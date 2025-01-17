@@ -1,0 +1,2 @@
+recursive-include src/basic_bot/webapp *
+recursive-exclude src/basic_bot/webapp/node_modules *

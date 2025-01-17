@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "basic_bot"
+version = "0.1.0"
+authors = [{name="Bee Wilkerson", email="bee.wilkerson@ymail.com" }]
+description = "A simpler alternative to ROS"
+readme = "README.md"
+dependencies = ["cachetools","requests"]
+requires-python = ">=3.9"
+
+[project.scripts]
+create_basic_bot = "basic_bot.create:main"
+
+[project.urls]
+"Homepage" = "https://github.com/littlebee/basic_bot"
+"Bug Tracker" = "https://github.com/littlebee/basic_bot/issues"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+webapp = ["src/basic_bot/webapp/*"]
