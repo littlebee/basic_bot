@@ -14,13 +14,16 @@ import psutil
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 
-from commons import web_utils, hub_state
+from commons import web_utils
+from commons.hub_state import HubState
 from commons.hub_state_monitor import HubStateMonitor
+
+hub_state = HubState()
 
 app = Flask(__name__, static_url_path="/static")
 CORS(app, supports_credentials=True)
 
-_hub_state_monitor = HubStateMonitor("webserver", "*")
+HubStateMonitor(hub_state, "webserver", "*")
 
 dir_path = os.path.dirname(os.path.realpath(__file__)) + "/webapp_vite/dist"
 

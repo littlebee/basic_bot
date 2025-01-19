@@ -1,16 +1,26 @@
 #!/usr/bin/env python3
-
-import logging
 import json
 import asyncio
 import websockets
 import traceback
 
 
-from commons import constants, hub_state, log
+from basic_bot.commons import constants, log
+from basic_bot.commons.hub_state import HubState
 
-logging.basicConfig()
 
+log.info("Initializing hub state")
+hub_state = HubState(
+    {
+        # provided by central_hub/
+        "hub_stats": {"state_updates_recv": 0},
+        # which subsystems are online and have indentified themselves
+        "subsystem_stats": {},
+    },
+    [],
+)
+
+# these are all of the client sockets that are connected to the hub
 connected_sockets = set()
 
 # a dictionary of sets containing sockets by top level
@@ -34,7 +44,7 @@ def iseeu_message(websocket):
 
 
 async def send_message(websocket, message):
-    if constants.LOG_ALL_MESSAGES and message != '{"type": "pong"}':
+    if constants.BB_LOG_ALL_MESSAGES and message != '{"type": "pong"}':
         log.info(
             f"sending {message} to {websocket.remote_address[0]}:{websocket.remote_address[1]}"
         )
@@ -191,7 +201,7 @@ async def handle_message(websocket):
             messageType = jsonData.get("type")
             messageData = jsonData.get("data")
 
-            if constants.LOG_ALL_MESSAGES and messageType != "ping":
+            if constants.BB_LOG_ALL_MESSAGES and messageType != "ping":
                 log.info(f"received {message} from {websocket.remote_address[1]}")
 
             # {type: "getState, data: [state_keys] or omitted}
@@ -214,7 +224,7 @@ async def handle_message(websocket):
             else:
                 log.error("received unsupported message: %s", messageType)
 
-            if constants.LOG_ALL_MESSAGES and messageType != "ping":
+            if constants.BB_LOG_ALL_MESSAGES and messageType != "ping":
                 log.info(f"getting next message for {websocket.remote_address[1]}")
 
     except Exception as e:
@@ -239,8 +249,8 @@ async def persist_state_task():
 async def main():
     log.info("Loading persisted state")
     hub_state.init_persisted_state()
-    log.info(f"Starting server on port {constants.HUB_PORT}")
-    async with websockets.serve(handle_message, port=constants.HUB_PORT):
+    log.info(f"Starting server on port {constants.BB_HUB_PORT}")
+    async with websockets.serve(handle_message, port=constants.BB_HUB_PORT):
         # log.info("Starting hub stats task")
         # await send_hub_stats_task()
         await persist_state_task()

@@ -8,11 +8,24 @@ version = "0.1.0"
 authors = [{name="Bee Wilkerson", email="bee.wilkerson@ymail.com" }]
 description = "A simpler alternative to ROS"
 readme = "README.md"
-dependencies = ["cachetools","requests"]
+dependencies = [
+    "cachetools",
+    "requests",
+    "websockets==10.4",
+    "flask",
+    "flask-cors",
+    "psutil",
+    "pytest",
+    "websocket-client"
+]
 requires-python = ">=3.9"
 
 [project.scripts]
-create_basic_bot = "basic_bot.create:main"
+basic_bot_create = "basic_bot.create:main"
+basic_bot_start = "basic_bot.start:main"
+basic_bot_stop = "basic_bot.stop:main"
+basic_bot_restart = "basic_bot.restart:main"
+
 
 [project.urls]
 "Homepage" = "https://github.com/littlebee/basic_bot"
