@@ -1,8 +1,8 @@
 import os
 
-print("Environment variables:")
-for name, value in os.environ.items():
-    print("{0}: {1}".format(name, value))
+# print("Environment variables:")
+# for name, value in os.environ.items():
+#     print("{0}: {1}".format(name, value))
 
 
 def env_string(name, default):
@@ -32,23 +32,13 @@ def env_bool(name, default):
         return False
 
 
-SERVO_CHANNELS = env_int("SERVO_CHANNELS", 6)
-
-
 # Connect to central hub websocket
-HUB_PORT = env_int("HUB_PORT", 5800)
-HUB_URI = f"ws://127.0.0.1:{HUB_PORT}/ws"
+BB_HUB_PORT = env_int("BB_HUB_PORT", 5800)
+BB_HUB_URI = f"ws://127.0.0.1:{BB_HUB_PORT}/ws"
 
-LOG_ALL_MESSAGES = env_bool("LOG_ALL_MESSAGES", False)
-
-ARM_CONFIGS_DIR = env_string("ARM_CONFIGS_DIR", "./src/webapp_vite/public/arm-configs")
-ARM_PARTS_DIR = env_string("ARM_PARTS_DIR", "./src/webapp_vite/public/arm-parts")
-
-DEFAULT_MOTOR_RANGE = env_int("DEFAULT_MOTOR_RANGE", 270)
-DEFAULT_MIN_ANGLE = env_int("DEFAULT_MIN_ANGLE", 0)
-DEFAULT_MAX_ANGLE = DEFAULT_MOTOR_RANGE
+BB_LOG_ALL_MESSAGES = env_bool("BB_LOG_ALL_MESSAGES", False)
 
 # This is used to stub out the motor controller for testing and local (mac/windows) development
 #   This is set to True in env vars on the raspberry pi by the default rc.local script
 #
-STRONGARM_ENV = env_string("STRONGARM_ENV", "development")
+BB_ENV = env_string("BB_ENV", "development")

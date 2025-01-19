@@ -12,7 +12,7 @@ const HUB_PING_INTERVAL = 1000;
 // messages from hub.  Otherwise, we show "offline"
 const MIN_HUB_UPDATE_INTERVAL = 1500;
 
-export const DEFAULT_HUB_PORT = 5800;
+export const DEFAULT_BB_HUB_PORT = 5800;
 
 export interface IVec3 {
     x: number;
@@ -37,7 +37,7 @@ export const DEFAULT_HUB_STATE: IHubState = {
 };
 
 const __hub_state: IHubState = { ...DEFAULT_HUB_STATE };
-const __hub_port: number = DEFAULT_HUB_PORT;
+const __hub_port: number = DEFAULT_BB_HUB_PORT;
 
 const onUpdateCallbacks: Array<(state: IHubState) => void> = [];
 let hubStatePromises: Array<(state: IHubState) => void> = [];
@@ -53,7 +53,7 @@ export interface ConnectToHubOptions {
 }
 
 export function connectToHub({
-    port = DEFAULT_HUB_PORT,
+    port = DEFAULT_BB_HUB_PORT,
     state = DEFAULT_HUB_STATE,
     autoReconnect = true,
 }: ConnectToHubOptions) {

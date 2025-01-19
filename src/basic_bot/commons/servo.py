@@ -8,7 +8,7 @@ import traceback
 
 from commons import log, constants as c
 
-if c.STRONGARM_ENV == "production":
+if c.BB_ENV == "production":
     from board import SCL, SDA
     import busio
 
@@ -21,7 +21,7 @@ if c.STRONGARM_ENV == "production":
     pca = PCA9685(i2c)
     pca.frequency = 50
 else:
-    log.info(f"commons.Servo running in {c.STRONGARM_ENV} mode.  Using mock servo libs")
+    log.info(f"commons.Servo running in {c.BB_ENV} mode.  Using mock servo libs")
 
     class pca:
         channels = [i for i in range(16)]

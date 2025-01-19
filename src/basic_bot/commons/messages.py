@@ -12,7 +12,7 @@ class MessageType(Enum):
 
 async def send_message(websocket, message):
     json_message = json.dumps(message)
-    if c.LOG_ALL_MESSAGES:
+    if c.BB_LOG_ALL_MESSAGES:
         log.info(f"sent {json_message} to {websocket.remote_address[1]}")
     await websocket.send(json_message)
 

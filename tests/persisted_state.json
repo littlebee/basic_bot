@@ -1,0 +1,31 @@
+{
+    "arm_config_selected": "4dof-iphone-test.json",
+    "saved_positions": [
+        {
+            "uuid": "70bd62fa-44ff-4ada-9398-0d2897b4d332",
+            "name": "Another saved position",
+            "description": "Should saved positions be sorted alpha or time",
+            "angles": [
+                123,
+                113,
+                22,
+                97,
+                10,
+                82
+            ]
+        },
+        {
+            "uuid": "1c085321-0fd9-425a-86e5-e62eed320df6",
+            "name": "wall mounted item - right view",
+            "description": "",
+            "angles": [
+                145,
+                126,
+                7,
+                81,
+                26,
+                96
+            ]
+        }
+    ]
+}

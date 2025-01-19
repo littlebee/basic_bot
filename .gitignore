@@ -1,3 +1,7 @@
+# our stuff
+logs/
+pids/
+
 # mac os
 .DS_Store
 
