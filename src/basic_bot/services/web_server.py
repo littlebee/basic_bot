@@ -14,9 +14,9 @@ import psutil
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 
-from commons import web_utils
-from commons.hub_state import HubState
-from commons.hub_state_monitor import HubStateMonitor
+from basic_bot.commons import web_utils, log
+from basic_bot.commons.hub_state import HubState
+from basic_bot.commons.hub_state_monitor import HubStateMonitor
 
 hub_state = HubState()
 
@@ -25,7 +25,8 @@ CORS(app, supports_credentials=True)
 
 HubStateMonitor(hub_state, "webserver", "*")
 
-dir_path = os.path.dirname(os.path.realpath(__file__)) + "/webapp_vite/dist"
+dir_path = os.path.join(os.getcwd(), "webapp/dist")
+log.info(f"serving from dir_path: {dir_path}")
 
 
 @app.route("/stats")

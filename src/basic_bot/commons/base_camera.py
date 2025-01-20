@@ -7,11 +7,12 @@ https://github.com/adeept/Adeept_RaspTank/blob/a6c45e8cc7df620ad8977845eda2b8396
 
 Thank you, @adeept and @miguelgrinberg!
 """
+
 import time
 import threading
 import logging
 
-from commons.fps_stats import FpsStats
+from basic_bot.commons.fps_stats import FpsStats
 
 logger = logging.getLogger(__name__)
 

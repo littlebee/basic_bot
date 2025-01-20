@@ -12,7 +12,8 @@ export async function startServices() {
     // @ts-expect-error globalThis is a global object injected by vitest
     globalThis.hubPort = port;
 
-    const cmd = `cd ../.. && BB_ENV=test BB_FILE_APPEND=${threadId} BB_HUB_PORT=${port} ./start.sh`;
+    // start all of the services used by the bot
+    const cmd = `cd .. && BB_ENV=test BB_FILE_APPEND=${threadId} BB_HUB_PORT=${port} bb_start`;
     console.log(`startStop.ts: starting services with command '${cmd}'`);
     const { stdout, stderr } = await execAsync(cmd);
     console.log(`vitest.setup.ts beforeAll start.sh stdout: ${stdout}`);
@@ -23,7 +24,7 @@ export async function stopServices() {
     console.log("After all tests: stopping services");
     const threadId = process.env.VITEST_POOL_ID;
     const { stderr, stdout } = await execAsync(
-        `cd ../.. && BB_ENV=test BB_FILE_APPEND=${threadId} ./stop.sh`
+        `cd .. && BB_ENV=test BB_FILE_APPEND=${threadId} bb_stop`
     );
     console.log(`vitest.setup.ts afterAll stdout: ${stdout}`);
     if (stderr) console.log(`vitest.setup.ts afterAll stderr: ${stderr}`);

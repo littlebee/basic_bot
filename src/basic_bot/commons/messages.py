@@ -1,7 +1,7 @@
 import json
 from enum import Enum
 
-from commons import log, constants as c
+from basic_bot.commons import log, constants as c
 
 
 class MessageType(Enum):
