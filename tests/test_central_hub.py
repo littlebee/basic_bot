@@ -1,5 +1,5 @@
-import helpers.central_hub as hub
-import helpers.start_stop as sss
+import basic_bot.test_helpers.central_hub as hub
+import basic_bot.test_helpers.start_stop as sss
 
 # semi-random values to use for testing
 TEST_ANGLES_1 = [10, 50, 180, 120, 90, 0]

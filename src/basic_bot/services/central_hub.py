@@ -197,12 +197,12 @@ async def handle_message(websocket):
     await register(websocket)
     try:
         async for message in websocket:
+            if constants.BB_LOG_ALL_MESSAGES and message != {"type": "ping"}:
+                log.info(f"received {message} from {websocket.remote_address[1]}")
+
             jsonData = json.loads(message)
             messageType = jsonData.get("type")
             messageData = jsonData.get("data")
-
-            if constants.BB_LOG_ALL_MESSAGES and messageType != "ping":
-                log.info(f"received {message} from {websocket.remote_address[1]}")
 
             # {type: "getState, data: [state_keys] or omitted}
             if messageType == "getState":

@@ -2,6 +2,7 @@
 import os
 import sys
 import subprocess
+import time
 
 HELP = """
 Usage: python3 -m basic_bot.start [service] [service] ...
@@ -99,6 +100,10 @@ def main():
             print(
                 f"Started service: {service} and PID {process.pid} and logging to {log_file}"
             )
+
+        if sub_system == "basic_bot.services.central_hub":
+            # let the central hub start up before starting the remaining services
+            time.sleep(1)
 
 
 if __name__ == "__main__":

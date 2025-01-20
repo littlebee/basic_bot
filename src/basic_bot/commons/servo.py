@@ -6,7 +6,7 @@ import time
 import threading
 import traceback
 
-from commons import log, constants as c
+from basic_bot.commons import log, constants as c
 
 if c.BB_ENV == "production":
     from board import SCL, SDA

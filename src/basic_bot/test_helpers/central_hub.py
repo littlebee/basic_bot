@@ -1,6 +1,6 @@
 import json
 
-import helpers.constants as tc
+import basic_bot.test_helpers.constants as tc
 
 # Note this is actually the websocket_client and not the websockets lib.
 # websocket_client provides a way of synchronously sending and receiving
@@ -38,6 +38,10 @@ def send_state_update(ws, dict):
             "data": dict,
         },
     )
+
+
+def send_identity(ws, name):
+    send(ws, {"type": "identity", "data": name})
 
 
 def send_subscribe(ws, namesList):

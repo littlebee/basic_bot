@@ -21,10 +21,10 @@ dependencies = [
 requires-python = ">=3.9"
 
 [project.scripts]
-basic_bot_create = "basic_bot.create:main"
-basic_bot_start = "basic_bot.start:main"
-basic_bot_stop = "basic_bot.stop:main"
-basic_bot_restart = "basic_bot.restart:main"
+bb_create = "basic_bot.create:main"
+bb_start = "basic_bot.start:main"
+bb_stop = "basic_bot.stop:main"
+bb_restart = "basic_bot.restart:main"
 
 
 [project.urls]

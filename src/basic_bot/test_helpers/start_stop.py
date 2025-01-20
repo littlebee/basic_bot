@@ -1,9 +1,8 @@
 import os
-import time
 
 from typing import List
 
-import helpers.constants as tc
+import basic_bot.test_helpers.constants as tc
 
 
 def start_services(service_list: List[str]):
@@ -15,11 +14,10 @@ def start_services(service_list: List[str]):
                 service main file in src/ directory.
     """
     for service_name in service_list:
-        cmd = f'BB_ENV=test BB_LOG_ALL_MESSAGES=1 BB_HUB_PORT={tc.CENTRAL_HUB_TEST_PORT} basic_bot_start "{service_name}"'
+        cmd = f'BB_ENV=test BB_LOG_ALL_MESSAGES=1 BB_HUB_PORT={tc.CENTRAL_HUB_TEST_PORT} bb_start "{service_name}"'
         print(f"starting {service_name} with command: {cmd}")
         exit_code = os.system(cmd)
         assert exit_code == 0
-        time.sleep(1)
 
 
 def stop_services(service_list: List[str]):
@@ -32,5 +30,5 @@ def stop_services(service_list: List[str]):
     """
 
     for service_name in service_list:
-        exit_code = os.system(f"BB_ENV=test basic_bot_stop {service_name}")
+        exit_code = os.system(f"BB_ENV=test bb_stop {service_name}")
         assert exit_code == 0

@@ -12,6 +12,14 @@ TEST_PERSISTED_STATE_OUTPUT_FILE = "./tests/persisted_state_out.json"
 
 
 class HubState:
+    """
+    This class manages the state of the hub.  It is initialized with a default
+    initial state and can be updated with new state data.
+
+    It can also serialize the current local state to JSON
+
+    """
+
     def __init__(
         self, default_state: Dict[str, Any] = {}, persisted_state_keys: List[str] = []
     ) -> None:
