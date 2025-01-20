@@ -33,16 +33,6 @@ def copy_webapp(target_project_dir: str):
     print(f"copying webapp from {source_web_dir} -> {target_web_dir}...")
     shutil.copytree(source_web_dir, target_web_dir)
 
-    npm = shutil.which("npm")
-    if npm is None:
-        print("npm not found.  skipping npm install.")
-        return
-    else:
-        print("running npm install for webapp...")
-        os.chdir(target_web_dir)
-        os.system("npm install")
-        os.chdir(target_project_dir)
-
 
 def build_and_test(target_project_dir: str):
     os.chdir(target_project_dir)
