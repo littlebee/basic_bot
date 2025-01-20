@@ -35,4 +35,4 @@ bb_restart = "basic_bot.restart:main"
 include-package-data = true
 
 [tool.setuptools.package-data]
-webapp = ["src/basic_bot/webapp/*"]
+created_files = ["src/basic_bot/created_files/*"]
