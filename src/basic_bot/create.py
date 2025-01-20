@@ -25,15 +25,6 @@ def create_project(target_project_dir: str):
     )
 
 
-def copy_webapp(target_project_dir: str):
-    this_file = os.path.abspath(__file__)
-    source_web_dir = os.path.join(os.path.dirname(this_file), "webapp")
-
-    target_web_dir = os.path.join(target_project_dir, "webapp")
-    print(f"copying webapp from {source_web_dir} -> {target_web_dir}...")
-    shutil.copytree(source_web_dir, target_web_dir)
-
-
 def build_and_test(target_project_dir: str):
     os.chdir(target_project_dir)
 
@@ -53,7 +44,6 @@ def main():
         return
 
     create_project(target_project_dir)
-    copy_webapp(target_project_dir)
     build_and_test(target_project_dir)
 
     print("done.\n\n")

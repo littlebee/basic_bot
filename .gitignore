@@ -2,6 +2,7 @@
 /logs/
 /pids/
 
+node_modules/
 package-lock.json
 
 # mac os
