@@ -63,8 +63,9 @@ class HubStateMonitor:
                             self.hub_state.update_state_from_message_data(message_data)
                         await asyncio.sleep(0)
 
-            except:
-                traceback.print_exc()
+            except Exception as e:
+                if "no close frame received" not in str(e):
+                    traceback.print_exc()
 
             self.connected_socket = None
             log.info("central_hub socket disconnected.  Reconnecting in 5 sec...")
