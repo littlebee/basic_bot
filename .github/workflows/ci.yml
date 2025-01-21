@@ -30,6 +30,10 @@ jobs:
           sudo apt-get install -y python3-pip
           pip install --upgrade pip
 
+      - name: Install dependencies
+        run: |
+          pip install build setuptools wheel
+
       - name: Make install-dev.sh executable
         run: chmod +x ./*.sh
 
