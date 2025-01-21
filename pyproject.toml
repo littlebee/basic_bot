@@ -9,6 +9,7 @@ authors = [{name="Bee Wilkerson", email="bee.wilkerson@ymail.com" }]
 description = "A simpler alternative to ROS"
 readme = "README.md"
 dependencies = [
+    "build",
     "cachetools",
     "requests",
     "websockets==10.4",
