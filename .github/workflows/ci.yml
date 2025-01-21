@@ -17,21 +17,24 @@ jobs:
         python-version: [3.9]
 
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
+      - name: Check out repository
+        uses: actions/checkout@v2
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get install -y python3-pip
-        pip install --upgrade pip
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y python3-pip
+          pip install --upgrade pip
 
-    - name: Run install-dev.sh
-      run: ./install-dev.sh
+      - name: Make install-dev.sh executable
+        run: chmod +x ./*.sh
 
-    - name: Run tests
-      run: ./test.sh
+      - name: Run install-dev.sh
+        run: ./install-dev.sh
+
+      - name: Run tests
+        run: ./test.sh
