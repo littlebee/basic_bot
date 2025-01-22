@@ -1,4 +1,5 @@
 import os
+import time
 
 from typing import List
 
@@ -19,6 +20,8 @@ def start_services(service_list: List[str]):
         exit_code = os.system(cmd)
         assert exit_code == 0
 
+    time.sleep(1)  # give all the services time to start
+
 
 def stop_services(service_list: List[str]):
     """
@@ -30,5 +33,5 @@ def stop_services(service_list: List[str]):
     """
 
     for service_name in service_list:
-        exit_code = os.system(f"BB_ENV=test bb_stop {service_name}")
+        exit_code = os.system(f'BB_ENV=test bb_stop "{service_name}"')
         assert exit_code == 0
