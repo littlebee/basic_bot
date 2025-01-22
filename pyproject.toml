@@ -15,6 +15,7 @@ dependencies = [
     "websockets==10.4",
     "flask",
     "flask-cors",
+    "opencv-python>=4.11",
     "psutil",
     "pytest",
     "websocket-client"
