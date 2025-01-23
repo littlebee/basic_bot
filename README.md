@@ -14,8 +14,10 @@ A Python centric, basic robotics platform providing
 January 20th, 2025 - Basic working central_hub and web_server services merged.  Working on adding basic motor controller service similar to Scatbot.
 
 ## Getting Started
+On your development computer (not your bot's onboard computer; see later in this doc)
+
 ```shell
-pip install git+https://github.com/littlebee/basic_bot.git@main
+python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
 bb_create my_new_project_dir
 ```
 The above commands will
@@ -44,7 +46,41 @@ To build and use the created `./webapp` example, you will need to have Node.js >
 
 From there, check out the .sh files in the root of my_new_robot_project.  Commands to build, start in the background, run integration tests for the Python example "worthless_counter" service, and run example integration test.
 
+### Upload to your robot
+
 Also included is an example `upload.sh` script that can be used to upload your code to your robot's onboard computer.  The example `upload.sh` uses `rsync` and requires that both your local and onboard computer need to have SSH installed and properly set up.  If you can `ssh my_rad_robot.local` or by IP, you should be able to use rsync and the upload example.
+
+Example:
+```
+./upload.sh pi@my_raspberry_bot.local /home/pi/my_bot
+```
+`pi` above is the username
+`my_raspberry_bot.local` above is the hostname to upload can be replaced by IPAddress
+`/home/pi/my_bot` is the directory you wish to upload to.  The directory will be created if it does not already exist.
+
+Notes:
+
+I work on a macbook and use iTerm2 for terminal.  One of the additions I like to make to the standard setup, is to use the same user name on the Pi that I use locally on my mac.  This allows not having to type `ssh raspberry@mybot.local`, because the name is the same just `ssh mybot.local` works.
+
+I also like to add my public key to the `~/.ssh/authorized_keys` file on the remote SBC. This will stop it from prompting you for the password on every SSH command (upload.sh uses rsync which uses ssh).   I made a [gist of the script](https://gist.github.com/littlebee/b285f0b9d219e56fe29b7248440309a5) I use to upload my public key to new boards.
+
+
+### Run the software on your robot
+
+First `ssh` into the onboard computer and `cd path/uploaded/to`.
+
+Before running for the first time, in an ssh shell, install the basic_bot package:
+```
+python -m pip install git+https://github.com/littlebee/basic_bot.git@main
+```
+
+Then from within the the directory you uploaded to:
+```
+./start.sh
+```
+will start all of the services in  `./services.cfg` as individual processes running detached.  If your shell/terminal is closed, they will keep running.
+
+You can debug issues with a service by looking at the ./logs/* files for each service.
 
 ### Adding your own UI, too?
 
