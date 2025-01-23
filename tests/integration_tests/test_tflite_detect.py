@@ -3,12 +3,19 @@ import cv2
 
 
 from basic_bot.commons.tflite_detect import TFLiteDetect
+from basic_bot.commons import constants as c
+
+
+TFLITE_MODEL = os.path.join(
+    "src/basic_bot/created_files/models/tflite/", c.BB_TFLITE_MODEL
+)
 
 
 class TestTFLiteDetect:
+
     def test_pet_detection(self):
         # Initialize detector
-        detector = TFLiteDetect()
+        detector = TFLiteDetect(TFLITE_MODEL, False)
 
         # Get all images from test directory
         test_image_dir = "tests/test_data/images/pets"

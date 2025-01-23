@@ -12,20 +12,24 @@ from basic_bot.commons import constants as c, log
 class TFLiteDetect:
     detector = None
 
-    def __init__(self):
+    # args are used for testing
+    def __init__(self, model=None, use_coral_tpu=None):
         # Initialize the object detection model
-        model = None
-        if c.BB_ENABLE_CORAL_TPU:
-            # model = f"{TFLITE_DATA_DIR}/efficientdet_lite0_edgetpu.tflite"
-            model = f"{c.BB_TFLITE_DATA_DIR}/{c.BB_TFLITE_MODEL_CORAL}"
-        else:
-            model = f"{c.BB_TFLITE_DATA_DIR}/{c.BB_TFLITE_MODEL}"
+        if use_coral_tpu is None:
+            use_coral_tpu = c.BB_ENABLE_CORAL_TPU
 
-        log.info(f"using model {model}")
+        if model is None:
+            if use_coral_tpu:
+                # model = f"{TFLITE_DATA_DIR}/efficientdet_lite0_edgetpu.tflite"
+                model = f"{c.BB_TFLITE_DATA_DIR}/{c.BB_TFLITE_MODEL_CORAL}"
+            else:
+                model = f"{c.BB_TFLITE_DATA_DIR}/{c.BB_TFLITE_MODEL}"
+
+        log.info(f"TFliteDetect using model={model}, use_coral_tpu={use_coral_tpu}")
 
         base_options = core.BaseOptions(
             file_name=model,
-            use_coral=(c.BB_ENABLE_CORAL_TPU),
+            use_coral=(use_coral_tpu),
             num_threads=c.BB_TFLITE_THREADS,
         )
         detection_options = processor.DetectionOptions(
@@ -42,7 +46,19 @@ class TFLiteDetect:
         results = []
         if detection_result.detections:
             for detection in detection_result.detections:
-                bestClassification = max(detection.categories, key=lambda x: x.score)
+                # at some point the tensor-flow API changed from
+                # classes to categories and from class_name to category_name
+                categories = (
+                    detection.categories
+                    if hasattr(detection, "categories")
+                    else detection.classes
+                )
+                bestClassification = max(categories, key=lambda x: x.score)
+                class_name = (
+                    bestClassification.category_name
+                    if hasattr(bestClassification, "category_name")
+                    else bestClassification.class_name
+                )
                 results.append(
                     {
                         "boundingBox": [
@@ -53,7 +69,7 @@ class TFLiteDetect:
                             detection.bounding_box.origin_y
                             + detection.bounding_box.height,
                         ],
-                        "classification": bestClassification.category_name,
+                        "classification": class_name,
                         "confidence": bestClassification.score,
                     }
                 )

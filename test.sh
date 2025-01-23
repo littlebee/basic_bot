@@ -2,8 +2,6 @@
 
 set -e
 
-export BB_TFLITE_DATA_DIR=src/basic_bot/created_files/models/tflite
-
 echo "\n Running integration tests...\n"
 pytest tests/integration_tests/
 
