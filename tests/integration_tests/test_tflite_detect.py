@@ -11,7 +11,7 @@ class TestTFLiteDetect:
         detector = TFLiteDetect()
 
         # Get all images from test directory
-        test_image_dir = "tests/images/pets"
+        test_image_dir = "tests/test_data/images/pets"
         image_files = [
             f
             for f in os.listdir(test_image_dir)
