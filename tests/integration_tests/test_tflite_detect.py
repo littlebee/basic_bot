@@ -1,10 +1,19 @@
 import os
 import cv2
+import pytest
 
+try:
+    from tflite_support.task import core
+except ImportError:
+    pytest.skip(
+        "tflite_support not installed. Skipping test_flight_detect",
+        allow_module_level=True,
+    )
 
 from basic_bot.commons.tflite_detect import TFLiteDetect
 from basic_bot.commons import constants as c
 
+print(f"tflite_support is installed {core=}")
 
 TFLITE_MODEL = os.path.join(
     "src/basic_bot/created_files/models/tflite/", c.BB_TFLITE_MODEL
