@@ -6,7 +6,7 @@ an image can be read from a file.
 import cv2
 import os
 
-from basic_bot.test_helpers.constants import BB_IS_BLIND
+from basic_bot.test_helpers import constants as tc
 
 
 def test_cv2_import():
@@ -30,7 +30,7 @@ def test_camera_capture():
     """Test that an image can be captured from a camera 0"""
 
     # Skip this test if running on CI/CD machine without a camera
-    if BB_IS_BLIND:
+    if tc.IS_BLIND:
         print("Skipping test_camera_capture because BB_IS_BLIND is set")
         return
 
