@@ -6,7 +6,7 @@ from basic_bot.commons.tflite_detect import TFLiteDetect
 
 
 class TestTFLiteDetect:
-    def test_pet_detection():
+    def test_pet_detection(self):
         # Initialize detector
         detector = TFLiteDetect()
 
