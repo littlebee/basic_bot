@@ -39,11 +39,10 @@ class TFLiteDetect:
     def get_prediction(self, img):
         input_tensor = vision.TensorImage.create_from_array(img)
         detection_result = self.detector.detect(input_tensor)
-        print(f"detection_result: {detection_result}")
         results = []
         if detection_result.detections:
             for detection in detection_result.detections:
-                bestClassification = max(detection.classes, key=lambda x: x.score)
+                bestClassification = max(detection.categories, key=lambda x: x.score)
                 results.append(
                     {
                         "boundingBox": [
