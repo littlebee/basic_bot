@@ -32,10 +32,8 @@ BB_OBJECT_DETECTION_THRESHOLD = env.env_float("BB_OBJECT_DETECTION_THRESHOLD", 0
 BB_ENABLE_CORAL_TPU = env.env_bool("BB_ENABLE_CORAL_TPU", False)
 # path to the directory containing the tflite model and labels
 BB_TFLITE_DATA_DIR = env.env_string(
-    "BB_TFLITE_DATA_DIR", os.path.join("model", "tflite")
+    "BB_TFLITE_DATA_DIR", os.path.join("models", "tflite")
 )
-# number of threads to use for tflite detection
-BB_TFLITE_THREADS = env.env_int("BB_TFLITE_THREADS", 2)
 # which model to use for object detection.  default is the model from the coral site
 # which is faster than the model from the tensorflow hub
 BB_TFLITE_MODEL = env.env_string(
@@ -46,6 +44,9 @@ BB_TFLITE_MODEL_CORAL = env.env_string(
     "BB_TFLITE_MODEL_CORAL",
     "ssd_mobilenet_v1_coco_quant_postprocess_edgetpu.tflite",
 )
+# number of threads to use for tflite detection
+BB_TFLITE_THREADS = env.env_int("BB_TFLITE_THREADS", 2)
+# http port used by the vision service for video streaming
 BB_VISION_PORT = env.env_int("BB_VISION_PORT", 5801)
 BB_DISABLE_RECOGNITION_PROVIDER = env.env_bool("BB_DISABLE_RECOGNITION_PROVIDER", False)
 
