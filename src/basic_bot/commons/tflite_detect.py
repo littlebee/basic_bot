@@ -53,7 +53,7 @@ class TFLiteDetect:
                             detection.bounding_box.origin_y
                             + detection.bounding_box.height,
                         ],
-                        "classification": bestClassification.class_name,
+                        "classification": bestClassification.category_name,
                         "confidence": bestClassification.score,
                     }
                 )
