@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 echo "\n Running integration tests...\n"
 pytest tests/integration/
 
