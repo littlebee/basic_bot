@@ -92,7 +92,7 @@ def main():
 
         print(f"Starting {sub_system}...")
 
-        args = ["python3", "-m", sub_system] if is_module else ["python3", sub_system]
+        args = ["python", "-m", sub_system] if is_module else ["python3", sub_system]
 
         with open(log_file, "w") as log, open(pid_file, "w") as pid:
             process = subprocess.Popen(args, stdout=log, stderr=log)

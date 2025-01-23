@@ -4,7 +4,7 @@ import sys
 import signal
 
 HELP = """
-Usage: python3 -m basic_bot.stop [service] [service] ...
+Usage: python -m basic_bot.stop [service] [service] ...
 
 [service] is optional.  If not specified, all services listed in services.cfg in reverse order.
 """

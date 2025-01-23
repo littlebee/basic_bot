@@ -1,3 +1,3 @@
 #!/bin/sh
 ./build.sh
-pip3 install .
+pip3 install --break-system-packages .

@@ -18,6 +18,8 @@ dependencies = [
     "opencv-python>=4.11",
     "psutil",
     "pytest",
+    "protobuf>=3.18.0,<4",
+    "tflite-support",
     "websocket-client"
 ]
 requires-python = ">=3.9"
