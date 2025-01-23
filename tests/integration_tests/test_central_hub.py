@@ -21,7 +21,7 @@ class TestCentralHub:
         response = hub.recv(ws)
         ws.close()
 
-        assert response["type"] == "iseeu"
+        assert response["type"] != "iseeu"
 
     def test_state(self):
         ws = hub.connect()

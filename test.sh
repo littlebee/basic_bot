@@ -3,7 +3,7 @@
 set -e
 
 echo "\n Running integration tests...\n"
-pytest tests/integration/
+pytest tests/integration_tests/
 
 echo "\n Running e2e tests.  This may take a few minutes...\n"
 pytest tests/e2e_tests/
