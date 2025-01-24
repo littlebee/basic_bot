@@ -71,7 +71,7 @@ First `ssh` into the onboard computer and `cd path/uploaded/to`.
 
 Before running for the first time, in an ssh shell, install the basic_bot package:
 ```
-python -m pip install git+https://github.com/littlebee/basic_bot.git@main
+python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
 ```
 
 Then from within the the directory you uploaded to:
