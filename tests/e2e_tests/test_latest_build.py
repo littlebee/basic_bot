@@ -6,7 +6,7 @@ asserts the following:
 
 - The uncompressed file has the following files or directories:
     src/basic_bot/__init__.py
-    src/basic_bot/create.py
+    src/basic_bot/bb_create.py
     src/basic_bot/created_files
     src/basic_bot/created_files/webapp
 
@@ -24,7 +24,7 @@ from pathlib import Path
 DIST_FILE = Path("./dist/basic_bot-0.1.0.tar.gz")
 REQUIRED_FILES = [
     "src/basic_bot/__init__.py",
-    "src/basic_bot/create.py",
+    "src/basic_bot/bb_create.py",
     "src/basic_bot/created_files",
     "src/basic_bot/created_files/webapp",
 ]
