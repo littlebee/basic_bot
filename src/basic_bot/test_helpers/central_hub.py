@@ -1,6 +1,8 @@
 import json
 
+import basic_bot.commons.constants as c
 import basic_bot.test_helpers.constants as tc
+
 
 # Note this is actually the websocket_client and not the websockets lib.
 # websocket_client provides a way of synchronously sending and receiving
@@ -13,9 +15,7 @@ websocket.enableTrace(True)
 
 def connect(identity=None):
     """connect to central hub and return a websocket (websocket-client lib)"""
-    ws = websocket.create_connection(
-        f"ws://localhost:{tc.CENTRAL_HUB_TEST_PORT}/ws", timeout=tc.DEFAULT_TIMEOUT
-    )
+    ws = websocket.create_connection(c.BB_HUB_URI, timeout=tc.DEFAULT_TIMEOUT)
 
     if identity:
         send(ws, {"type": "identity", "data": identity})

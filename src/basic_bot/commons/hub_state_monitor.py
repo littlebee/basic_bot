@@ -11,9 +11,11 @@ import asyncio
 import websockets
 import traceback
 import json
+from contextlib import asynccontextmanager
 from typing import Callable, Optional, List
 
-from basic_bot.commons import constants, messages, log
+from basic_bot.commons import constants as c, messages, log
+from basic_bot.commons.hub_state import HubState
 
 
 class HubStateMonitor:
@@ -21,19 +23,39 @@ class HubStateMonitor:
     This class updates the process local copy of the hub state as subscribed keys
     are changed.  It starts a thread to listen for state updates from the central
     hub and applies them to the local state via hub_state.update_state_from_message_data.
+
+    Before applying the state update, it calls the on_state_update callback if it is
+    provided.  This allows the caller to do something with the state update before
+    before it is applied to the local state passed via hub_state arg.
+
+    The state update is applied to the local state via
+    hub_state.update_state_from_message_data regardless of whether the on_state_update
+    callback is provided or the value it returns.  To alter the state you should
+    alway send an `updateState` message to the central hub.
+
     """
 
     def __init__(
         self,
-        hub_state: dict,
+        hub_state: HubState,
         identity: str,
         subscribed_keys: List[str],
-        on_message_recv: Optional[Callable[[str], None]] = None,
+        on_state_update: Optional[
+            Callable[
+                [
+                    websockets.WebSocketClientProtocol,
+                    str,
+                    dict,
+                ],
+                None,
+            ]
+        ] = None,
     ) -> None:
         self.hub_state = hub_state
         self.identity = identity
         self.subscribed_keys = subscribed_keys
-        self.on_message_recv = on_message_recv
+        self.on_state_update = on_state_update
+        self.running = False
 
         # background thread connects to central_hub and listens for state updates
         self.thread = threading.Thread(target=self._thread)
@@ -41,27 +63,68 @@ class HubStateMonitor:
         # web socket if we are connected, None otherwise
         self.connected_socket: Optional[websockets.WebSocketClientProtocol] = None
 
+    def start(self) -> None:
+        self.running = True
         self.thread.start()
 
+    def stop(self) -> None:
+        self.running = False
+
+    @asynccontextmanager
+    async def connect_to_hub(self):
+        """
+        context manager to connect to the central hub
+        """
+        log.info(f"hub_state_monitor connecting to central_hub at {c.BB_HUB_URI}")
+        async with websockets.connect(c.BB_HUB_URI) as websocket:
+            log.info("hub_state_monitor connected to central_hub")
+            self.connected_socket = websocket
+            await messages.send_identity(websocket, self.identity)
+            await messages.send_subscribe(websocket, self.subscribed_keys)
+            await messages.send_get_state(websocket, self.subscribed_keys)
+            yield websocket
+
+    async def parse_next_message(self, websocket: websockets.WebSocketClientProtocol):
+        """
+        generator function to parse the next central_hub message from the websocket
+        """
+        log.info("parse_next_message")
+        async for message in websocket:
+            if not self.running:
+                return
+
+            msg = json.loads(message)
+            if c.BB_LOG_ALL_MESSAGES:
+                log.info(f"hub_state_monitor received: {msg}")
+            msg_type = msg.get("type")
+            msg_data = msg.get("data")
+
+            yield msg_type, msg_data
+
+            if not self.running:
+                return
+
     async def monitor_state(self) -> None:
-        while True:
+        while self.running:
             try:
-                log.info(
-                    f"hub_state_monitor connecting to hub central at {constants.BB_HUB_URI}"
-                )
-                async with websockets.connect(constants.BB_HUB_URI) as websocket:
-                    self.connected_socket = websocket
-                    await messages.send_identity(websocket, self.identity)
-                    await messages.send_get_state(websocket)
-                    await messages.send_subscribe(websocket, self.subscribed_keys)
-                    async for message in websocket:
-                        data = json.loads(message)
-                        if self.on_message_recv:
-                            self.on_message_recv(data)
-                        if data.get("type") == "state":
-                            message_data = data.get("data")
-                            self.hub_state.update_state_from_message_data(message_data)
-                        await asyncio.sleep(0)
+                if not self.running:
+                    return  # we want to just exit if we are not running
+                async with self.connect_to_hub() as websocket:
+                    async for msg_type, msg_data in self.parse_next_message(websocket):
+                        if msg_type in ["state", "stateUpdate"]:
+                            """
+                            The order here is intentional.  We want the on_state_update
+                            to still be able to query the pre-changed state via hub_state
+                            if it needs to.  See class comment.
+                            """
+                            if self.on_state_update:
+                                self.on_state_update(websocket, msg_type, msg_data)
+
+                            self.hub_state.update_state_from_message_data(msg_data)
+
+                    if not self.running:
+                        return
+                    await asyncio.sleep(0)
 
             except Exception as e:
                 if "no close frame received" not in str(e):

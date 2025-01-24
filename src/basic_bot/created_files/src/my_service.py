@@ -30,8 +30,11 @@ hub_monitor = HubStateMonitor(
     # callback function to call when a message is received
     # Note that when started using bb_start, any standard output or error
     # will be captured and logged to the ./logs directory.
-    on_message_recv=lambda data: print(f"on_message_recv: {data}"),
+    on_state_update=lambda websocket, msg_type, msg_data: print(
+        f"on_message_recv: {msg_type=}, {msg_data=}"
+    ),
 )
+hub_monitor.start()
 
 
 async def main():

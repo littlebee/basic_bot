@@ -1,19 +1,15 @@
-import getPort from "get-port";
-
 import { promisify } from "node:util";
 import child_process from "node:child_process";
 const execAsync = promisify(child_process.exec);
 
 export async function startServices() {
-    const port = await getPort();
-
     const threadId = process.env.VITEST_POOL_ID;
 
     // @ts-expect-error globalThis is a global object injected by vitest
-    globalThis.hubPort = port;
+    globalThis.hubPort = 5150;
 
     // start all of the services used by the bot
-    const cmd = `cd .. && BB_ENV=test BB_FILE_APPEND=${threadId} BB_HUB_PORT=${port} bb_start`;
+    const cmd = `cd .. && BB_ENV=test BB_FILE_APPEND=${threadId} bb_start`;
     console.log(`startStop.ts: starting services with command '${cmd}'`);
     const { stdout, stderr } = await execAsync(cmd);
     console.log(`vitest.setup.ts beforeAll start.sh stdout: ${stdout}`);
