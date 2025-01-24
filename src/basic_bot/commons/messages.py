@@ -1,5 +1,6 @@
 import json
 from enum import Enum
+from typing import Optional, List
 
 from basic_bot.commons import log, constants as c
 
@@ -38,11 +39,12 @@ async def send_subscribe(websocket, subscriptionNames):
     )
 
 
-async def send_get_state(websocket):
+async def send_get_state(websocket, keys: Optional[List] = []):
     await send_message(
         websocket,
         {
             "type": "getState",
+            "data": keys,
         },
     )
 

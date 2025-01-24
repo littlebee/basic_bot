@@ -3,8 +3,6 @@ import time
 
 from typing import List
 
-import basic_bot.test_helpers.constants as tc
-
 
 def start_services(service_list: List[str]):
     """
@@ -15,7 +13,7 @@ def start_services(service_list: List[str]):
                 service main file in src/ directory.
     """
     for service_name in service_list:
-        cmd = f'BB_ENV=test BB_LOG_ALL_MESSAGES=1 BB_HUB_PORT={tc.CENTRAL_HUB_TEST_PORT} bb_start "{service_name}"'
+        cmd = f'BB_ENV=test bb_start "{service_name}"'
         print(f"starting {service_name} with command: {cmd}")
         exit_code = os.system(cmd)
         assert exit_code == 0

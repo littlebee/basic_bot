@@ -12,7 +12,7 @@ const HUB_PING_INTERVAL = 1000;
 // messages from hub.  Otherwise, we show "offline"
 const MIN_HUB_UPDATE_INTERVAL = 1500;
 
-export const DEFAULT_BB_HUB_PORT = 5800;
+export const DEFAULT_BB_HUB_PORT = 5100;
 
 export interface IVec3 {
     x: number;

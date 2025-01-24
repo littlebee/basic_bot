@@ -23,7 +23,8 @@ hub_state = HubState()
 app = Flask(__name__, static_url_path="/static")
 CORS(app, supports_credentials=True)
 
-HubStateMonitor(hub_state, "webserver", "*")
+monitor = HubStateMonitor(hub_state, "webserver", "*")
+monitor.start()
 
 dir_path = os.path.join(os.getcwd(), "webapp/dist")
 log.info(f"serving from dir_path: {dir_path}")
