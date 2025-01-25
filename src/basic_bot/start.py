@@ -68,7 +68,7 @@ def main():
             print(
                 f"\nCowardly refusing to overwrite {pid_file}. \n"
                 f"Is {sub_system} already running? If so,  try running \n\n"
-                f'basic_bot_stop "-m {sub_system}" \n\n'
+                f'bb_stop "-m {sub_system}" \n\n'
                 "from the terminal or if not, delete the pid file and try again.\n"
             )
             continue

@@ -8,13 +8,13 @@ import sys
 def main(args):
     try:
         print("Stopping services")
-        subprocess.run(["./stop.sh"] + args, check=True)
+        subprocess.run("bb_stop " + args, check=True)
 
         print("Sleeping for 5s")
         time.sleep(5)
 
         print("Starting services")
-        subprocess.run(["./start.sh"] + args, check=True)
+        subprocess.run("bb_start " + args, check=True)
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
         sys.exit(1)
