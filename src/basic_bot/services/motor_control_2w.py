@@ -56,7 +56,7 @@ else:
 
 
 async def send_motor_state(websocket):
-    await messages.send_state_update(
+    await messages.send_update_state(
         websocket,
         {
             "motors": {

@@ -30,7 +30,17 @@ def send(ws, dict):
     return ws.send(json.dumps(dict))
 
 
-def send_state_update(ws, dict):
+def send_get_state(ws, namesList):
+    send(
+        ws,
+        {
+            "type": "getState",
+            "data": namesList,
+        },
+    )
+
+
+def send_update_state(ws, dict):
     send(
         ws,
         {
