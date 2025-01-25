@@ -2,6 +2,7 @@
 import os
 import sys
 import signal
+import psutil
 
 HELP = """
 Usage: python -m basic_bot.stop [service] [service] ...
@@ -13,6 +14,14 @@ Usage: python -m basic_bot.stop [service] [service] ...
 def print_help():
     print(HELP)
     sys.exit(0)
+
+
+def is_process_running(pid):
+    try:
+        psutil.Process(pid)
+        return True
+    except psutil.NoSuchProcess:
+        return False
 
 
 def main():
@@ -61,6 +70,14 @@ def main():
         if os.path.isfile(pid_file):
             with open(pid_file, "r") as pidfile:
                 pid = int(pidfile.read().strip())
+                # first check if the process is still running
+                if not is_process_running(pid):
+                    print(
+                        f"pid file found for {sub_system} but process is not running. removing pid file"
+                    )
+                    os.remove(pid_file)
+                    continue
+
                 try:
                     os.kill(pid, signal.SIGTERM)
                     os.remove(pid_file)
