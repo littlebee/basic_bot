@@ -87,9 +87,9 @@ class RecognitionProvider:
                 #     detector = PytorchDetect()
 
                 log.info(
-                    f"recognition connecting to hub central at {constants.HUB_URI}"
+                    f"recognition connecting to hub central at {constants.BB_HUB_URI}"
                 )
-                async with websockets.connect(constants.HUB_URI) as websocket:
+                async with websockets.connect(constants.BB_HUB_URI) as websocket:
                     await messages.send_identity(websocket, "recognition")
                     while True:
                         # if not cls.pause_event.is_set():
