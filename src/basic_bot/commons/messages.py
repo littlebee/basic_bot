@@ -49,7 +49,7 @@ async def send_get_state(websocket, keys: Optional[List] = []):
     )
 
 
-async def send_state_update(websocket, stateData):
+async def send_update_state(websocket, stateData):
     await send_message(
         websocket,
         {

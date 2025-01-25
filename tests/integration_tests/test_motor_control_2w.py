@@ -32,7 +32,7 @@ class TestMotorControl2w:
         ]
 
         for throttle in test_throttles:
-            hub.send_state_update(ws, {"throttles": throttle})
+            hub.send_update_state(ws, {"throttles": throttle})
             response = hub.recv(ws)
             print(f"for {throttle=}, {response=}")
             assert response["data"]["motors"]["left_throttle"] == throttle["left"]
@@ -55,7 +55,7 @@ class TestMotorControl2w:
         ]
 
         for test in limit_tests:
-            hub.send_state_update(ws, {"throttles": test["test"]})
+            hub.send_update_state(ws, {"throttles": test["test"]})
             response = hub.recv(ws)
             print(f"for {test=}, {response=}")
             assert (

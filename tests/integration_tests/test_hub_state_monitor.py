@@ -34,7 +34,7 @@ class TestHubStateMonitor:
             ws_client, "TestHubStateMonitor-test_hub_state_monitor-client1"
         )
         # create the client and send an update before creating the monitor
-        hub.send_state_update(ws_client, {"foo": INITIAL_FOO})
+        hub.send_update_state(ws_client, {"foo": INITIAL_FOO})
 
         callback = Mock()
 
@@ -59,7 +59,7 @@ class TestHubStateMonitor:
             assert hub_state.state.get("foo") == INITIAL_FOO
             callback.reset_mock()
 
-            hub.send_state_update(ws_client, {"foo": UPDATED_FOO})
+            hub.send_update_state(ws_client, {"foo": UPDATED_FOO})
             # reasonable time for the monitor to get the update and hubstate monitor
             # to call the callback
             time.sleep(EXPECTED_LATENCY)

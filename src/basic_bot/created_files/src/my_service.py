@@ -49,7 +49,7 @@ async def main():
         i += 1
         log.info(f"maybe sending state update {hub_monitor.connected_socket}")
         if hub_monitor.connected_socket:
-            await bb_message.send_state_update(
+            await bb_message.send_update_state(
                 hub_monitor.connected_socket, {"worthless_counter": i}
             )
         await asyncio.sleep(1)

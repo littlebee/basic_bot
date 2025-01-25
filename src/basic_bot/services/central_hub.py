@@ -58,9 +58,14 @@ async def send_state_update_to_subscribers(message_data):
     subscribed_sockets = set()
     for key in message_data:
         if key in subscribers:
+            # really need to keep this tight as possible,  don't log here
+            # unless needed to debug
             # log.info(f"subscribed sockets for {key}: {subscribers[key]}")
+
             for sub_socket in subscribers[key]:
                 subscribed_sockets.add(sub_socket)
+        else:
+            log.info(f"send_state_update_to_subscribers: no subscribers for {key}")
 
     relay_message = json.dumps(
         {
@@ -140,6 +145,8 @@ async def handle_state_request(websocket, keysRequested=None):
 
 async def handle_state_update(message_data):
     global subscribers
+
+    log.info(f"handle_state_update: {message_data}")
 
     hub_state.update_state_from_message_data(message_data)
     hub_state.state["hub_stats"]["state_updates_recv"] += 1

@@ -33,7 +33,7 @@ class TestCentralHub:
         # angles should be empty initially
         assert initial_state["data"].get("set_angles") != TEST_ANGLES_1
 
-        hub.send_state_update(ws, {"set_angles": TEST_ANGLES_1})
+        hub.send_update_state(ws, {"set_angles": TEST_ANGLES_1})
         hub.send(ws, {"type": "getState"})
         updated_state = hub.recv(ws)
         # print(f"{updated_state=}")
@@ -66,7 +66,7 @@ class TestCentralHub:
         hub.send_subscribe(ws2, ["current_angles"])
 
         # second client sends a set_angles update
-        hub.send_state_update(ws2, {"set_angles": TEST_ANGLES_1})
+        hub.send_update_state(ws2, {"set_angles": TEST_ANGLES_1})
 
         # the second client should not receive a set_angles update
         # because it is not subscribed to "current_angles"
@@ -75,21 +75,21 @@ class TestCentralHub:
         assert hub.has_received_state_update(ws1, "set_angles", TEST_ANGLES_1)
 
         # second client sends a current_angles update which both clients are subscribed
-        hub.send_state_update(ws2, {"current_angles": TEST_ANGLES_1})
+        hub.send_update_state(ws2, {"current_angles": TEST_ANGLES_1})
         # first client has subscribed to current_angles updates and should recv a message
         assert hub.has_received_state_update(ws1, "current_angles", TEST_ANGLES_1)
         # second client has also subscribed to current_angles updates and should recv a message
         assert hub.has_received_state_update(ws2, "current_angles", TEST_ANGLES_1)
 
         # first client sends a current_angles update which both clients are subscribed
-        hub.send_state_update(ws1, {"current_angles": TEST_ANGLES_2})
+        hub.send_update_state(ws1, {"current_angles": TEST_ANGLES_2})
         # first client has subscribed to current_angles updates and should recv a message
         assert hub.has_received_state_update(ws1, "current_angles", TEST_ANGLES_2)
         # second client has also subscribed to current_angles updates and should recv a message
         assert hub.has_received_state_update(ws2, "current_angles", TEST_ANGLES_2)
 
         # first client sends a feeder update which neither clients are subscribed
-        hub.send_state_update(ws1, {"feeder": TEST_ANGLES_1})
+        hub.send_update_state(ws1, {"feeder": TEST_ANGLES_1})
         assert not hub.has_received_data(ws1)
         assert not hub.has_received_data(ws2)
 
