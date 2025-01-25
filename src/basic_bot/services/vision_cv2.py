@@ -134,7 +134,7 @@ class webapp:
         self.camera = camera
 
     def thread(self):
-        log(f"starting vision webhost on {c.BB_VISION_PORT}")
+        log.info(f"starting vision webhost on {c.BB_VISION_PORT}")
         app.run(host="0.0.0.0", port=c.BB_VISION_PORT, threaded=True)
 
     def start_thread(self):
