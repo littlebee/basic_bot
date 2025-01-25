@@ -73,3 +73,20 @@ class TestHubStateMonitor:
         finally:
             # must do this at the end to stop the monitor
             monitor.stop()
+
+    def test_on_connect(self):
+
+        on_connect = Mock()
+        monitor = HubStateMonitor(
+            hub_state=HubState({"foo": 0}),
+            identity="TestHubStateMonitor-test_hub_state_monitor-hub",
+            subscribed_keys=["foo"],
+            on_connect=on_connect,
+        )
+        monitor.start()
+
+        try:
+            time.sleep(EXPECTED_LATENCY)
+            on_connect.assert_called_once_with(monitor.connected_socket)
+        finally:
+            monitor.stop()

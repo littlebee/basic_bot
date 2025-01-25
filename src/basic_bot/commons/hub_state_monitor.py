@@ -40,6 +40,12 @@ class HubStateMonitor:
         hub_state: HubState,
         identity: str,
         subscribed_keys: List[str],
+        on_connect: Optional[
+            Callable[
+                [websockets.WebSocketClientProtocol],
+                None,
+            ]
+        ] = None,
         on_state_update: Optional[
             Callable[
                 [
@@ -55,6 +61,7 @@ class HubStateMonitor:
         self.identity = identity
         self.subscribed_keys = subscribed_keys
         self.on_state_update = on_state_update
+        self.on_connect = on_connect
         self.running = False
 
         # background thread connects to central_hub and listens for state updates
@@ -110,6 +117,10 @@ class HubStateMonitor:
                 if not self.running:
                     return  # we want to just exit if we are not running
                 async with self.connect_to_hub() as websocket:
+
+                    if self.on_connect:
+                        self.on_connect(websocket)
+
                     async for msg_type, msg_data in self.parse_next_message(websocket):
                         if msg_type in ["state", "stateUpdate"]:
                             """
