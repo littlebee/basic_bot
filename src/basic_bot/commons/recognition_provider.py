@@ -98,6 +98,10 @@ class RecognitionProvider:
                         #     log.info(f"recognition resumed")
 
                         frame = cls.camera.get_frame()
+
+                        # TODO: test this, it may be unnecessary and slow
+                        # rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
                         t1 = time.time()
                         new_objects = detector.get_prediction(frame)
                         cls.last_frame_duration = time.time() - t1

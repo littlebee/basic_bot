@@ -82,10 +82,15 @@ async def send_state_update_to_subscribers(message_data):
         try:
             await send_message(socket, relay_message)
         except Exception as e:
-            log.error(
-                f"error sending message to subscriber {socket.remote_address[1]}: {e}"
-            )
-            traceback.print_exc()
+            # if the exception is a websockets.exceptions.ConnectionClosedOK
+            # then the client has disconnected and we can remove it from the
+            # subscribers list and close the socket, but we don't want to
+            # log an error in that case.
+            if "ConnectionClosedOK" not in str(e):
+                log.info(
+                    f"error sending message to subscriber {socket.remote_address[1]}: {e}"
+                )
+                traceback.print_exc()
             sockets_to_close.add(socket)
 
     for socket in sockets_to_close:
