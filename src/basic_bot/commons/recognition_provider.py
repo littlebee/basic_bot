@@ -12,7 +12,6 @@ import threading
 import asyncio
 import websockets
 import traceback
-import cv2
 
 from basic_bot.commons import constants, messages, log
 from basic_bot.commons.fps_stats import FpsStats

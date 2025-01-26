@@ -2,7 +2,6 @@
 This class provides object detection using Tensor Flow Lite.
 """
 
-import numpy as np
 from tflite_support.task import core
 from tflite_support.task import processor
 from tflite_support.task import vision
