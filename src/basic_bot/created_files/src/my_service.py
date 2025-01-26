@@ -36,15 +36,26 @@ hub_monitor = HubStateMonitor(
 )
 hub_monitor.start()
 
+# If you are creating a service that only consumes state changes and does not
+# read any external sensors or data,  You can remove the remaining code
+# in this file and replace it with
+#
+# ```python
+#   hub_monitor.thread.join()
+# ```
+#
+# For an example of such a service, see the daphbot_service at:
+# https://github.com/littlebee/daphbot-due/blob/aa7ed90d60df33009c5bd252c31fa0fb25076fad/src/daphbot_service.py
+
 
 async def main():
     log.info("in my_service:main()")
     i = 0
     while True:
         """
-        Replace this with your service logic that either responds
-        to state changes or sends state updates to the central hub
-        based on external data like that from motors or sensors
+        Replace this with your service logic that sends state
+        updates to the central hub from external data or inputs
+        like that from motors or sensors
         """
         i += 1
         log.info(f"maybe sending state update {hub_monitor.connected_socket}")
