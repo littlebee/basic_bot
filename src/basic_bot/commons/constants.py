@@ -26,8 +26,9 @@ BB_RIGHT_MOTOR_CHANNEL = env.env_int("BB_RIGHT_MOTOR_CHANNEL", 2)
 
 BB_CAMERA_CHANNEL = env.env_int("BB_CAMERA_CHANNEL", 0)
 BB_CAMERA_ROTATION = env.env_int("BB_CAMERA_ROTATION", 0)
-BB_VISION_HEIGHT = env.env_int("BB_VISION_HEIGHT", 640)
-BB_VISION_WIDTH = env.env_int("BB_VISION_WIDTH", 480)
+BB_CAMERA_FPS = env.env_int("BB_CAMERA_FPS", 30)
+BB_VISION_WIDTH = env.env_int("BB_VISION_WIDTH", 640)
+BB_VISION_HEIGHT = env.env_int("BB_VISION_HEIGHT", 480)
 # in degrees; depends on camera; RPi v2 cam is 62deg
 BB_VISION_FOV = 62
 # object detection threshold percentage; higher = greater confidence

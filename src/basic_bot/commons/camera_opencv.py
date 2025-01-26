@@ -39,6 +39,8 @@ class OpenCvCamera(BaseCamera):
 
         camera.set(cv2.CAP_PROP_FRAME_WIDTH, c.BB_VISION_WIDTH)
         camera.set(cv2.CAP_PROP_FRAME_HEIGHT, c.BB_VISION_HEIGHT)
+        camera.set(cv2.CAP_PROP_FPS, c.BB_CAMERA_FPS)
+        camera.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc("M", "J", "P", "G"))
 
         # Doing the rotation using cv2.rotate() was a 6-7 FPS drop
         # Unfortunately, you can't set the rotation on the v4l driver
@@ -48,7 +50,11 @@ class OpenCvCamera(BaseCamera):
             os.system(f"sudo v4l2-ctl --set-ctrl=rotate={c.BB_CAMERA_ROTATION}")
 
         while True:
-            _, img = camera.read()
+            success, img = camera.read()
+            if not success:
+                log.error("failed to read frame from camera")
+                continue
+
             if img is None:
                 if not OpenCvCamera.img_is_none_messaged:
                     log.error(
