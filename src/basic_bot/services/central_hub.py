@@ -3,7 +3,9 @@ import json
 import asyncio
 import websockets
 import traceback
+from typing import Any, Dict, List, Optional, Union
 
+from websockets.server import WebSocketServerProtocol
 
 from basic_bot.commons import constants, log
 from basic_bot.commons.hub_state import HubState
@@ -21,17 +23,17 @@ hub_state = HubState(
 )
 
 # these are all of the client sockets that are connected to the hub
-connected_sockets = set()
+connected_sockets: set[WebSocketServerProtocol] = set()
 
 # a dictionary of sets containing sockets by top level
 # dictionary key in hub_state
-subscribers = dict()
+subscribers: Dict[str, set[WebSocketServerProtocol]] = dict()
 
 # a dictionary of websocket to subsystem name; see handle_identity
-identities = dict()
+identities: Dict[WebSocketServerProtocol, str] = dict()
 
 
-def iseeu_message(websocket):
+def iseeu_message(websocket: WebSocketServerProtocol) -> str:
     return json.dumps(
         {
             "type": "iseeu",
@@ -43,7 +45,7 @@ def iseeu_message(websocket):
     )
 
 
-async def send_message(websocket, message):
+async def send_message(websocket: Union[WebSocketServerProtocol, str], message: str) -> None:
     if constants.BB_LOG_ALL_MESSAGES and message != '{"type": "pong"}':
         log.info(
             f"sending {message} to {websocket.remote_address[0]}:{websocket.remote_address[1]}"
@@ -54,8 +56,8 @@ async def send_message(websocket, message):
         await asyncio.wait([websocket.send(message) for websocket in connected_sockets])
 
 
-async def send_state_update_to_subscribers(message_data):
-    subscribed_sockets = set()
+async def send_state_update_to_subscribers(message_data: Dict[str, Any]) -> None:
+    subscribed_sockets: set[WebSocketServerProtocol] = set()
     for key in message_data:
         if key in subscribers:
             # really need to keep this tight as possible,  don't log here
@@ -77,7 +79,7 @@ async def send_state_update_to_subscribers(message_data):
             "data": message_data,
         }
     )
-    sockets_to_close = set()
+    sockets_to_close: set[WebSocketServerProtocol] = set()
     for socket in subscribed_sockets:
         try:
             await send_message(socket, relay_message)
@@ -99,19 +101,19 @@ async def send_state_update_to_subscribers(message_data):
         socket.close()
 
 
-async def notify_state(websocket="all", keysRequested=None):
+async def notify_state(websocket: Union[WebSocketServerProtocol, str] = "all", keysRequested: Optional[List[str]] = None) -> None:
     await send_message(websocket, hub_state.serialize_state(keysRequested))
 
 
 # NOTE that there is no "all" option here, need a websocket,
 #  ye shall not ever broadcast this info
-async def notify_iseeu(websocket):
+async def notify_iseeu(websocket: WebSocketServerProtocol) -> None:
     if not websocket or websocket == "all":
         return
     await send_message(websocket, iseeu_message(websocket))
 
 
-async def update_online_status(subsystem_name: str, status: int):
+async def update_online_status(subsystem_name: str, status: int) -> None:
     if subsystem_name in hub_state.state["subsystem_stats"]:
         hub_state.state["subsystem_stats"][subsystem_name]["online"] = status
     else:
@@ -122,14 +124,14 @@ async def update_online_status(subsystem_name: str, status: int):
     )
 
 
-async def register(websocket):
+async def register(websocket: WebSocketServerProtocol) -> None:
     log.info(
         f"got new connection from {websocket.remote_address[0]}:{websocket.remote_address[1]}:"
     )
     connected_sockets.add(websocket)
 
 
-async def unregister(websocket):
+async def unregister(websocket: WebSocketServerProtocol) -> None:
     log.info(
         f"lost connection {websocket.remote_address[0]}:{websocket.remote_address[1]}"
     )
@@ -144,11 +146,11 @@ async def unregister(websocket):
         pass
 
 
-async def handle_state_request(websocket, keysRequested=None):
+async def handle_state_request(websocket: WebSocketServerProtocol, keysRequested: Optional[List[str]] = None) -> None:
     await notify_state(websocket, keysRequested)
 
 
-async def handle_state_update(message_data):
+async def handle_state_update(message_data: Dict[str, Any]) -> None:
     global subscribers
 
     log.info(f"handle_state_update: {message_data}")
@@ -159,16 +161,16 @@ async def handle_state_update(message_data):
     await send_state_update_to_subscribers(message_data)
 
 
-async def handle_state_subscribe(websocket, data):
+async def handle_state_subscribe(websocket: WebSocketServerProtocol, data: Union[str, List[str]]) -> None:
     global subscribers
-    subscription_keys = []
+    subscription_keys: List[str] = []
     if data == "*":
-        subscription_keys = hub_state.state.keys()
+        subscription_keys = list(hub_state.state.keys())
     else:
         subscription_keys = data
 
     for key in subscription_keys:
-        socket_set = None
+        socket_set: Optional[set[WebSocketServerProtocol]] = None
         if key in subscribers:
             socket_set = subscribers[key]
         else:
@@ -181,11 +183,11 @@ async def handle_state_subscribe(websocket, data):
         socket_set.add(websocket)
 
 
-async def handle_state_unsubscribe(websocket, data):
+async def handle_state_unsubscribe(websocket: WebSocketServerProtocol, data: Union[str, List[str]]) -> None:
     global subscribers
-    subscription_keys = []
+    subscription_keys: List[str] = []
     if data == "*":
-        subscription_keys = subscribers.keys()
+        subscription_keys = list(subscribers.keys())
     else:
         subscription_keys = data
 
@@ -194,18 +196,18 @@ async def handle_state_unsubscribe(websocket, data):
             subscribers[key].remove(websocket)
 
 
-async def handle_identity(websocket, subsystem_name):
+async def handle_identity(websocket: WebSocketServerProtocol, subsystem_name: str) -> None:
     identities[websocket] = subsystem_name
     log.info(f"setting identity of {websocket.remote_address[1]} to {subsystem_name}")
     await update_online_status(subsystem_name, 1)
     await notify_iseeu(websocket)
 
 
-async def handle_ping(websocket):
+async def handle_ping(websocket: WebSocketServerProtocol) -> None:
     await send_message(websocket, json.dumps({"type": "pong"}))
 
 
-async def handle_message(websocket):
+async def handle_message(websocket: WebSocketServerProtocol) -> None:
     await register(websocket)
     try:
         async for message in websocket:
@@ -251,14 +253,14 @@ async def handle_message(websocket):
         await websocket.close()
 
 
-async def persist_state_task():
+async def persist_state_task() -> None:
 
     while True:
         hub_state.persist_state()
         await asyncio.sleep(1)
 
 
-async def main():
+async def main() -> None:
     log.info("Loading persisted state")
     hub_state.init_persisted_state()
     log.info(f"Starting server on port {constants.BB_HUB_PORT}")

@@ -16,26 +16,26 @@ MY_BOOL = env.env_bool("MY_BOOL", True)
 import os
 
 
-def env_string(name, default):
+def env_string(name: str, default: str) -> str:
     env_val = os.getenv(name) or str(default)
     return env_val
 
 
-def env_int(name, default):
+def env_int(name: str, default: int) -> int:
     try:
         return int(env_string(name, default))
     except:
         return default
 
 
-def env_float(name, default):
+def env_float(name: str, default: float) -> float:
     try:
         return float(env_string(name, default))
     except:
         return default
 
 
-def env_bool(name, default):
+def env_bool(name: str, default: bool) -> bool:
     value = env_string(name, default).lower()
     if value in ("true", "1"):
         return True

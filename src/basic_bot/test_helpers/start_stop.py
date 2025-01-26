@@ -4,7 +4,7 @@ import time
 from typing import List
 
 
-def start_services(service_list: List[str]):
+def start_services(service_list: List[str]) -> None:
     """
     starts subsystems as a detached process using same start script used to start on the bot
 
@@ -21,7 +21,7 @@ def start_services(service_list: List[str]):
     time.sleep(1)  # give all the services time to start
 
 
-def stop_services(service_list: List[str]):
+def stop_services(service_list: List[str]) -> None:
     """
     stops subsystems and restores the central hub state to what it was before the tests started
 

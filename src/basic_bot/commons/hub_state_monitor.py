@@ -12,7 +12,7 @@ import websockets
 import traceback
 import json
 from contextlib import asynccontextmanager
-from typing import Callable, Optional, List
+from typing import Callable, Optional, List, AsyncGenerator
 
 from basic_bot.commons import constants as c, messages, log
 from basic_bot.commons.hub_state import HubState
@@ -78,7 +78,7 @@ class HubStateMonitor:
         self.running = False
 
     @asynccontextmanager
-    async def connect_to_hub(self):
+    async def connect_to_hub(self) -> AsyncGenerator[websockets.WebSocketClientProtocol, None]:
         """
         context manager to connect to the central hub
         """
@@ -91,7 +91,7 @@ class HubStateMonitor:
             await messages.send_get_state(websocket, self.subscribed_keys)
             yield websocket
 
-    async def parse_next_message(self, websocket: websockets.WebSocketClientProtocol):
+    async def parse_next_message(self, websocket: websockets.WebSocketClientProtocol) -> AsyncGenerator[tuple[str, dict], None]:
         """
         generator function to parse the next central_hub message from the websocket
         """
@@ -145,6 +145,6 @@ class HubStateMonitor:
             log.info("central_hub socket disconnected.  Reconnecting in 5 sec...")
             await asyncio.sleep(5)
 
-    def _thread(self):
+    def _thread(self) -> None:
         log.info("Starting hub_state_monitor thread.")
         asyncio.run(self.monitor_state())

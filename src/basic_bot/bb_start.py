@@ -18,12 +18,12 @@ Example: python3 start.py basic_bot.services.central_hub
 """
 
 
-def print_help():
+def print_help() -> None:
     print(HELP)
     sys.exit(0)
 
 
-def main():
+def main() -> None:
 
     if len(sys.argv) > 1 and (sys.argv[1] == "-h" or sys.argv[1] == "--help"):
         print_help()

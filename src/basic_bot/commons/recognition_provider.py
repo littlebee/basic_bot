@@ -12,6 +12,7 @@ import threading
 import asyncio
 import websockets
 import traceback
+from typing import Any, List, Dict
 
 from basic_bot.commons import constants, messages, log
 from basic_bot.commons.fps_stats import FpsStats
@@ -30,18 +31,18 @@ WHICH_DETECTOR = "tflite"
 
 
 class RecognitionProvider:
-    thread = None  # background thread that reads frames from camera
-    camera = None
-    last_objects_seen = []
-    fps_stats = FpsStats()
-    last_frame_duration = 0
-    last_dimensions = {}
-    total_objects_detected = 0
+    thread: threading.Thread = None  # background thread that reads frames from camera
+    camera: Any = None
+    last_objects_seen: List[Dict[str, Any]] = []
+    fps_stats: FpsStats = FpsStats()
+    last_frame_duration: float = 0
+    last_dimensions: Dict[str, Any] = {}
+    total_objects_detected: int = 0
 
-    next_objects_event = threading.Event()
-    pause_event = threading.Event()
+    next_objects_event: threading.Event = threading.Event()
+    pause_event: threading.Event = threading.Event()
 
-    def __init__(self, camera):
+    def __init__(self, camera: Any) -> None:
         RecognitionProvider.camera = camera
         if RecognitionProvider.thread is None:
             RecognitionProvider.thread = threading.Thread(target=self._thread)
@@ -49,22 +50,22 @@ class RecognitionProvider:
 
         self.resume()
 
-    def get_objects(self):
+    def get_objects(self) -> List[Dict[str, Any]]:
         return RecognitionProvider.last_objects_seen
 
-    def get_next_objects(self):
+    def get_next_objects(self) -> List[Dict[str, Any]]:
         RecognitionProvider.next_objects_event.wait()
         RecognitionProvider.next_objects_event.clear()
         return self.get_objects()
 
-    def pause(self):
+    def pause(self) -> None:
         RecognitionProvider.pause_event.clear()
 
-    def resume(self):
+    def resume(self) -> None:
         RecognitionProvider.pause_event.set()
 
     @classmethod
-    def stats(cls):
+    def stats(cls) -> Dict[str, Any]:
         return {
             "last_objects_seen": cls.last_objects_seen,
             "fps": cls.fps_stats.stats(),
@@ -73,7 +74,7 @@ class RecognitionProvider:
         }
 
     @classmethod
-    async def provide_state(cls):
+    async def provide_state(cls) -> None:
         cls.fps_stats.start()
 
         while True:
@@ -131,6 +132,6 @@ class RecognitionProvider:
             time.sleep(5)
 
     @classmethod
-    def _thread(cls):
+    def _thread(cls) -> None:
         log.info("Starting recognition thread.")
         asyncio.run(cls.provide_state())

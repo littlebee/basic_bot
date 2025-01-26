@@ -31,6 +31,7 @@ import json
 import asyncio
 import traceback
 import websockets
+from websockets.client import WebSocketClientProtocol
 
 from basic_bot.commons import constants as c, messages, log
 
@@ -55,7 +56,7 @@ else:
     right_motor = Motor()
 
 
-async def send_motor_state(websocket):
+async def send_motor_state(websocket: WebSocketClientProtocol) -> None:
     await messages.send_update_state(
         websocket,
         {
@@ -67,7 +68,7 @@ async def send_motor_state(websocket):
     )
 
 
-async def provide_state():
+async def provide_state() -> None:
     while True:
         try:
             log.info(f"connecting to {c.BB_HUB_URI}")
@@ -107,7 +108,7 @@ async def provide_state():
         time.sleep(5)
 
 
-def main():
+def main() -> None:
     asyncio.run(provide_state())
 
 

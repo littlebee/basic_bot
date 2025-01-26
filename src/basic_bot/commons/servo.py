@@ -5,6 +5,7 @@ import sys
 import time
 import threading
 import traceback
+from typing import Optional
 
 from basic_bot.commons import log, constants as c
 
@@ -47,7 +48,7 @@ DEFAULT_STEP_DELAY = 0.0001
 SERVO_PRECISION = 0.5
 
 
-def limit_angle(angle, min_angle, max_angle):
+def limit_angle(angle: float, min_angle: float, max_angle: float) -> float:
     limited_angle = angle
     if angle < min_angle:
         limited_angle = min_angle
@@ -65,8 +66,8 @@ class Servo:
     down the movement.  The thread can be paused and resumed.
     """
 
-    def __init__(self, motor_channel, motor_range, min_angle, max_angle):
-        self.thread = None  # background thread that steps motor to destination
+    def __init__(self, motor_channel: int, motor_range: Optional[int], min_angle: Optional[float], max_angle: Optional[float]) -> None:
+        self.thread: Optional[threading.Thread] = None  # background thread that steps motor to destination
         self.pause_event = threading.Event()
         self.stopped_event = threading.Event()
         self.force_stop = False
@@ -93,7 +94,7 @@ class Servo:
         self.thread.start()
 
     @property
-    def current_angle(self):
+    def current_angle(self) -> float:
         try:
             return self.servo.fraction * self.motor_range
         except OSError as error:
@@ -104,14 +105,14 @@ class Servo:
             return self.destination_angle
 
     @property
-    def step_delay(self):
+    def step_delay(self) -> float:
         return self._step_delay
 
     @step_delay.setter
-    def step_delay(self, value):
+    def step_delay(self, value: float) -> None:
         self._step_delay = value
 
-    def move_to(self, angle):
+    def move_to(self, angle: float) -> None:
         new_angle = limit_angle(angle, self.min_angle, self.max_angle)
         if DEBUG_MOTORS:
             log.info(
@@ -129,26 +130,26 @@ class Servo:
         self.stopped_event.clear()
         self.resume()
 
-    def pause(self):
+    def pause(self) -> None:
         self.pause_event.clear()
 
-    def resume(self):
+    def resume(self) -> None:
         self.pause_event.set()
 
-    def stop_thread(self):
+    def stop_thread(self) -> None:
         self.stopped_event.set()
         self.force_stop = True
         # thread could be waiting on pause_event, resume to quit
         self.resume()
 
-    def wait_for_motor_stopped(self):
+    def wait_for_motor_stopped(self) -> None:
         if DEBUG_MOTORS:
             log.info(f"waiting on stopped event on channel {self.motor_channel}")
         self.stopped_event.wait()
         if DEBUG_MOTORS:
             log.info(f"after wait: {self.motor_channel} {self.stopped_event.is_set()}")
 
-    def _thread(self):
+    def _thread(self) -> None:
         log.info(f"Starting servo movement thread. {self.current_angle}")
         self.started_at = time.time()
 
@@ -180,7 +181,7 @@ class Servo:
 
         log.info("servo thread exit on channel={self.motor_channel}")
 
-    def _step_move(self, direction):
+    def _step_move(self, direction: int) -> bool:
         """direction = -1 = left; 1 = right.  returns true if did move"""
         try:
             would_overshoot = self._step_would_overshoot_dest(direction)
@@ -210,7 +211,7 @@ class Servo:
             )
             return False
 
-    def _step_would_overshoot_dest(self, direction):
+    def _step_would_overshoot_dest(self, direction: int) -> bool:
         current_angle = self.current_angle
         new_angle = current_angle + STEP_DEGREES * direction
         return (direction == -1 and new_angle < self.destination_angle) or (

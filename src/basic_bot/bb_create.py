@@ -1,4 +1,3 @@
-# TODO : create directory structure and files described in the README.md
 import os
 import sys
 import shutil
@@ -12,7 +11,7 @@ project_name = sys.argv[1]
 target_project_dir = os.path.join(os.getcwd(), project_name)
 
 
-def create_project(target_project_dir: str):
+def create_project(target_project_dir: str) -> None:
     this_file = os.path.abspath(__file__)
     source_files_dir = os.path.join(os.path.dirname(this_file), "created_files")
 
@@ -25,7 +24,7 @@ def create_project(target_project_dir: str):
     )
 
 
-def build_and_test(target_project_dir: str):
+def build_and_test(target_project_dir: str) -> None:
     os.chdir(target_project_dir)
 
     print("building project via {target_project_dir}/build.sh ...")
@@ -35,8 +34,7 @@ def build_and_test(target_project_dir: str):
     os.system("./test.sh")
 
 
-# main can't take arguments.  see, https://setuptools.pypa.io/en/latest/userguide/entry_point.html
-def main():
+def main() -> None:
     if os.path.exists(target_project_dir):
         print(
             f"project directory {target_project_dir} already exists. will not overwrite"

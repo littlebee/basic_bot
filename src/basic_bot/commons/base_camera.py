@@ -11,6 +11,7 @@ Thank you, @adeept and @miguelgrinberg!
 import time
 import threading
 import logging
+from typing import Generator, Optional
 
 from basic_bot.commons.fps_stats import FpsStats
 
@@ -30,10 +31,10 @@ class CameraEvent(object):
     available.
     """
 
-    def __init__(self):
-        self.events = {}
+    def __init__(self) -> None:
+        self.events: dict[int, list[threading.Event, float]] = {}
 
-    def wait(self):
+    def wait(self) -> bool:
         """Invoked from each client's thread to wait for the next frame."""
         ident = get_ident()
         if ident not in self.events:
@@ -43,10 +44,10 @@ class CameraEvent(object):
             self.events[ident] = [threading.Event(), time.time()]
         return self.events[ident][0].wait()
 
-    def set(self):
+    def set(self) -> None:
         """Invoked by the camera thread when a new frame is available."""
         now = time.time()
-        remove = None
+        remove: Optional[int] = None
         for ident, event in self.events.items():
             if not event[0].isSet():
                 # if this client's event is not set, then set it
@@ -63,19 +64,19 @@ class CameraEvent(object):
         if remove:
             del self.events[remove]
 
-    def clear(self):
+    def clear(self) -> None:
         """Invoked from each client's thread after a frame was processed."""
         self.events[get_ident()][0].clear()
 
 
 class BaseCamera(object):
-    thread = None  # background thread that reads frames from camera
-    frame = None  # current frame is stored here by background thread
+    thread: Optional[threading.Thread] = None  # background thread that reads frames from camera
+    frame: Optional[bytes] = None  # current frame is stored here by background thread
 
     event = CameraEvent()
     fps_stats = FpsStats()
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Start the background camera thread if it isn't running yet."""
         if BaseCamera.thread is None:
             # start background frame thread
@@ -86,7 +87,7 @@ class BaseCamera(object):
             # while self.get_frame() is None:
             #     time.sleep(0)
 
-    def get_frame(self):
+    def get_frame(self) -> Optional[bytes]:
         """Return the current camera frame."""
         # wait for a signal from the camera thread
         BaseCamera.event.wait()
@@ -95,16 +96,16 @@ class BaseCamera(object):
         return BaseCamera.frame
 
     @staticmethod
-    def frames():
+    def frames() -> Generator[bytes, None, None]:
         """ "Generator that returns frames from the camera."""
         raise RuntimeError("Must be implemented by subclasses.")
 
     @classmethod
-    def stats(cls):
+    def stats(cls) -> dict[str, float]:
         return cls.fps_stats.stats()
 
     @classmethod
-    def _thread(cls):
+    def _thread(cls) -> None:
         """Camera background thread."""
         logger.info("Starting camera thread.")
         BaseCamera.fps_stats.start()

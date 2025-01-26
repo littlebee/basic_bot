@@ -9,26 +9,27 @@
 
 import os
 import cv2
+from typing import Generator
 
 from basic_bot.commons import constants as c, log
 from basic_bot.commons.base_camera import BaseCamera
 
 
 class OpenCvCamera(BaseCamera):
-    video_source = 0
-    img_is_none_messaged = False
+    video_source: int = 0
+    img_is_none_messaged: bool = False
 
-    def __init__(self):
+    def __init__(self) -> None:
         OpenCvCamera.set_video_source(c.BB_CAMERA_CHANNEL)
         super(OpenCvCamera, self).__init__()
 
     @staticmethod
-    def set_video_source(source):
+    def set_video_source(source: int) -> None:
         log.info(f"setting video source to {source}")
         OpenCvCamera.video_source = source
 
     @staticmethod
-    def frames():
+    def frames() -> Generator[bytes, None, None]:
         log.info("initializing VideoCapture")
 
         camera = cv2.VideoCapture(
