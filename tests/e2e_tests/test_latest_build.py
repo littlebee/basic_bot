@@ -3,18 +3,8 @@ This pytest test opens the ../dist/basic_bot-0.1.0.tar.gz file and
 asserts the following:
 
 - The file exists
-
-- The uncompressed file has the following files or directories:
-    src/basic_bot/__init__.py
-    src/basic_bot/bb_create.py
-    src/basic_bot/created_files
-    src/basic_bot/created_files/webapp
-
-- The uncompressed file does not contain anyof  the following files or
-directories recursively:
-    __pycache__
-    node_modules
-    package-lock.json
+- The uncompressed file has the REQUIRED_FILES (see below)
+- The uncompressed file does not contain any of the EXCLUDED_PATTERNS below
 
 """
 

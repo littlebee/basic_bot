@@ -5,6 +5,14 @@ import pytest
 try:
     from tflite_support.task import core
 except ImportError:
+    """
+    tflite_support ishard to install on mac and even worse on Apple Silicon.
+
+    It does run on Ubuntu Linux and runs on the Raspberry Pi.  The CI/CD
+    GitHub Actions runner is Ubuntu Linux and you should see it running there.
+    """
+    #
+    #
     pytest.skip(
         "tflite_support not installed. Skipping test_flight_detect",
         allow_module_level=True,
