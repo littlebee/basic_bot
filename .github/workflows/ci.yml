@@ -34,10 +34,12 @@ jobs:
         run: |
           pip install build setuptools wheel
           pip install -r requirements.txt
+          mypy --install-types
 
       - name: Make install-dev.sh executable
         run: chmod +x ./*.sh
 
+        # this also runs build.sh which in turn runs mypy
       - name: Run install-dev.sh
         run: ./install-dev.sh
 
