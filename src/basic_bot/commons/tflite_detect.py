@@ -2,9 +2,9 @@
 This class provides object detection using Tensor Flow Lite.
 """
 
-from tflite_support.task import core
-from tflite_support.task import processor
-from tflite_support.task import vision
+from tflite_support.task import core  # type: ignore
+from tflite_support.task import processor  # type: ignore
+from tflite_support.task import vision  # type: ignore
 from typing import Optional, List, Dict, Any
 
 from basic_bot.commons import constants as c, log
@@ -14,7 +14,9 @@ class TFLiteDetect:
     detector: vision.ObjectDetector
 
     # args are used for testing
-    def __init__(self, model: Optional[str] = None, use_coral_tpu: Optional[bool] = None) -> None:
+    def __init__(
+        self, model: Optional[str] = None, use_coral_tpu: Optional[bool] = None
+    ) -> None:
         # Initialize the object detection model
         if use_coral_tpu is None:
             use_coral_tpu = c.BB_ENABLE_CORAL_TPU

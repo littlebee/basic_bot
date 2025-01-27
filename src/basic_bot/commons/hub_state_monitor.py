@@ -12,7 +12,9 @@ import websockets
 import traceback
 import json
 from contextlib import asynccontextmanager
-from typing import Callable, Optional, List, AsyncGenerator
+
+from typing import Callable, Optional, List, AsyncGenerator, Union, Literal
+from websockets.client import WebSocketClientProtocol
 
 from basic_bot.commons import constants as c, messages, log
 from basic_bot.commons.hub_state import HubState
@@ -39,17 +41,17 @@ class HubStateMonitor:
         self,
         hub_state: HubState,
         identity: str,
-        subscribed_keys: List[str],
+        subscribed_keys: Union[List[str], Literal["*"]],
         on_connect: Optional[
             Callable[
-                [websockets.WebSocketClientProtocol],
+                [WebSocketClientProtocol],
                 None,
             ]
         ] = None,
         on_state_update: Optional[
             Callable[
                 [
-                    websockets.WebSocketClientProtocol,
+                    WebSocketClientProtocol,
                     str,
                     dict,
                 ],
@@ -68,7 +70,7 @@ class HubStateMonitor:
         self.thread = threading.Thread(target=self._thread)
 
         # web socket if we are connected, None otherwise
-        self.connected_socket: Optional[websockets.WebSocketClientProtocol] = None
+        self.connected_socket: Optional[WebSocketClientProtocol] = None
 
     def start(self) -> None:
         self.running = True
@@ -78,20 +80,25 @@ class HubStateMonitor:
         self.running = False
 
     @asynccontextmanager
-    async def connect_to_hub(self) -> AsyncGenerator[websockets.WebSocketClientProtocol, None]:
+    async def connect_to_hub(
+        self,
+    ) -> AsyncGenerator[websockets.client.WebSocketClientProtocol, None]:
         """
         context manager to connect to the central hub
         """
         log.info(f"hub_state_monitor connecting to central_hub at {c.BB_HUB_URI}")
-        async with websockets.connect(c.BB_HUB_URI) as websocket:
+        async with websockets.client.connect(c.BB_HUB_URI) as websocket:
             log.info("hub_state_monitor connected to central_hub")
+            state_keys = self.subscribed_keys if self.subscribed_keys != "*" else None
             self.connected_socket = websocket
             await messages.send_identity(websocket, self.identity)
             await messages.send_subscribe(websocket, self.subscribed_keys)
-            await messages.send_get_state(websocket, self.subscribed_keys)
+            await messages.send_get_state(websocket, state_keys)
             yield websocket
 
-    async def parse_next_message(self, websocket: websockets.WebSocketClientProtocol) -> AsyncGenerator[tuple[str, dict], None]:
+    async def parse_next_message(
+        self, websocket: WebSocketClientProtocol
+    ) -> AsyncGenerator[tuple[str, dict], None]:
         """
         generator function to parse the next central_hub message from the websocket
         """

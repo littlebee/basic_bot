@@ -10,24 +10,25 @@ from typing import Optional
 from basic_bot.commons import log, constants as c
 
 if c.BB_ENV == "production":
-    from board import SCL, SDA
-    import busio
+    from board import SCL, SDA  # type: ignore
+    import busio  # type: ignore
 
     # Import the PCA9685 module. Available in the bundle and here:
     #   https://github.com/adafruit/Adafruit_CircuitPython_PCA9685
-    from adafruit_pca9685 import PCA9685
-    from adafruit_motor import servo as servo_af
+    from adafruit_pca9685 import PCA9685  # type: ignore
+    from adafruit_motor import servo as servo_af  # type: ignore
 
     i2c = busio.I2C(SCL, SDA)
     pca = PCA9685(i2c)
     pca.frequency = 50
+
 else:
     log.info(f"commons.Servo running in {c.BB_ENV} mode.  Using mock servo libs")
 
-    class pca:
+    class pca:  # type: ignore
         channels = [i for i in range(16)]
 
-    class servo_af:
+    class servo_af:  # type: ignore
         class Servo:
             def __init__(self, channel, min_pulse=500, max_pulse=2500):
                 self.channel = channel
@@ -66,18 +67,26 @@ class Servo:
     down the movement.  The thread can be paused and resumed.
     """
 
-    def __init__(self, motor_channel: int, motor_range: Optional[int], min_angle: Optional[float], max_angle: Optional[float]) -> None:
-        self.thread: Optional[threading.Thread] = None  # background thread that steps motor to destination
+    def __init__(
+        self,
+        motor_channel: int,
+        motor_range: int = 180,
+        min_angle: int = 0,
+        max_angle: int = 180,
+    ) -> None:
+        # background thread that steps motor to destination
+        self.thread: Optional[threading.Thread] = None
+
         self.pause_event = threading.Event()
         self.stopped_event = threading.Event()
         self.force_stop = False
         self._step_delay = DEFAULT_STEP_DELAY
 
         self.motor_channel = motor_channel
-        self.motor_range = motor_range or 180
-        self.min_angle = min_angle or 0
-        self.max_angle = max_angle or self.motor_range
-        self.mid_angle = min_angle + ((max_angle - min_angle) / 2)
+        self.motor_range = motor_range
+        self.min_angle = min_angle
+        self.max_angle = min(max_angle, self.motor_range)
+        self.mid_angle = self.min_angle + ((self.max_angle - self.min_angle) / 2)
         self.destination_angle = self.mid_angle
 
         self.servo = servo_af.Servo(

@@ -10,9 +10,10 @@ the video feed to stream at 30fps while detect frames lag behind
 import time
 import threading
 import asyncio
-import websockets
+import websockets.client as websockets
 import traceback
-from typing import Any, List, Dict
+
+from typing import Any, List, Dict, Optional
 
 from basic_bot.commons import constants, messages, log
 from basic_bot.commons.fps_stats import FpsStats
@@ -31,7 +32,9 @@ WHICH_DETECTOR = "tflite"
 
 
 class RecognitionProvider:
-    thread: threading.Thread = None  # background thread that reads frames from camera
+    thread: Optional[threading.Thread] = (
+        None  # background thread that reads frames from camera
+    )
     camera: Any = None
     last_objects_seen: List[Dict[str, Any]] = []
     fps_stats: FpsStats = FpsStats()

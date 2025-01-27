@@ -28,7 +28,7 @@ def connect(identity: Optional[str] = None) -> websocket.WebSocket:
 
 def send(ws: websocket.WebSocket, dict: Dict[str, Any]) -> None:
     """send dictionary as json to central hub"""
-    return ws.send(json.dumps(dict))
+    ws.send(json.dumps(dict))
 
 
 def send_get_state(ws: websocket.WebSocket, namesList: List[str]) -> None:

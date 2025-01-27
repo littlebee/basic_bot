@@ -3,7 +3,7 @@ import json
 import asyncio
 import websockets
 import traceback
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 from websockets.server import WebSocketServerProtocol
 
@@ -45,7 +45,7 @@ def iseeu_message(websocket: WebSocketServerProtocol) -> str:
     )
 
 
-async def send_message(websocket: Union[WebSocketServerProtocol, str], message: str) -> None:
+async def send_message(websocket: WebSocketServerProtocol, message: str) -> None:
     if constants.BB_LOG_ALL_MESSAGES and message != '{"type": "pong"}':
         log.info(
             f"sending {message} to {websocket.remote_address[0]}:{websocket.remote_address[1]}"
@@ -98,10 +98,13 @@ async def send_state_update_to_subscribers(message_data: Dict[str, Any]) -> None
     for socket in sockets_to_close:
         log.info(f"relay error: closing socket {socket.remote_address[1]}")
         await unregister(socket)
-        socket.close()
+        await socket.close()
 
 
-async def notify_state(websocket: Union[WebSocketServerProtocol, str] = "all", keysRequested: Optional[List[str]] = None) -> None:
+async def notify_state(
+    websocket: WebSocketServerProtocol,
+    keysRequested: Optional[List[str]] = None,
+) -> None:
     await send_message(websocket, hub_state.serialize_state(keysRequested))
 
 
@@ -140,13 +143,15 @@ async def unregister(websocket: WebSocketServerProtocol) -> None:
         for key in subscribers:
             subscribers[key].remove(websocket)
         subsystem_name = identities.pop(websocket, None)
-
-        await update_online_status(subsystem_name, 0)
+        if subsystem_name:
+            await update_online_status(subsystem_name, 0)
     except:
         pass
 
 
-async def handle_state_request(websocket: WebSocketServerProtocol, keysRequested: Optional[List[str]] = None) -> None:
+async def handle_state_request(
+    websocket: WebSocketServerProtocol, keysRequested: Optional[List[str]] = None
+) -> None:
     await notify_state(websocket, keysRequested)
 
 
@@ -161,7 +166,9 @@ async def handle_state_update(message_data: Dict[str, Any]) -> None:
     await send_state_update_to_subscribers(message_data)
 
 
-async def handle_state_subscribe(websocket: WebSocketServerProtocol, data: Union[str, List[str]]) -> None:
+async def handle_state_subscribe(
+    websocket: WebSocketServerProtocol, data: List[str]
+) -> None:
     global subscribers
     subscription_keys: List[str] = []
     if data == "*":
@@ -183,7 +190,9 @@ async def handle_state_subscribe(websocket: WebSocketServerProtocol, data: Union
         socket_set.add(websocket)
 
 
-async def handle_state_unsubscribe(websocket: WebSocketServerProtocol, data: Union[str, List[str]]) -> None:
+async def handle_state_unsubscribe(
+    websocket: WebSocketServerProtocol, data: List[str]
+) -> None:
     global subscribers
     subscription_keys: List[str] = []
     if data == "*":
@@ -196,7 +205,9 @@ async def handle_state_unsubscribe(websocket: WebSocketServerProtocol, data: Uni
             subscribers[key].remove(websocket)
 
 
-async def handle_identity(websocket: WebSocketServerProtocol, subsystem_name: str) -> None:
+async def handle_identity(
+    websocket: WebSocketServerProtocol, subsystem_name: str
+) -> None:
     identities[websocket] = subsystem_name
     log.info(f"setting identity of {websocket.remote_address[1]} to {subsystem_name}")
     await update_online_status(subsystem_name, 1)
@@ -212,7 +223,7 @@ async def handle_message(websocket: WebSocketServerProtocol) -> None:
     try:
         async for message in websocket:
             if constants.BB_LOG_ALL_MESSAGES and message != {"type": "ping"}:
-                log.info(f"received {message} from {websocket.remote_address[1]}")
+                log.info(f"received {str(message)} from {websocket.remote_address[1]}")
 
             jsonData = json.loads(message)
             messageType = jsonData.get("type")
@@ -236,7 +247,7 @@ async def handle_message(websocket: WebSocketServerProtocol) -> None:
             elif messageType == "ping":
                 await handle_ping(websocket)
             else:
-                log.error("received unsupported message: %s", messageType)
+                log.error(f"received unsupported message: {messageType}")
 
             if constants.BB_LOG_ALL_MESSAGES and messageType != "ping":
                 log.info(f"getting next message for {websocket.remote_address[1]}")
@@ -264,7 +275,8 @@ async def main() -> None:
     log.info("Loading persisted state")
     hub_state.init_persisted_state()
     log.info(f"Starting server on port {constants.BB_HUB_PORT}")
-    async with websockets.serve(handle_message, port=constants.BB_HUB_PORT):
+    # TODO : figure out why the type error below
+    async with websockets.serve(handle_message, port=constants.BB_HUB_PORT):  # type: ignore
         # log.info("Starting hub stats task")
         # await send_hub_stats_task()
         await persist_state_task()

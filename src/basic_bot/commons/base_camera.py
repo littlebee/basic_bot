@@ -11,17 +11,17 @@ Thank you, @adeept and @miguelgrinberg!
 import time
 import threading
 import logging
-from typing import Generator, Optional
+from typing import Generator, Optional, List
 
 from basic_bot.commons.fps_stats import FpsStats
 
 logger = logging.getLogger(__name__)
 
 try:
-    from greenlet import getcurrent as get_ident
+    from greenlet import getcurrent as get_ident  # type: ignore
 except ImportError:
     try:
-        from thread import get_ident
+        from thread import get_ident  # type: ignore
     except ImportError:
         from _thread import get_ident
 
@@ -32,7 +32,8 @@ class CameraEvent(object):
     """
 
     def __init__(self) -> None:
-        self.events: dict[int, list[threading.Event, float]] = {}
+        # TODO : figure out the type error below
+        self.events: dict[int, List[threading.Event, float]] = {}  # type: ignore
 
     def wait(self) -> bool:
         """Invoked from each client's thread to wait for the next frame."""
@@ -70,7 +71,9 @@ class CameraEvent(object):
 
 
 class BaseCamera(object):
-    thread: Optional[threading.Thread] = None  # background thread that reads frames from camera
+    thread: Optional[threading.Thread] = (
+        None  # background thread that reads frames from camera
+    )
     frame: Optional[bytes] = None  # current frame is stored here by background thread
 
     event = CameraEvent()

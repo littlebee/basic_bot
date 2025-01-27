@@ -57,7 +57,7 @@ from basic_bot.commons import constants as c, web_utils, log
 from basic_bot.commons.base_camera import BaseCamera
 from basic_bot.commons.camera_opencv import OpenCvCamera
 from basic_bot.commons.recognition_provider import RecognitionProvider
-from typing import Generator, Optional
+from typing import Generator
 
 
 app = Flask(__name__)

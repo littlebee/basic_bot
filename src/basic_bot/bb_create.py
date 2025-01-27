@@ -34,6 +34,7 @@ def build_and_test(target_project_dir: str) -> None:
     os.system("./test.sh")
 
 
+# Note: # main itself can't take arguments.  see, https://setuptools.pypa.io/en/latest/userguide/entry_point.html
 def main() -> None:
     if os.path.exists(target_project_dir):
         print(

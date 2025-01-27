@@ -41,7 +41,9 @@ class OpenCvCamera(BaseCamera):
         camera.set(cv2.CAP_PROP_FRAME_WIDTH, c.BB_VISION_WIDTH)
         camera.set(cv2.CAP_PROP_FRAME_HEIGHT, c.BB_VISION_HEIGHT)
         camera.set(cv2.CAP_PROP_FPS, c.BB_CAMERA_FPS)
-        camera.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc("M", "J", "P", "G"))
+
+        fourcc = cv2.VideoWriter_fourcc("M", "J", "P", "G")  # type: ignore
+        camera.set(cv2.CAP_PROP_FOURCC, fourcc)
 
         # Doing the rotation using cv2.rotate() was a 6-7 FPS drop
         # Unfortunately, you can't set the rotation on the v4l driver

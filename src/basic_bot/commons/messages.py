@@ -1,6 +1,6 @@
 import json
 from enum import Enum
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Union, Literal
 
 from basic_bot.commons import log, constants as c
 
@@ -29,7 +29,9 @@ async def send_identity(websocket: Any, name: str) -> None:
 
 
 # subscriptionNames should be an array or "*"
-async def send_subscribe(websocket: Any, subscriptionNames: List[str]) -> None:
+async def send_subscribe(
+    websocket: Any, subscriptionNames: Union[List[str], Literal["*"]]
+) -> None:
     await send_message(
         websocket,
         {
