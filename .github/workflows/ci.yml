@@ -33,6 +33,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install build setuptools wheel
+          pip install -r requirements.txt
 
       - name: Make install-dev.sh executable
         run: chmod +x ./*.sh
