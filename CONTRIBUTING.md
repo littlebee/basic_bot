@@ -1,4 +1,14 @@
 
+First need to install build and test dependencies:
+```sh
+pip install -r requirements.txt
+```
+
+Install mypy types:
+```sh
+mypy --install-types
+```
+
 
 To build:
 ```sh
@@ -9,6 +19,9 @@ To install as editable for dev testing without having to reinstall between chang
 ```sh
 pip install --editable .
 ```
+
+Install the dependencies for testing
+
 
 Run the main test.sh script from the project root dir:
 ```sh

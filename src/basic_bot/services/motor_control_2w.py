@@ -31,11 +31,13 @@ import json
 import asyncio
 import traceback
 import websockets
+from websockets.client import WebSocketClientProtocol
+import websockets.client
 
 from basic_bot.commons import constants as c, messages, log
 
 if c.BB_ENV == "production":
-    from adafruit_motorkit import MotorKit
+    from adafruit_motorkit import MotorKit  # type: ignore
 
     kit = MotorKit(c.BB_MOTOR_I2C_ADDRESS)
     motors = [kit.motor1, kit.motor2, kit.motor3, kit.motor4]
@@ -55,7 +57,7 @@ else:
     right_motor = Motor()
 
 
-async def send_motor_state(websocket):
+async def send_motor_state(websocket: WebSocketClientProtocol) -> None:
     await messages.send_update_state(
         websocket,
         {
@@ -67,11 +69,11 @@ async def send_motor_state(websocket):
     )
 
 
-async def provide_state():
+async def provide_state() -> None:
     while True:
         try:
             log.info(f"connecting to {c.BB_HUB_URI}")
-            async with websockets.connect(c.BB_HUB_URI) as websocket:
+            async with websockets.client.connect(c.BB_HUB_URI) as websocket:
                 # reset motors incase of restart due to crash
                 left_motor.throttle = 0
                 right_motor.throttle = 0
@@ -80,7 +82,7 @@ async def provide_state():
                 await messages.send_subscribe(websocket, ["throttles"])
                 async for message in websocket:
                     if c.BB_LOG_ALL_MESSAGES:  # log all messages except pongs
-                        log.info(f"received from central hub:  {message}")
+                        log.info(f"received from central hub: {str(message)}")
 
                     data = json.loads(message)
                     message_data = data.get("data")
@@ -107,7 +109,7 @@ async def provide_state():
         time.sleep(5)
 
 
-def main():
+def main() -> None:
     asyncio.run(provide_state())
 
 

@@ -57,6 +57,7 @@ from basic_bot.commons import constants as c, web_utils, log
 from basic_bot.commons.base_camera import BaseCamera
 from basic_bot.commons.camera_opencv import OpenCvCamera
 from basic_bot.commons.recognition_provider import RecognitionProvider
+from typing import Generator
 
 
 app = Flask(__name__)
@@ -68,7 +69,7 @@ if not c.BB_DISABLE_RECOGNITION_PROVIDER:
     recognition = RecognitionProvider(camera)
 
 
-def gen_rgb_video(camera):
+def gen_rgb_video(camera: OpenCvCamera) -> Generator[bytes, None, None]:
     """Video streaming generator function."""
     while True:
         frame = camera.get_frame()
@@ -78,7 +79,7 @@ def gen_rgb_video(camera):
 
 
 @app.route("/video_feed")
-def video_feed():
+def video_feed() -> Response:
     """Video streaming route. Put this in the src attribute of an img tag."""
     return Response(
         gen_rgb_video(camera), mimetype="multipart/x-mixed-replace; boundary=frame"
@@ -86,7 +87,7 @@ def video_feed():
 
 
 @app.route("/stats")
-def send_stats():
+def send_stats() -> Response:
     (cpu_temp, *rest) = [
         int(i) / 1000
         for i in os.popen("cat /sys/devices/virtual/thermal/thermal_zone*/temp")
@@ -107,7 +108,7 @@ def send_stats():
 
 
 @app.route("/pauseRecognition")
-def pause_recognition():
+def pause_recognition() -> Response:
     if c.BB_DISABLE_RECOGNITION_PROVIDER:
         return abort(404, "recognition provider disabled")
 
@@ -116,7 +117,7 @@ def pause_recognition():
 
 
 @app.route("/resumeRecognition")
-def resume_recognition():
+def resume_recognition() -> Response:
     if c.BB_DISABLE_RECOGNITION_PROVIDER:
         return abort(404, "recognition provider disabled")
 
@@ -125,19 +126,19 @@ def resume_recognition():
 
 
 @app.route("/ping")
-def ping():
+def ping() -> Response:
     return web_utils.respond_ok(app, "pong")
 
 
 class webapp:
-    def __init__(self):
+    def __init__(self) -> None:
         self.camera = camera
 
-    def thread(self):
+    def thread(self) -> None:
         log.info(f"starting vision webhost on {c.BB_VISION_PORT}")
         app.run(host="0.0.0.0", port=c.BB_VISION_PORT, threaded=True)
 
-    def start_thread(self):
+    def start_thread(self) -> None:
         # Define a thread for flask
         thread = threading.Thread(target=self.thread)
         #    'True' means it is a front thread, it would close when the mainloop() closes
@@ -145,7 +146,7 @@ class webapp:
         thread.start()  # Thread starts
 
 
-def main():
+def main() -> None:
     flask_app = webapp()
     flask_app.start_thread()
 

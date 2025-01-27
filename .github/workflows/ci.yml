@@ -33,11 +33,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install build setuptools wheel
+          pip install -r requirements.txt
+          chmod +x ./*.sh
 
-      - name: Make install-dev.sh executable
-        run: chmod +x ./*.sh
-
-      - name: Run install-dev.sh
+        # this also runs build.sh which in turn runs mypy
+      - name: Run build and install
         run: ./install-dev.sh
 
       - name: Run tests

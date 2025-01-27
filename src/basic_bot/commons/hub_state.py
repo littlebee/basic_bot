@@ -29,7 +29,7 @@ class HubState:
         self.persisted_state_keys = persisted_state_keys
         self.init_persisted_state()
 
-    def get(self, keys_requested: List[str]) -> str:
+    def get(self, keys_requested: List[str]) -> Dict[str, Any]:
         requested_state = None
         if keys_requested:
             requested_state = {
@@ -64,7 +64,7 @@ class HubState:
     def serialize_state(self, keys_requested: Optional[List[str]] = None) -> str:
         """Serialize the current state to JSON."""
 
-        keys_requested = keys_requested or self.state.keys()
+        keys_requested = keys_requested or list(self.state.keys())
         requested_state = self.state
         if keys_requested:
             requested_state = {

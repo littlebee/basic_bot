@@ -5,28 +5,30 @@ import sys
 import time
 import threading
 import traceback
+from typing import Optional
 
 from basic_bot.commons import log, constants as c
 
 if c.BB_ENV == "production":
-    from board import SCL, SDA
-    import busio
+    from board import SCL, SDA  # type: ignore
+    import busio  # type: ignore
 
     # Import the PCA9685 module. Available in the bundle and here:
     #   https://github.com/adafruit/Adafruit_CircuitPython_PCA9685
-    from adafruit_pca9685 import PCA9685
-    from adafruit_motor import servo as servo_af
+    from adafruit_pca9685 import PCA9685  # type: ignore
+    from adafruit_motor import servo as servo_af  # type: ignore
 
     i2c = busio.I2C(SCL, SDA)
     pca = PCA9685(i2c)
     pca.frequency = 50
+
 else:
     log.info(f"commons.Servo running in {c.BB_ENV} mode.  Using mock servo libs")
 
-    class pca:
+    class pca:  # type: ignore
         channels = [i for i in range(16)]
 
-    class servo_af:
+    class servo_af:  # type: ignore
         class Servo:
             def __init__(self, channel, min_pulse=500, max_pulse=2500):
                 self.channel = channel
@@ -47,7 +49,7 @@ DEFAULT_STEP_DELAY = 0.0001
 SERVO_PRECISION = 0.5
 
 
-def limit_angle(angle, min_angle, max_angle):
+def limit_angle(angle: float, min_angle: float, max_angle: float) -> float:
     limited_angle = angle
     if angle < min_angle:
         limited_angle = min_angle
@@ -65,18 +67,26 @@ class Servo:
     down the movement.  The thread can be paused and resumed.
     """
 
-    def __init__(self, motor_channel, motor_range, min_angle, max_angle):
-        self.thread = None  # background thread that steps motor to destination
+    def __init__(
+        self,
+        motor_channel: int,
+        motor_range: int = 180,
+        min_angle: int = 0,
+        max_angle: int = 180,
+    ) -> None:
+        # background thread that steps motor to destination
+        self.thread: Optional[threading.Thread] = None
+
         self.pause_event = threading.Event()
         self.stopped_event = threading.Event()
         self.force_stop = False
         self._step_delay = DEFAULT_STEP_DELAY
 
         self.motor_channel = motor_channel
-        self.motor_range = motor_range or 180
-        self.min_angle = min_angle or 0
-        self.max_angle = max_angle or self.motor_range
-        self.mid_angle = min_angle + ((max_angle - min_angle) / 2)
+        self.motor_range = motor_range
+        self.min_angle = min_angle
+        self.max_angle = min(max_angle, self.motor_range)
+        self.mid_angle = self.min_angle + ((self.max_angle - self.min_angle) / 2)
         self.destination_angle = self.mid_angle
 
         self.servo = servo_af.Servo(
@@ -93,7 +103,7 @@ class Servo:
         self.thread.start()
 
     @property
-    def current_angle(self):
+    def current_angle(self) -> float:
         try:
             return self.servo.fraction * self.motor_range
         except OSError as error:
@@ -104,14 +114,14 @@ class Servo:
             return self.destination_angle
 
     @property
-    def step_delay(self):
+    def step_delay(self) -> float:
         return self._step_delay
 
     @step_delay.setter
-    def step_delay(self, value):
+    def step_delay(self, value: float) -> None:
         self._step_delay = value
 
-    def move_to(self, angle):
+    def move_to(self, angle: float) -> None:
         new_angle = limit_angle(angle, self.min_angle, self.max_angle)
         if DEBUG_MOTORS:
             log.info(
@@ -129,26 +139,26 @@ class Servo:
         self.stopped_event.clear()
         self.resume()
 
-    def pause(self):
+    def pause(self) -> None:
         self.pause_event.clear()
 
-    def resume(self):
+    def resume(self) -> None:
         self.pause_event.set()
 
-    def stop_thread(self):
+    def stop_thread(self) -> None:
         self.stopped_event.set()
         self.force_stop = True
         # thread could be waiting on pause_event, resume to quit
         self.resume()
 
-    def wait_for_motor_stopped(self):
+    def wait_for_motor_stopped(self) -> None:
         if DEBUG_MOTORS:
             log.info(f"waiting on stopped event on channel {self.motor_channel}")
         self.stopped_event.wait()
         if DEBUG_MOTORS:
             log.info(f"after wait: {self.motor_channel} {self.stopped_event.is_set()}")
 
-    def _thread(self):
+    def _thread(self) -> None:
         log.info(f"Starting servo movement thread. {self.current_angle}")
         self.started_at = time.time()
 
@@ -180,7 +190,7 @@ class Servo:
 
         log.info("servo thread exit on channel={self.motor_channel}")
 
-    def _step_move(self, direction):
+    def _step_move(self, direction: int) -> bool:
         """direction = -1 = left; 1 = right.  returns true if did move"""
         try:
             would_overshoot = self._step_would_overshoot_dest(direction)
@@ -210,7 +220,7 @@ class Servo:
             )
             return False
 
-    def _step_would_overshoot_dest(self, direction):
+    def _step_would_overshoot_dest(self, direction: int) -> bool:
         current_angle = self.current_angle
         new_angle = current_angle + STEP_DEGREES * direction
         return (direction == -1 and new_angle < self.destination_angle) or (
