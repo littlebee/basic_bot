@@ -1,2 +1,4 @@
 pytest
 mypy
+types-Flask-Cors
+types-psutil

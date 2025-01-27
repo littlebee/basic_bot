@@ -34,7 +34,6 @@ jobs:
         run: |
           pip install build setuptools wheel
           pip install -r requirements.txt
-          mypy --install-types src/basic_bot
 
       - name: Make install-dev.sh executable
         run: chmod +x ./*.sh
