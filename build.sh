@@ -10,8 +10,10 @@ rm -Rf src/basic_bot/created_files/webapp/package-lock.json
 set -e
 
 echo "Running mypy $(mypy --version)"
-# run type checking
-mypy src/basic_bot
+
+# run type checking without missing imports because when we
+# run the install, it will install the missing imports
+mypy --ignore-missing-imports src/basic_bot
 
 echo "Building package"
 python3 -m build
