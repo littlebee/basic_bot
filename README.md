@@ -11,7 +11,10 @@ A Python centric, basic robotics platform providing
 
 ### Updates
 
-January 20th, 2025 - Basic working central_hub and web_server services merged.  Working on adding basic motor controller service similar to Scatbot.
+20250127 - It can see! Working basic_bot.services.vision_cv service that uses open cv2 and tensorflow lite.  Still trying to decide what else is needed in the beta version - support for GPIO in?  Doing this in parallel with implementing the first working example of using basic_bot - [daphbot-due](https://github.com/littlebee/daphbot-due) 
+
+
+20250120 - Basic working central_hub and web_server services merged.  Working on adding basic motor controller service similar to Scatbot.
 
 ## Getting Started
 On your development computer (not your bot's onboard computer; see later in this doc)
@@ -25,10 +28,10 @@ The above commands will
  - create a project directory named `my_new_robot_project` and cd to it
  - add files for the basic shell of a webapp
  - add test of webapp
- - add files for example service that just increments a counter
+ - add files for example service that increments a counter
  - add test for example service
- - add start.sh, stop.sh, upload.sh scripts to my_new_robot_project/
- - add build.sh and test.sh scripts to my_new_robot_project/
+ - add start.sh, stop.sh, upload.sh scripts to my_new_project_dir/
+ - add build.sh and test.sh scripts to my_new_project_dir/
  - run build.sh and test.sh scripts
 
  After `bb_create` finishes you should be able to
@@ -38,13 +41,31 @@ The above commands will
 
 ### Everything created is yours to edit
 
-`bb_create` is single use per project and will not overwrite existing directory.
+`bb_create` is single use per project and will not overwrite an existing directory.
 
-The created app should run on any OS supported by Python >= 3.9 with a Posix compliant shell.  I've tested this assertion on macOS >= 14.7 and on Raspberry PI 4 with Raspian Bullseye.
+The created app should run on any OS supported by Python >= 3.9 with a Posix compliant shell.  I've tested this assertion on macOS >= 14.7 and on Raspberry PI 4 with Raspian Bullseye.  Additionally, the CI/CD test system for this project validates that everything works on `ubuntu-latest`.  
 
-To build and use the created `./webapp` example, you will need to have Node.js >= v20.18 and `npm` needs to be in your path.
+Python >= 3.9 is required.  It's also a good idea to make sure `python` and `pip` commands are pointing to the correct version (3.9) if you are using a virtual environment like Anaconda or Miniconda. 
+
+To build and use the created `./webapp` example, you must have Node.js >= v20.18, and `npm` needs to be in your path.
 
 From there, check out the .sh files in the root of my_new_robot_project.  Commands to build, start in the background, run integration tests for the Python example "worthless_counter" service, and run example integration test.
+
+# Kicking the tires locally
+You can start the services locally in the background (from your project root dir on dev machine):
+```sh
+./start.sh
+```
+... which will start all services in the `services.cfg` file.  Each service runs in as a process.  
+
+You can start a hot development web server that will show your changes to the webapp/ code in near real time most of the time :).
+```
+cd webapp
+npm run dev
+```
+
+For more information about hacking on the code, running tests, and debugging, see [CONTRIBUTING.md](https://github.com/littlebee/basic_bot/blob/main/CONTRIBUTING.md).
+
 
 ### Upload to your robot
 
