@@ -42,4 +42,6 @@ rsync --progress --partial \
 --exclude=__pycache__ \
 --exclude=.pytest_cache \
 --exclude=.git \
+--exclude=.vscode \
+--exclude=.mypy_cache \
 -avz . $target_host:$target_dir
