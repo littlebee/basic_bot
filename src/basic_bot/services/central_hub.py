@@ -19,7 +19,6 @@ hub_state = HubState(
         # which subsystems are online and have indentified themselves
         "subsystem_stats": {},
     },
-    [],
 )
 
 # these are all of the client sockets that are connected to the hub
@@ -266,22 +265,12 @@ async def handle_message(websocket: WebSocketServerProtocol) -> None:
         await websocket.close()
 
 
-async def persist_state_task() -> None:
-
-    while True:
-        hub_state.persist_state()
-        await asyncio.sleep(1)
-
-
 async def main() -> None:
-    log.info("Loading persisted state")
-    hub_state.init_persisted_state()
     log.info(f"Starting server on port {constants.BB_HUB_PORT}")
     # TODO : figure out why the type error below
     async with websockets.serve(handle_message, port=constants.BB_HUB_PORT):  # type: ignore
         # log.info("Starting hub stats task")
         # await send_hub_stats_task()
-        await persist_state_task()
         await asyncio.Future()  # run forever
 
 

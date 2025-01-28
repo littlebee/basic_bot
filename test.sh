@@ -2,6 +2,9 @@
 
 set -e
 
+echo "\n Running unit tests...\n"
+pytest -v tests/unit_tests/
+
 echo "\n Running integration tests...\n"
 pytest -v tests/integration_tests/
 
