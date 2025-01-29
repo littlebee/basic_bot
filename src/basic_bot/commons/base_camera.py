@@ -2,8 +2,8 @@
 This was originally pilfered from
 https://github.com/adeept/Adeept_RaspTank/blob/a6c45e8cc7df620ad8977845eda2b839647d5a83/server/base_camera.py
 
- Which looks like it was in turn pilfered from
- https://blog.miguelgrinberg.com/post/flask-video-streaming-revisited
+Which looks like it was in turn pilfered from
+https://blog.miguelgrinberg.com/post/flask-video-streaming-revisited
 
 Thank you, @adeept and @miguelgrinberg!
 """
@@ -27,7 +27,8 @@ except ImportError:
 
 
 class CameraEvent(object):
-    """An Event-like class that signals all active clients when a new frame is
+    """
+    An Event-like class that signals all active clients when a new frame is
     available.
     """
 
@@ -71,6 +72,12 @@ class CameraEvent(object):
 
 
 class BaseCamera(object):
+    """
+    BaseCamera is an abstract base class that for camera implementations.  It
+    creates a background thread that reads frames from the camera and signals
+    when a new frame is available.
+    """
+
     thread: Optional[threading.Thread] = (
         None  # background thread that reads frames from camera
     )
@@ -105,13 +112,13 @@ class BaseCamera(object):
 
     @classmethod
     def stats(cls) -> dict[str, float]:
+        """Return the fps stats dictionary."""
         return cls.fps_stats.stats()
 
     @classmethod
     def _thread(cls) -> None:
         """Camera background thread."""
         logger.info("Starting camera thread.")
-        BaseCamera.fps_stats.start()
 
         frames_iterator = cls.frames()
         for frame in frames_iterator:

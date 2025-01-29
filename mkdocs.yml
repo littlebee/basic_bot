@@ -1,0 +1,12 @@
+site_name: basic_bot Docs
+theme:
+  name: readthedocs
+
+# markdown_extensions:
+#   - admonition
+#   - codehilite
+#   - jetblack_markdown.autodoc:
+#       ignore_all: false
+#       ignore_inherited: true
+#       prefer_docstring: true
+#       follow_module_tree: False

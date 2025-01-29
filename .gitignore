@@ -5,6 +5,12 @@
 node_modules/
 package-lock.json
 
+# generated docs see ./build-docs.py
+/docs/index.md
+/docs/services
+/docs/commons
+/docs/scripts
+
 # mac os
 .DS_Store
 

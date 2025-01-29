@@ -1,39 +1,39 @@
 #!/usr/bin/env python3
 """
-    Provide image feed and object recognition based on open-cv for the
-    video capture input.  This service will provide a list of objects
-    and their bounding boxes in the image feed via central hub
+Provide image feed and object recognition based on open-cv for the
+video capture input.  This service will provide a list of objects
+and their bounding boxes in the image feed via central hub.
 
-    A vision feed is provided via http://<ip>:<port>/video_feed that
-    can be used in an HTML 'img' element.  The image feed is a multipart
-    jpeg stream (for now; TODO: reassess this).  Assuming that the vision
-    service is running on the same host machine as the browser client
-    location, you can do something like:
-    ```html
-    <img src="http://localhost:5001/video_feed" />
-    ```
+A vision feed is provided via http://<ip>:<port>/video_feed that
+can be used in an HTML 'img' element.  The image feed is a multipart
+jpeg stream (for now; TODO: reassess this).  Assuming that the vision
+service is running on the same host machine as the browser client
+location, you can do something like:
+```html
+<img src="http://localhost:5001/video_feed" />
+```
 
-    The following data is provided to central_hug as fast as image capture and
-    recognition can be done:
+The following data is provided to central_hub as fast as image capture and
+recognition can be done:
 
-    ```json
-    {
-        "recognition": [
-            {
-                "bounding_box": [x1, y1, x2, y2],
-                "classification": "person",
-                "confidence": 0.99
-            },
-            {
-                "bounding_box": [x1, y1, x2, y2],
-                "classification": "dog",
-                "confidence": 0.75
-            }
-        ]
-    }
-    ```
-    The [x1, y1, x2, y2] bounding box above is actually sent as
-    the numeric values of the bounding box in the image.
+```json
+{
+    "recognition": [
+        {
+            "bounding_box": [x1, y1, x2, y2],
+            "classification": "person",
+            "confidence": 0.99
+        },
+        {
+            "bounding_box": [x1, y1, x2, y2],
+            "classification": "dog",
+            "confidence": 0.75
+        }
+    ]
+}
+```
+The [x1, y1, x2, y2] bounding box above is actually sent as
+the numeric values of the bounding box in the image.
 
 Origin:
     This was originally pilfered from

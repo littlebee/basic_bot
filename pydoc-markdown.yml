@@ -1,0 +1,5 @@
+
+renderer:
+  type: markdown
+  descriptive_class_title: true
+  render_toc: false

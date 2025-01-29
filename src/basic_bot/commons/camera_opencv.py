@@ -1,10 +1,5 @@
 """
- This was originally pilfered from
- https://github.com/adeept/Adeept_RaspTank/blob/a6c45e8cc7df620ad8977845eda2b839647d5a83/server/camera_opencv.py
-
- Which looks like it was in turn pilfered from
- https://blog.miguelgrinberg.com/post/flask-video-streaming-revisited
-
+An implemation of BaseCamera using OpenCV.
 """
 
 import os
@@ -16,6 +11,20 @@ from basic_bot.commons.base_camera import BaseCamera
 
 
 class OpenCvCamera(BaseCamera):
+    """
+    This class implements the BaseCamera interface using OpenCV.
+
+    Usage:
+
+    ```python
+    camera = OpenCvCamera()
+    # get_frame() is from BaseCamera and returns a single frame
+    frame = camera.get_frame()
+    # you can then used the fame for example:
+    jpeg = cv2.imencode(".jpg", frame)[1].tobytes()
+    ```
+    """
+
     video_source: int = 0
     img_is_none_messaged: bool = False
 
@@ -30,6 +39,9 @@ class OpenCvCamera(BaseCamera):
 
     @staticmethod
     def frames() -> Generator[bytes, None, None]:
+        """
+        Generator function that yields frames from the camera. Required by BaseCamera
+        """
         log.info("initializing VideoCapture")
 
         camera = cv2.VideoCapture(

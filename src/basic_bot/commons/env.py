@@ -18,11 +18,13 @@ from typing import cast
 
 
 def env_string(name: str, default: str) -> str:
+    """Parse environment variable as string with default value."""
     env_val = os.getenv(name) or str(default)
     return env_val
 
 
 def env_int(name: str, default: int) -> int:
+    """Parse environment variable as int with default value."""
     try:
         return int(env_string(name, cast(str, default)))
     except:
@@ -30,6 +32,7 @@ def env_int(name: str, default: int) -> int:
 
 
 def env_float(name: str, default: float) -> float:
+    """Parse environment variable as float with default value."""
     try:
         return float(env_string(name, cast(str, default)))
     except:
@@ -37,6 +40,7 @@ def env_float(name: str, default: float) -> float:
 
 
 def env_bool(name: str, default: bool) -> bool:
+    """Parse environment variable as bool with default value."""
     value = env_string(name, cast(str, default)).lower()
     if value in ("true", "1"):
         return True

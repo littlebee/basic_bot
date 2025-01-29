@@ -12,6 +12,37 @@ class PersistState:
     def __init__(
         self, hub_state: HubState, file_path: str, persisted_state_keys: List[str]
     ) -> None:
+        """
+        Initialize the PersistState object and load the persisted state from
+        the file if it exists.
+
+        Args:
+
+        - hub_state: the hub state object instance to persist
+        - file_path: the file path to persist the state to
+        - persisted_state_keys: the keys to persist to the file
+
+        Usage:
+
+        ```python
+        from basic_bot.commons.hub_state import HubState
+        from basic_bot.commons.persist_state import PersistState
+
+        # initialize the hub state
+        hub_state = HubState({
+            "test_key": "test_value",
+            "some_other_key": "some_other_value"
+        })
+
+        # hub_state will be updated with the persisted state if the file exists
+        persist = PersistState(hub_state, "./my_service_persisted.json", ["test_key"])
+
+        # ... do something that updates the hub_state
+
+        persist.persist_state()
+
+        ```
+        """
         self.hub_state = hub_state
         self.persisted_state_keys = persisted_state_keys
         self.file_path = file_path

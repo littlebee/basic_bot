@@ -1,11 +1,3 @@
-"""
-This class updates the local copy of the hub state as subscribed keys are changed.
-
-A thread is created to listen for state updates from the central hub.
-When a state update is received, the local state is updated and the
-state_updated_at timestamp is updated.
-"""
-
 import threading
 import asyncio
 import websockets
@@ -35,6 +27,18 @@ class HubStateMonitor:
     callback is provided or the value it returns.  To alter the state you should
     alway send an `updateState` message to the central hub.
 
+    Usage:
+    ```python
+    from basic_bot.commons.hub_state import HubState
+    from basic_bot.commons.hub_state_monitor import HubStateMonitor
+
+    hub_state = HubState({"test_key": "test_value"})
+    monitor = HubStateMonitor(hub_state, "test_identity", ["test_key"])
+    monitor.start()
+    ```
+
+    For a more complex example using callbacks, see [usage in daphbot example - daphbot_service](https://github.com/littlebee/daphbot-due/blob/aa7ed90d60df33009c5bd252c31fa0fb25076fad/src/daphbot_service.py#L75)
+
     """
 
     def __init__(
@@ -59,6 +63,7 @@ class HubStateMonitor:
             ]
         ] = None,
     ) -> None:
+        """Instantiate a HubStateMonitor object."""
         self.hub_state = hub_state
         self.identity = identity
         self.subscribed_keys = subscribed_keys
@@ -73,19 +78,18 @@ class HubStateMonitor:
         self.connected_socket: Optional[WebSocketClientProtocol] = None
 
     def start(self) -> None:
+        """Starts the background thread that listens for state updates and updates HubState"""
         self.running = True
         self.thread.start()
 
     def stop(self) -> None:
+        """Stops the background thread that listens for state updates and updates HubState"""
         self.running = False
 
     @asynccontextmanager
     async def connect_to_hub(
         self,
     ) -> AsyncGenerator[websockets.client.WebSocketClientProtocol, None]:
-        """
-        context manager to connect to the central hub
-        """
         log.info(f"hub_state_monitor connecting to central_hub at {c.BB_HUB_URI}")
         async with websockets.client.connect(c.BB_HUB_URI) as websocket:
             log.info("hub_state_monitor connected to central_hub")
@@ -99,9 +103,6 @@ class HubStateMonitor:
     async def parse_next_message(
         self, websocket: WebSocketClientProtocol
     ) -> AsyncGenerator[tuple[str, dict], None]:
-        """
-        generator function to parse the next central_hub message from the websocket
-        """
         log.info("parse_next_message")
         async for message in websocket:
             if not self.running:
