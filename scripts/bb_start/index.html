@@ -69,8 +69,6 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/persist_state/">persist_state</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../commons/pytorch_detect/">pytorch_detect</a>
-                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/recognition_provider/">recognition_provider</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/servo/">servo</a>
@@ -130,6 +128,15 @@
               
                 <p><a id="basic_bot.bb_start"></a></p>
 <h1 id="basic_botbb_start">basic_bot.bb_start</h1>
+<p>bb_start is a script to start services in the background. It reads a
+list of services from the 'services.cfg' file or from the command line
+arguments file.</p>
+<p>stdout and stderr are redirected to log files in the 'logs' directory.</p>
+<p>The PID of each service is written to a file in the 'pids' directory
+and used by the <code>bb_stop</code> script to stop the service.</p>
+<p>Usage:</p>
+<pre><code>bb_start [service] [service] [...]
+</code></pre>
               
             </div>
           </div><footer>

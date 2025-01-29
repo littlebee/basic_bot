@@ -59,6 +59,14 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">fps_stats</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#fpsstats-objects">FpsStats Objects</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#increment">increment</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#stats">stats</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../hub_state/">hub_state</a>
@@ -70,8 +78,6 @@
                   <li class="toctree-l1"><a class="reference internal" href="../messages/">messages</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../persist_state/">persist_state</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../pytorch_detect/">pytorch_detect</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../recognition_provider/">recognition_provider</a>
                   </li>
@@ -130,7 +136,23 @@
               
                 <p><a id="basic_bot.commons.fps_stats"></a></p>
 <h1 id="basic_botcommonsfps_stats">basic_bot.commons.fps_stats</h1>
+<p><a id="basic_bot.commons.fps_stats.FpsStats"></a></p>
+<h2 id="fpsstats-objects">FpsStats Objects</h2>
+<pre><code class="language-python">class FpsStats()
+</code></pre>
 <p>FpsStats - A class to track overall and floating frames per seconds</p>
+<p>Instantiate the class to start tracking the stats. Call increment() for each frame read.
+Call stats() to get the stats.</p>
+<p><a id="basic_bot.commons.fps_stats.FpsStats.increment"></a></p>
+<h4 id="increment">increment</h4>
+<pre><code class="language-python">def increment() -&gt; None
+</code></pre>
+<p>Increment the frame count and calculate the floating fps</p>
+<p><a id="basic_bot.commons.fps_stats.FpsStats.stats"></a></p>
+<h4 id="stats">stats</h4>
+<pre><code class="language-python">def stats() -&gt; dict[str, float]
+</code></pre>
+<p>Return the stats as a dictionary</p>
               
             </div>
           </div><footer>

@@ -57,6 +57,14 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">env</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#env_string">env_string</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#env_int">env_int</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#env_float">env_float</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#env_bool">env_bool</a>
+    </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../fps_stats/">fps_stats</a>
@@ -70,8 +78,6 @@
                   <li class="toctree-l1"><a class="reference internal" href="../messages/">messages</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../persist_state/">persist_state</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../pytorch_detect/">pytorch_detect</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../recognition_provider/">recognition_provider</a>
                   </li>
@@ -139,6 +145,26 @@ MY_STRING = env.env_string(&quot;MY_STRING&quot;, &quot;default&quot;)
 MY_FLOAT = env.env_float(&quot;MY_FLOAT&quot;, 3.14)
 MY_BOOL = env.env_bool(&quot;MY_BOOL&quot;, True)
 </code></pre>
+<p><a id="basic_bot.commons.env.env_string"></a></p>
+<h4 id="env_string">env_string</h4>
+<pre><code class="language-python">def env_string(name: str, default: str) -&gt; str
+</code></pre>
+<p>Parse environment variable as string with default value.</p>
+<p><a id="basic_bot.commons.env.env_int"></a></p>
+<h4 id="env_int">env_int</h4>
+<pre><code class="language-python">def env_int(name: str, default: int) -&gt; int
+</code></pre>
+<p>Parse environment variable as int with default value.</p>
+<p><a id="basic_bot.commons.env.env_float"></a></p>
+<h4 id="env_float">env_float</h4>
+<pre><code class="language-python">def env_float(name: str, default: float) -&gt; float
+</code></pre>
+<p>Parse environment variable as float with default value.</p>
+<p><a id="basic_bot.commons.env.env_bool"></a></p>
+<h4 id="env_bool">env_bool</h4>
+<pre><code class="language-python">def env_bool(name: str, default: bool) -&gt; bool
+</code></pre>
+<p>Parse environment variable as bool with default value.</p>
               
             </div>
           </div><footer>

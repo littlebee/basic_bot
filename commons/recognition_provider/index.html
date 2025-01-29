@@ -69,10 +69,24 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../persist_state/">persist_state</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../pytorch_detect/">pytorch_detect</a>
-                  </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">recognition_provider</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#recognitionprovider-objects">RecognitionProvider Objects</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#__init__">__init__</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get_objects">get_objects</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get_next_objects">get_next_objects</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#pause">pause</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#resume">resume</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#stats">stats</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../servo/">servo</a>
@@ -130,16 +144,58 @@
               
                 <p><a id="basic_bot.commons.recognition_provider"></a></p>
 <h1 id="basic_botcommonsrecognition_provider">basic_bot.commons.recognition_provider</h1>
-<p>This class detects objects in frames it gets from the  camera object passed to
+<p><a id="basic_bot.commons.recognition_provider.RecognitionProvider"></a></p>
+<h2 id="recognitionprovider-objects">RecognitionProvider Objects</h2>
+<pre><code class="language-python">class RecognitionProvider()
+</code></pre>
+<p>This class detects objects in frames it gets from the camera object passed to
 the constructor.</p>
-<p>A thread is created that does the heavy lifting of detecting objects and updates
-a class var that contains the last faces detected. This allows the thread providing
-the video feed to stream at 30fps while detect frames lag behind</p>
+<p>It uses the TFLiteDetect class to detect objects in the frames.</p>
+<p>It sends the detected objects to the central hub via a websocket connection
+using the <code>recognition</code> key</p>
+<p>To use, simply instantiate it:</p>
+<pre><code class="language-python">from basic_bot.commons.recognition_provider import RecognitionProvider
+from basic_bot.commons.camera_opencv import OpenCvCamera
+
+camera = OpenCvCamera()
+recognition_provider = RecognitionProvider(camera)
+</code></pre>
+<p><a id="basic_bot.commons.recognition_provider.RecognitionProvider.__init__"></a></p>
+<h4 id="__init__">__init__</h4>
+<pre><code class="language-python">def __init__(camera: Any) -&gt; None
+</code></pre>
+<p>Constructor</p>
+<p><a id="basic_bot.commons.recognition_provider.RecognitionProvider.get_objects"></a></p>
+<h4 id="get_objects">get_objects</h4>
+<pre><code class="language-python">def get_objects() -&gt; List[Dict[str, Any]]
+</code></pre>
+<p>Return the last objects seen</p>
+<p><a id="basic_bot.commons.recognition_provider.RecognitionProvider.get_next_objects"></a></p>
+<h4 id="get_next_objects">get_next_objects</h4>
+<pre><code class="language-python">def get_next_objects() -&gt; List[Dict[str, Any]]
+</code></pre>
+<p>Wait for and return the next objects seen</p>
+<p><a id="basic_bot.commons.recognition_provider.RecognitionProvider.pause"></a></p>
+<h4 id="pause">pause</h4>
+<pre><code class="language-python">def pause() -&gt; None
+</code></pre>
+<p>Pause the recognition thread</p>
+<p><a id="basic_bot.commons.recognition_provider.RecognitionProvider.resume"></a></p>
+<h4 id="resume">resume</h4>
+<pre><code class="language-python">def resume() -&gt; None
+</code></pre>
+<p>Resume the recognition thread</p>
+<p><a id="basic_bot.commons.recognition_provider.RecognitionProvider.stats"></a></p>
+<h4 id="stats">stats</h4>
+<pre><code class="language-python">@classmethod
+def stats(cls) -&gt; Dict[str, Any]
+</code></pre>
+<p>Return the fps stats dictionary.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../pytorch_detect/" class="btn btn-neutral float-left" title="pytorch_detect"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../persist_state/" class="btn btn-neutral float-left" title="persist_state"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../servo/" class="btn btn-neutral float-right" title="servo">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -163,7 +219,7 @@ the video feed to stream at 30fps while detect frames lag behind</p>
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../pytorch_detect/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../persist_state/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../servo/" style="color: #fcfcfc">Next &raquo;</a></span>

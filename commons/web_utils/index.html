@@ -69,8 +69,6 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../persist_state/">persist_state</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../pytorch_detect/">pytorch_detect</a>
-                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../recognition_provider/">recognition_provider</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../servo/">servo</a>
@@ -79,6 +77,12 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">web_utils</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#json_response">json_response</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#respond_ok">respond_ok</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#respond_not_ok">respond_not_ok</a>
+    </li>
     </ul>
                   </li>
               </ul>
@@ -130,6 +134,22 @@
               
                 <p><a id="basic_bot.commons.web_utils"></a></p>
 <h1 id="basic_botcommonsweb_utils">basic_bot.commons.web_utils</h1>
+<p>Utility functions for handling Flask web responses and requests.</p>
+<p><a id="basic_bot.commons.web_utils.json_response"></a></p>
+<h4 id="json_response">json_response</h4>
+<pre><code class="language-python">def json_response(app, data)
+</code></pre>
+<p>Return a JSON response.</p>
+<p><a id="basic_bot.commons.web_utils.respond_ok"></a></p>
+<h4 id="respond_ok">respond_ok</h4>
+<pre><code class="language-python">def respond_ok(app, data=None)
+</code></pre>
+<p>Return a JSON response with status ok.</p>
+<p><a id="basic_bot.commons.web_utils.respond_not_ok"></a></p>
+<h4 id="respond_not_ok">respond_not_ok</h4>
+<pre><code class="language-python">def respond_not_ok(app, status, data)
+</code></pre>
+<p>Return a JSON response with status not ok.</p>
               
             </div>
           </div><footer>

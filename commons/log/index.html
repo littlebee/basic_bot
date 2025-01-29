@@ -77,8 +77,6 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../persist_state/">persist_state</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../pytorch_detect/">pytorch_detect</a>
-                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../recognition_provider/">recognition_provider</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../servo/">servo</a>
@@ -136,21 +134,26 @@
               
                 <p><a id="basic_bot.commons.log"></a></p>
 <h1 id="basic_botcommonslog">basic_bot.commons.log</h1>
+<p>Simple methods for logging messages to console with timestamps
+and "INFO", "DEBUG", "ERROR" prefixes.</p>
+<p>These methods ensure that the last message is flushed to console.</p>
+<p><code>bb_start</code>, which is used to run services in the background, will
+redirect all stdout and stderr to a log file.</p>
 <p><a id="basic_bot.commons.log.debug"></a></p>
 <h4 id="debug">debug</h4>
 <pre><code class="language-python">def debug(message: str) -&gt; None
 </code></pre>
-<p>Flush debug message to console only in development and test environments</p>
+<p>Flush DEBUG: message to console only in development and test environments</p>
 <p><a id="basic_bot.commons.log.info"></a></p>
 <h4 id="info">info</h4>
 <pre><code class="language-python">def info(message: str) -&gt; None
 </code></pre>
-<p>Flush message to console</p>
+<p>Flush INFO: message to console</p>
 <p><a id="basic_bot.commons.log.error"></a></p>
 <h4 id="error">error</h4>
 <pre><code class="language-python">def error(message: str) -&gt; None
 </code></pre>
-<p>Flush error message to console</p>
+<p>Flush ERROR: message to console</p>
               
             </div>
           </div><footer>

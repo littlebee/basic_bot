@@ -69,13 +69,31 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../persist_state/">persist_state</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../pytorch_detect/">pytorch_detect</a>
-                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../recognition_provider/">recognition_provider</a>
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">servo</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#servo-objects">Servo Objects</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#__init__">__init__</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#current_angle">current_angle</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#step_delay">step_delay</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#step_delay_1">step_delay</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#move_to">move_to</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#pause">pause</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#resume">resume</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#stop_thread">stop_thread</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#wait_for_motor_stopped">wait_for_motor_stopped</a>
+    </li>
+        </ul>
     </li>
     </ul>
                   </li>
@@ -136,10 +154,60 @@
 <h2 id="servo-objects">Servo Objects</h2>
 <pre><code class="language-python">class Servo()
 </code></pre>
-<p>The servo motors &amp; gearing for shelly-bot's neck ended up being way too
-fast and jerky.  This class uses a thread to slowly step the motor to
-the destination angle.  The step_delay can be adjusted to speed up or slow
-down the movement.  The thread can be paused and resumed.</p>
+<p>This class controls a single servo motor using the Adafruit PCA9685 servo controller.
+It uses a background thread to move the motor to a destination angle at a give
+fraction of the motor's range and thereby control the speed.</p>
+<p><a id="basic_bot.commons.servo.Servo.__init__"></a></p>
+<h4 id="__init__">__init__</h4>
+<pre><code class="language-python">def __init__(motor_channel: int,
+             motor_range: int = 180,
+             min_angle: int = 0,
+             max_angle: int = 180) -&gt; None
+</code></pre>
+<p>Constructor</p>
+<p><a id="basic_bot.commons.servo.Servo.current_angle"></a></p>
+<h4 id="current_angle">current_angle</h4>
+<pre><code class="language-python">@property
+def current_angle() -&gt; float
+</code></pre>
+<p>Returns the current angle of the servo motor</p>
+<p><a id="basic_bot.commons.servo.Servo.step_delay"></a></p>
+<h4 id="step_delay">step_delay</h4>
+<pre><code class="language-python">@property
+def step_delay() -&gt; float
+</code></pre>
+<p>Returns the current step delay</p>
+<p><a id="basic_bot.commons.servo.Servo.step_delay"></a></p>
+<h4 id="step_delay_1">step_delay</h4>
+<pre><code class="language-python">@step_delay.setter
+def step_delay(value: float) -&gt; None
+</code></pre>
+<p>Sets the step delay</p>
+<p><a id="basic_bot.commons.servo.Servo.move_to"></a></p>
+<h4 id="move_to">move_to</h4>
+<pre><code class="language-python">def move_to(angle: float) -&gt; None
+</code></pre>
+<p>Move the servo to the specified angle</p>
+<p><a id="basic_bot.commons.servo.Servo.pause"></a></p>
+<h4 id="pause">pause</h4>
+<pre><code class="language-python">def pause() -&gt; None
+</code></pre>
+<p>Pause the servo movement</p>
+<p><a id="basic_bot.commons.servo.Servo.resume"></a></p>
+<h4 id="resume">resume</h4>
+<pre><code class="language-python">def resume() -&gt; None
+</code></pre>
+<p>Resume the servo movement</p>
+<p><a id="basic_bot.commons.servo.Servo.stop_thread"></a></p>
+<h4 id="stop_thread">stop_thread</h4>
+<pre><code class="language-python">def stop_thread() -&gt; None
+</code></pre>
+<p>Stop the servo movement thread</p>
+<p><a id="basic_bot.commons.servo.Servo.wait_for_motor_stopped"></a></p>
+<h4 id="wait_for_motor_stopped">wait_for_motor_stopped</h4>
+<pre><code class="language-python">def wait_for_motor_stopped() -&gt; None
+</code></pre>
+<p>Wait for the motor to stop moving</p>
               
             </div>
           </div><footer>

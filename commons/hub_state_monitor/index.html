@@ -65,9 +65,11 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#hubstatemonitor-objects">HubStateMonitor Objects</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#connect_to_hub">connect_to_hub</a>
+    <li class="toctree-l3"><a class="reference internal" href="#__init__">__init__</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#parse_next_message">parse_next_message</a>
+    <li class="toctree-l3"><a class="reference internal" href="#start">start</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#stop">stop</a>
     </li>
         </ul>
     </li>
@@ -78,8 +80,6 @@
                   <li class="toctree-l1"><a class="reference internal" href="../messages/">messages</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../persist_state/">persist_state</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../pytorch_detect/">pytorch_detect</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../recognition_provider/">recognition_provider</a>
                   </li>
@@ -138,10 +138,6 @@
               
                 <p><a id="basic_bot.commons.hub_state_monitor"></a></p>
 <h1 id="basic_botcommonshub_state_monitor">basic_bot.commons.hub_state_monitor</h1>
-<p>This class updates the local copy of the hub state as subscribed keys are changed.</p>
-<p>A thread is created to listen for state updates from the central hub.
-When a state update is received, the local state is updated and the
-state_updated_at timestamp is updated.</p>
 <p><a id="basic_bot.commons.hub_state_monitor.HubStateMonitor"></a></p>
 <h2 id="hubstatemonitor-objects">HubStateMonitor Objects</h2>
 <pre><code class="language-python">class HubStateMonitor()
@@ -156,20 +152,46 @@ before it is applied to the local state passed via hub_state arg.</p>
 hub_state.update_state_from_message_data regardless of whether the on_state_update
 callback is provided or the value it returns.  To alter the state you should
 alway send an <code>updateState</code> message to the central hub.</p>
-<p><a id="basic_bot.commons.hub_state_monitor.HubStateMonitor.connect_to_hub"></a></p>
-<h4 id="connect_to_hub">connect_to_hub</h4>
-<pre><code class="language-python">@asynccontextmanager
-async def connect_to_hub(
-) -&gt; AsyncGenerator[websockets.client.WebSocketClientProtocol, None]
+<p>Usage:</p>
+<pre><code class="language-python">from basic_bot.commons.hub_state import HubState
+from basic_bot.commons.hub_state_monitor import HubStateMonitor
+
+hub_state = HubState({&quot;test_key&quot;: &quot;test_value&quot;})
+monitor = HubStateMonitor(hub_state, &quot;test_identity&quot;, [&quot;test_key&quot;])
+monitor.start()
 </code></pre>
-<p>context manager to connect to the central hub</p>
-<p><a id="basic_bot.commons.hub_state_monitor.HubStateMonitor.parse_next_message"></a></p>
-<h4 id="parse_next_message">parse_next_message</h4>
-<pre><code class="language-python">async def parse_next_message(
-    websocket: WebSocketClientProtocol
-) -&gt; AsyncGenerator[tuple[str, dict], None]
+<p>For a more complex example using callbacks, see <a href="https://github.com/littlebee/daphbot-due/blob/aa7ed90d60df33009c5bd252c31fa0fb25076fad/src/daphbot_service.py#L75">usage in daphbot example - daphbot_service</a></p>
+<p><a id="basic_bot.commons.hub_state_monitor.HubStateMonitor.__init__"></a></p>
+<h4 id="__init__">__init__</h4>
+<pre><code class="language-python">def __init__(
+    hub_state: HubState,
+    identity: str,
+    subscribed_keys: Union[List[str], Literal[&quot;*&quot;]],
+    on_connect: Optional[Callable[
+        [WebSocketClientProtocol],
+        None,
+    ]] = None,
+    on_state_update: Optional[Callable[
+        [
+            WebSocketClientProtocol,
+            str,
+            dict,
+        ],
+        None,
+    ]] = None
+) -&gt; None
 </code></pre>
-<p>generator function to parse the next central_hub message from the websocket</p>
+<p>Instantiate a HubStateMonitor object.</p>
+<p><a id="basic_bot.commons.hub_state_monitor.HubStateMonitor.start"></a></p>
+<h4 id="start">start</h4>
+<pre><code class="language-python">def start() -&gt; None
+</code></pre>
+<p>Starts the background thread that listens for state updates and updates HubState</p>
+<p><a id="basic_bot.commons.hub_state_monitor.HubStateMonitor.stop"></a></p>
+<h4 id="stop">stop</h4>
+<pre><code class="language-python">def stop() -&gt; None
+</code></pre>
+<p>Stops the background thread that listens for state updates and updates HubState</p>
               
             </div>
           </div><footer>

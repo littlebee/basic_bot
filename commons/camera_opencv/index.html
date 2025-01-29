@@ -53,6 +53,12 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">camera_opencv</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#opencvcamera-objects">OpenCvCamera Objects</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#frames">frames</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../constants/">constants</a>
@@ -70,8 +76,6 @@
                   <li class="toctree-l1"><a class="reference internal" href="../messages/">messages</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../persist_state/">persist_state</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../pytorch_detect/">pytorch_detect</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../recognition_provider/">recognition_provider</a>
                   </li>
@@ -130,10 +134,25 @@
               
                 <p><a id="basic_bot.commons.camera_opencv"></a></p>
 <h1 id="basic_botcommonscamera_opencv">basic_bot.commons.camera_opencv</h1>
-<p>This was originally pilfered from
-https://github.com/adeept/Adeept_RaspTank/blob/a6c45e8cc7df620ad8977845eda2b839647d5a83/server/camera_opencv.py</p>
-<p>Which looks like it was in turn pilfered from
-https://blog.miguelgrinberg.com/post/flask-video-streaming-revisited</p>
+<p>An implemation of BaseCamera using OpenCV.</p>
+<p><a id="basic_bot.commons.camera_opencv.OpenCvCamera"></a></p>
+<h2 id="opencvcamera-objects">OpenCvCamera Objects</h2>
+<pre><code class="language-python">class OpenCvCamera(BaseCamera)
+</code></pre>
+<p>This class implements the BaseCamera interface using OpenCV.</p>
+<p>Usage:</p>
+<pre><code class="language-python">camera = OpenCvCamera()
+# get_frame() is from BaseCamera and returns a single frame
+frame = camera.get_frame()
+# you can then used the fame for example:
+jpeg = cv2.imencode(&quot;.jpg&quot;, frame)[1].tobytes()
+</code></pre>
+<p><a id="basic_bot.commons.camera_opencv.OpenCvCamera.frames"></a></p>
+<h4 id="frames">frames</h4>
+<pre><code class="language-python">@staticmethod
+def frames() -&gt; Generator[bytes, None, None]
+</code></pre>
+<p>Generator function that yields frames from the camera. Required by BaseCamera</p>
               
             </div>
           </div><footer>

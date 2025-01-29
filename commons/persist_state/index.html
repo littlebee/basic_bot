@@ -71,13 +71,13 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#persiststate-objects">PersistState Objects</a>
         <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#__init__">__init__</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#persist_state">persist_state</a>
     </li>
         </ul>
     </li>
     </ul>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../pytorch_detect/">pytorch_detect</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../recognition_provider/">recognition_provider</a>
                   </li>
@@ -141,6 +141,37 @@
 <pre><code class="language-python">class PersistState()
 </code></pre>
 <p>Class to handle persisting the bot state to a file.</p>
+<p><a id="basic_bot.commons.persist_state.PersistState.__init__"></a></p>
+<h4 id="__init__">__init__</h4>
+<pre><code class="language-python">def __init__(hub_state: HubState, file_path: str,
+             persisted_state_keys: List[str]) -&gt; None
+</code></pre>
+<p>Initialize the PersistState object and load the persisted state from
+the file if it exists.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li>hub_state: the hub state object instance to persist</li>
+<li>file_path: the file path to persist the state to</li>
+<li>persisted_state_keys: the keys to persist to the file</li>
+</ul>
+<p>Usage:</p>
+<pre><code class="language-python">from basic_bot.commons.hub_state import HubState
+from basic_bot.commons.persist_state import PersistState
+
+# initialize the hub state
+hub_state = HubState({
+    &quot;test_key&quot;: &quot;test_value&quot;,
+    &quot;some_other_key&quot;: &quot;some_other_value&quot;
+})
+
+# hub_state will be updated with the persisted state if the file exists
+persist = PersistState(hub_state, &quot;./my_service_persisted.json&quot;, [&quot;test_key&quot;])
+
+# ... do something that updates the hub_state
+
+persist.persist_state()
+
+</code></pre>
 <p><a id="basic_bot.commons.persist_state.PersistState.persist_state"></a></p>
 <h4 id="persist_state">persist_state</h4>
 <pre><code class="language-python">def persist_state() -&gt; None
@@ -151,7 +182,7 @@
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../messages/" class="btn btn-neutral float-left" title="messages"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../pytorch_detect/" class="btn btn-neutral float-right" title="pytorch_detect">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../recognition_provider/" class="btn btn-neutral float-right" title="recognition_provider">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -177,7 +208,7 @@
       <span><a href="../messages/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../pytorch_detect/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../recognition_provider/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

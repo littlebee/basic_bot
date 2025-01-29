@@ -71,6 +71,8 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#frames">frames</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#stats">stats</a>
+    </li>
         </ul>
     </li>
     </ul>
@@ -92,8 +94,6 @@
                   <li class="toctree-l1"><a class="reference internal" href="../messages/">messages</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../persist_state/">persist_state</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../pytorch_detect/">pytorch_detect</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../recognition_provider/">recognition_provider</a>
                   </li>
@@ -155,7 +155,7 @@
 <p>This was originally pilfered from
 https://github.com/adeept/Adeept_RaspTank/blob/a6c45e8cc7df620ad8977845eda2b839647d5a83/server/base_camera.py</p>
 <p>Which looks like it was in turn pilfered from
- https://blog.miguelgrinberg.com/post/flask-video-streaming-revisited</p>
+https://blog.miguelgrinberg.com/post/flask-video-streaming-revisited</p>
 <p>Thank you, @adeept and @miguelgrinberg!</p>
 <p><a id="basic_bot.commons.base_camera.CameraEvent"></a></p>
 <h2 id="cameraevent-objects">CameraEvent Objects</h2>
@@ -182,6 +182,9 @@ available.</p>
 <h2 id="basecamera-objects">BaseCamera Objects</h2>
 <pre><code class="language-python">class BaseCamera(object)
 </code></pre>
+<p>BaseCamera is an abstract base class that for camera implementations.  It
+creates a background thread that reads frames from the camera and signals
+when a new frame is available.</p>
 <p><a id="basic_bot.commons.base_camera.BaseCamera.frame"></a></p>
 <h4 id="frame">frame</h4>
 <p>current frame is stored here by background thread</p>
@@ -201,6 +204,12 @@ available.</p>
 def frames() -&gt; Generator[bytes, None, None]
 </code></pre>
 <p>"Generator that returns frames from the camera.</p>
+<p><a id="basic_bot.commons.base_camera.BaseCamera.stats"></a></p>
+<h4 id="stats">stats</h4>
+<pre><code class="language-python">@classmethod
+def stats(cls) -&gt; dict[str, float]
+</code></pre>
+<p>Return the fps stats dictionary.</p>
               
             </div>
           </div><footer>

@@ -69,14 +69,20 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../persist_state/">persist_state</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../pytorch_detect/">pytorch_detect</a>
-                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../recognition_provider/">recognition_provider</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../servo/">servo</a>
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">tflite_detect</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#tflitedetect-objects">TFLiteDetect Objects</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#__init__">__init__</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get_prediction">get_prediction</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../web_utils/">web_utils</a>
@@ -130,7 +136,33 @@
               
                 <p><a id="basic_bot.commons.tflite_detect"></a></p>
 <h1 id="basic_botcommonstflite_detect">basic_bot.commons.tflite_detect</h1>
+<p><a id="basic_bot.commons.tflite_detect.TFLiteDetect"></a></p>
+<h2 id="tflitedetect-objects">TFLiteDetect Objects</h2>
+<pre><code class="language-python">class TFLiteDetect()
+</code></pre>
 <p>This class provides object detection using Tensor Flow Lite.</p>
+<p><a id="basic_bot.commons.tflite_detect.TFLiteDetect.__init__"></a></p>
+<h4 id="__init__">__init__</h4>
+<pre><code class="language-python">def __init__(model: Optional[str] = None,
+             use_coral_tpu: Optional[bool] = None) -&gt; None
+</code></pre>
+<p>Constructor</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li>model: the path to the tflite model file</li>
+<li>use_coral_tpu: whether to use the Coral TPU for inference</li>
+</ul>
+<p><a id="basic_bot.commons.tflite_detect.TFLiteDetect.get_prediction"></a></p>
+<h4 id="get_prediction">get_prediction</h4>
+<pre><code class="language-python">def get_prediction(img: Any) -&gt; List[Dict[str, Any]]
+</code></pre>
+<p>Given an image array, return a list of detected objects.</p>
+<p>Each detected object is a dictionary with the following:</p>
+<ul>
+<li>boundingBox: [x1, y1, x2, y2]</li>
+<li>classification: string</li>
+<li>confidence: float (0-1)</li>
+</ul>
               
             </div>
           </div><footer>
