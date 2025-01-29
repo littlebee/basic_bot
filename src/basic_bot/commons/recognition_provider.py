@@ -1,12 +1,3 @@
-"""
-This class detects objects in frames it gets from the  camera object passed to
-the constructor.
-
-A thread is created that does the heavy lifting of detecting objects and updates
-a class var that contains the last faces detected. This allows the thread providing
-the video feed to stream at 30fps while detect frames lag behind
-"""
-
 import time
 import threading
 import asyncio
@@ -32,6 +23,25 @@ WHICH_DETECTOR = "tflite"
 
 
 class RecognitionProvider:
+    """
+    This class detects objects in frames it gets from the camera object passed to
+    the constructor.
+
+    It uses the TFLiteDetect class to detect objects in the frames.
+
+    It sends the detected objects to the central hub via a websocket connection
+    using the `recognition` key
+
+    To use, simply instantiate it:
+    ```python
+    from basic_bot.commons.recognition_provider import RecognitionProvider
+    from basic_bot.commons.camera_opencv import OpenCvCamera
+
+    camera = OpenCvCamera()
+    recognition_provider = RecognitionProvider(camera)
+    ```
+    """
+
     thread: Optional[threading.Thread] = (
         None  # background thread that reads frames from camera
     )
@@ -46,6 +56,7 @@ class RecognitionProvider:
     pause_event: threading.Event = threading.Event()
 
     def __init__(self, camera: Any) -> None:
+        """Constructor"""
         RecognitionProvider.camera = camera
         if RecognitionProvider.thread is None:
             RecognitionProvider.thread = threading.Thread(target=self._thread)
@@ -54,21 +65,26 @@ class RecognitionProvider:
         self.resume()
 
     def get_objects(self) -> List[Dict[str, Any]]:
+        """Return the last objects seen"""
         return RecognitionProvider.last_objects_seen
 
     def get_next_objects(self) -> List[Dict[str, Any]]:
+        """Wait for and return the next objects seen"""
         RecognitionProvider.next_objects_event.wait()
         RecognitionProvider.next_objects_event.clear()
         return self.get_objects()
 
     def pause(self) -> None:
+        """Pause the recognition thread"""
         RecognitionProvider.pause_event.clear()
 
     def resume(self) -> None:
+        """Resume the recognition thread"""
         RecognitionProvider.pause_event.set()
 
     @classmethod
     def stats(cls) -> Dict[str, Any]:
+        """Return the fps stats dictionary."""
         return {
             "last_objects_seen": cls.last_objects_seen,
             "fps": cls.fps_stats.stats(),
@@ -78,8 +94,6 @@ class RecognitionProvider:
 
     @classmethod
     async def provide_state(cls) -> None:
-        cls.fps_stats.start()
-
         while True:
             try:
                 detector = TFLiteDetect()

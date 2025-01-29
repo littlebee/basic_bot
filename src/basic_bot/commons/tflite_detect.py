@@ -1,7 +1,3 @@
-"""
-This class provides object detection using Tensor Flow Lite.
-"""
-
 from tflite_support.task import core  # type: ignore
 from tflite_support.task import processor  # type: ignore
 from tflite_support.task import vision  # type: ignore
@@ -11,12 +7,24 @@ from basic_bot.commons import constants as c, log
 
 
 class TFLiteDetect:
+    """
+    This class provides object detection using Tensor Flow Lite.
+    """
+
     detector: vision.ObjectDetector
 
     # args are used for testing
     def __init__(
         self, model: Optional[str] = None, use_coral_tpu: Optional[bool] = None
     ) -> None:
+        """
+        Constructor
+
+        Args:
+
+        - model: the path to the tflite model file
+        - use_coral_tpu: whether to use the Coral TPU for inference
+        """
         # Initialize the object detection model
         if use_coral_tpu is None:
             use_coral_tpu = c.BB_ENABLE_CORAL_TPU
@@ -44,6 +52,16 @@ class TFLiteDetect:
         self.detector = vision.ObjectDetector.create_from_options(options)
 
     def get_prediction(self, img: Any) -> List[Dict[str, Any]]:
+        """
+        Given an image array, return a list of detected objects.
+
+        Each detected object is a dictionary with the following:
+
+        - boundingBox: [x1, y1, x2, y2]
+        - classification: string
+        - confidence: float (0-1)
+
+        """
         input_tensor = vision.TensorImage.create_from_array(img)
         detection_result = self.detector.detect(input_tensor)
         results = []

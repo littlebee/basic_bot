@@ -1,4 +1,19 @@
 #!/usr/bin/env python3
+"""
+bb_start is a script to start services in the background. It reads a
+list of services from the 'services.cfg' file or from the command line
+arguments file.
+
+stdout and stderr are redirected to log files in the 'logs' directory.
+
+The PID of each service is written to a file in the 'pids' directory
+and used by the `bb_stop` script to stop the service.
+
+Usage:
+```
+bb_start [service] [service] [...]
+```
+"""
 import os
 import sys
 import subprocess

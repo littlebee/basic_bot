@@ -61,10 +61,9 @@ def limit_angle(angle: float, min_angle: float, max_angle: float) -> float:
 
 class Servo:
     """
-    The servo motors & gearing for shelly-bot's neck ended up being way too
-    fast and jerky.  This class uses a thread to slowly step the motor to
-    the destination angle.  The step_delay can be adjusted to speed up or slow
-    down the movement.  The thread can be paused and resumed.
+    This class controls a single servo motor using the Adafruit PCA9685 servo controller.
+    It uses a background thread to move the motor to a destination angle at a give
+    fraction of the motor's range and thereby control the speed.
     """
 
     def __init__(
@@ -74,6 +73,7 @@ class Servo:
         min_angle: int = 0,
         max_angle: int = 180,
     ) -> None:
+        """Constructor"""
         # background thread that steps motor to destination
         self.thread: Optional[threading.Thread] = None
 
@@ -104,6 +104,7 @@ class Servo:
 
     @property
     def current_angle(self) -> float:
+        """Returns the current angle of the servo motor"""
         try:
             return self.servo.fraction * self.motor_range
         except OSError as error:
@@ -115,13 +116,16 @@ class Servo:
 
     @property
     def step_delay(self) -> float:
+        """Returns the current step delay"""
         return self._step_delay
 
     @step_delay.setter
     def step_delay(self, value: float) -> None:
+        """Sets the step delay"""
         self._step_delay = value
 
     def move_to(self, angle: float) -> None:
+        """Move the servo to the specified angle"""
         new_angle = limit_angle(angle, self.min_angle, self.max_angle)
         if DEBUG_MOTORS:
             log.info(
@@ -140,18 +144,22 @@ class Servo:
         self.resume()
 
     def pause(self) -> None:
+        """Pause the servo movement"""
         self.pause_event.clear()
 
     def resume(self) -> None:
+        """Resume the servo movement"""
         self.pause_event.set()
 
     def stop_thread(self) -> None:
+        """Stop the servo movement thread"""
         self.stopped_event.set()
         self.force_stop = True
         # thread could be waiting on pause_event, resume to quit
         self.resume()
 
     def wait_for_motor_stopped(self) -> None:
+        """Wait for the motor to stop moving"""
         if DEBUG_MOTORS:
             log.info(f"waiting on stopped event on channel {self.motor_channel}")
         self.stopped_event.wait()

@@ -1,3 +1,13 @@
+"""
+basic_bot.commons.constants can be imported to access the constants used
+by basic_bot services. The constants are set by default and
+most can be overridden by setting environment variables.
+
+See the [latest version of this file](https://github.com/littlebee/basic_bot/blob/main/src/basic_bot/commons/constants.py)
+on GitHub for the most recent constants.
+
+"""
+
 import os
 import basic_bot.commons.env as env
 

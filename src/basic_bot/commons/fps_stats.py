@@ -1,6 +1,3 @@
-"""
-FpsStats - A class to track overall and floating frames per seconds
-"""
 import time
 
 # last n seconds to use for fps calc
@@ -8,10 +5,17 @@ FPS_WINDOW = 60
 
 
 class FpsStats:
-    def __init__(self) -> None:
-        self.start()
+    """
+    FpsStats - A class to track overall and floating frames per seconds
 
-    def start(self) -> None:
+    Instantiate the class to start tracking the stats. Call increment() for each frame read.
+    Call stats() to get the stats.
+    """
+
+    def __init__(self) -> None:
+        self._start()
+
+    def _start(self) -> None:
         self.started_at: float = time.time()
         self.total_frames: int = 0
         self.floating_frames_count: int = 0
@@ -19,6 +23,7 @@ class FpsStats:
         self.last_floating_fps: float = 0.0
 
     def increment(self) -> None:
+        """Increment the frame count and calculate the floating fps"""
         self.total_frames += 1
         self.floating_frames_count += 1
 
@@ -29,6 +34,7 @@ class FpsStats:
             self.floating_frames_count = 0
 
     def stats(self) -> dict[str, float]:
+        """Return the stats as a dictionary"""
         now: float = time.time()
         total_time: float = now - self.started_at
         return {

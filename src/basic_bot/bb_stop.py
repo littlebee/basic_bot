@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+"""
+`bb_stop` is a script to stop services running in the background that
+where started by `bb_start`. It reads a list of services from the
+'services.cfg' file or from the command line.
+
+Usage:
+```
+bb_stop [service] [service] [...]
+```
+
+"""
 import os
 import sys
 import signal
