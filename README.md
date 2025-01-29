@@ -7,10 +7,14 @@ A Python centric, basic robotics platform providing
 - support for vision and in frame object detection
 - a simple `bb_create` script for creating new projects
 
+See official [API Docs](https://littlebee.github.io/basic_bot/)
+
 ## Status
 *** This is still a work in progress ***
 
 ### Updates
+
+20250128 - We have [online hosted docs](https://littlebee.github.io/basic_bot/)! 🎉
 
 20250127 - It can see! Working basic_bot.services.vision_cv service that uses open cv2 and tensorflow lite.  Still trying to decide what else is needed in the beta version - support for GPIO in?  Doing this in parallel with implementing the first working example of using basic_bot - [daphbot-due](https://github.com/littlebee/daphbot-due)
 
