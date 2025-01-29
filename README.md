@@ -1,6 +1,7 @@
 # basic_bot
 
 A Python centric, basic robotics platform providing
+
 - an ultra lightweight, websockets based pub/sub service
 - hardware support for various motors, servos, sensors
 - support for vision and in frame object detection
@@ -24,20 +25,23 @@ python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
 bb_create my_new_project_dir
 ```
 The above commands will
- - install the basic_bot python libs and scripts like `bb_create`, `bb_start`, `bb_stop`
- - create a project directory named `my_new_robot_project` and cd to it
- - add files for the basic shell of a webapp
- - add test of webapp
- - add files for example service that increments a counter
- - add test for example service
- - add start.sh, stop.sh, upload.sh scripts to my_new_project_dir/
- - add build.sh and test.sh scripts to my_new_project_dir/
- - run build.sh and test.sh scripts
 
- After `bb_create` finishes you should be able to
- ```shell
- cd my_new_robot_project
- ```
+- install the basic_bot python libs and scripts like `bb_create`, `bb_start`, `bb_stop`
+- create a project directory named `my_new_robot_project`
+- add files for the basic shell of a webapp
+- add test of webapp
+- add files for example service that increments a counter
+- add test for example service
+- add start.sh, stop.sh, upload.sh scripts to my_new_project_dir/
+- add build.sh and test.sh scripts to my_new_project_dir/
+- run build.sh and test.sh scripts
+```
+
+After `bb_create` finishes you should be able to
+
+```shell
+cd my_new_robot_project
+```
 
 ### Everything created is yours to edit
 
@@ -52,6 +56,7 @@ To build and use the created `./webapp` example, you must have Node.js >= v20.18
 From there, check out the .sh files in the root of my_new_robot_project.  Commands to build, start in the background, run integration tests for the Python example "worthless_counter" service, and run example integration test.
 
 ## Kicking the tires locally
+
 You can start the services locally in the background (from your project root dir on dev machine):
 ```sh
 ./start.sh

@@ -2,29 +2,43 @@
 import os
 import shutil
 
-shutil.copyfile("./README.md", "./docs/index.md")
+from typing import List, Tuple
 
-shutil.rmtree("./docs/services")
-shutil.rmtree("./docs/commons")
-shutil.rmtree("./docs/test_helpers")
+FILE_BANNER = """
+#
+#      WARNING: this file is added by build-docs.py in the project root.
+#
+#              YOUR CHANGES HERE WILL BE OVERWRITTEN
+"""
+with open("./README.md", "r") as f_readme:
+    with open("./docs/index.md", "w") as f_docs:
+        f_docs.write(f"---\ntitle: README.md\n\n{FILE_BANNER}\n---\n")
+        f_docs.write(f_readme.read())
 
-os.makedirs("./docs/services", exist_ok=True)
-os.makedirs("./docs/commons", exist_ok=True)
-os.makedirs("./docs/test_helpers", exist_ok=True)
-
-services_dir = os.path.join("./src/basic_bot/services")
-services = [
-    file
-    for file in os.listdir(services_dir)
-    if file != "__init__.py" and file.endswith(".py")
+doc_dirs: List[Tuple[str, str]] = [
+    ("./src/basic_bot", "./docs/scripts"),
+    ("./src/basic_bot/services", "./docs/services"),
+    ("./src/basic_bot/commons", "./docs/commons"),
 ]
-for service in services:
-    service_name = service[:-3]
-    doc_file = f"./docs/services/{service_name}.md"
-    with open(doc_file, "w") as f:
-        # without the title, the mkdocs TOC entry will be stripped of
-        # underscores and capitalized
-        f.write(f"---\ntitle: {service_name}\n---\n")
-    cmd = f"pydoc-markdown -m basic_bot.services.{service_name} >> {doc_file}"
-    print(f"running: {cmd}")
-    os.system(cmd)
+
+for src_dir, dest_dir in doc_dirs:
+    shutil.rmtree(dest_dir, ignore_errors=True)
+    os.makedirs(dest_dir, exist_ok=True)
+    dot_parts = ".".join(src_dir.split("/")[3:])
+    if len(dot_parts) > 0:
+        dot_parts += "."
+
+    for file in os.listdir(src_dir):
+        if file.endswith(".py") and not file.startswith("__"):
+            file_name = file[:-3]
+            doc_file = f"{dest_dir}/{file_name}.md"
+            with open(doc_file, "w") as f:
+                # without the title, the mkdocs TOC entry will be stripped of
+                # underscores and capitalized
+                f.write(f"---\ntitle: {file_name}")
+                f.write(FILE_BANNER)
+                f.write("\n---\n")
+
+            cmd = f"pydoc-markdown -m basic_bot.{dot_parts}{file_name} >> {doc_file}"
+            print(f"running: {cmd}")
+            os.system(cmd)

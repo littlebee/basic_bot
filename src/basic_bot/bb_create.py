@@ -1,3 +1,17 @@
+"""
+Usage:
+```sh
+    bb_create <new_project_directory_name>
+```
+
+Description:
+    Create a new robot project directory with the given name.  The new project
+    will contain a basic bot project structure with some example code and
+    scripts to get you started.  The new project will be created in the current
+    working directory.
+
+"""
+
 import os
 import sys
 import shutil
