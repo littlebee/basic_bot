@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>basic_bot Docs</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "README.md";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> basic_bot Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">README.md</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#status">Status</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#updates">Updates</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#everything-created-is-yours-to-edit">Everything created is yours to edit</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#kicking-the-tires-locally">Kicking the tires locally</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#upload-to-your-robot">Upload to your robot</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#run-the-software-on-your-robot">Run the software on your robot</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#adding-your-own-ui-too">Adding your own UI, too?</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#will-it-run-on-windows">Will it run on Windows?</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#todo-add-links-to-other-bots-using-their-own-components-as-examples-like-strongarm">TODO: add links to other bots using their own components as examples (like strongarm)</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-it-all-works">How it all works</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#todo-add-updated-version-of-how-it-all-works-from-strongarm-scatbot">TODO add updated version of How It All Works from strongarm + scatbot</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="og_original_goals/">Og original goals</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Commons</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/base_camera/">base_camera</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/camera_opencv/">camera_opencv</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/constants/">constants</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/env/">env</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/fps_stats/">fps_stats</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/hub_state/">hub_state</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/hub_state_monitor/">hub_state_monitor</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/log/">log</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/messages/">messages</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/persist_state/">persist_state</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/pytorch_detect/">pytorch_detect</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/recognition_provider/">recognition_provider</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/servo/">servo</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/tflite_detect/">tflite_detect</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/web_utils/">web_utils</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Scripts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="scripts/bb_create/">bb_create</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="scripts/bb_restart/">bb_restart</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="scripts/bb_start/">bb_start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="scripts/bb_stop/">bb_stop</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Services</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="services/central_hub/">central_hub</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="services/motor_control_2w/">motor_control_2w</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="services/vision_cv2/">vision_cv2</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="services/web_server/">web_server</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">basic_bot Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">README.md</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="basic_bot">basic_bot</h1>
+<p>A Python centric, basic robotics platform providing</p>
+<ul>
+<li>an ultra lightweight, websockets based pub/sub service</li>
+<li>hardware support for various motors, servos, sensors</li>
+<li>support for vision and in frame object detection</li>
+<li>a simple <code>bb_create</code> script for creating new projects</li>
+</ul>
+<h2 id="status">Status</h2>
+<p>*** This is still a work in progress ***</p>
+<h3 id="updates">Updates</h3>
+<p>20250127 - It can see! Working basic_bot.services.vision_cv service that uses open cv2 and tensorflow lite.  Still trying to decide what else is needed in the beta version - support for GPIO in?  Doing this in parallel with implementing the first working example of using basic_bot - <a href="https://github.com/littlebee/daphbot-due">daphbot-due</a></p>
+<p>20250120 - Basic working central_hub and web_server services merged.  Working on adding basic motor controller service similar to Scatbot.</p>
+<h2 id="getting-started">Getting Started</h2>
+<p>On your development computer (not your bot's onboard computer; see later in this doc)</p>
+<pre><code class="language-shell">python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
+bb_create my_new_project_dir
+</code></pre>
+<p>The above commands will</p>
+<ul>
+<li>install the basic_bot python libs and scripts like <code>bb_create</code>, <code>bb_start</code>, <code>bb_stop</code></li>
+<li>create a project directory named <code>my_new_robot_project</code></li>
+<li>add files for the basic shell of a webapp</li>
+<li>add test of webapp</li>
+<li>add files for example service that increments a counter</li>
+<li>add test for example service</li>
+<li>add start.sh, stop.sh, upload.sh scripts to my_new_project_dir/</li>
+<li>add build.sh and test.sh scripts to my_new_project_dir/</li>
+<li>run build.sh and test.sh scripts</li>
+</ul>
+<pre><code>
+After `bb_create` finishes you should be able to
+
+```shell
+cd my_new_robot_project
+</code></pre>
+<h3 id="everything-created-is-yours-to-edit">Everything created is yours to edit</h3>
+<p><code>bb_create</code> is single use per project and will not overwrite an existing directory.</p>
+<p>The created app should run on any OS supported by Python &gt;= 3.9 with a Posix compliant shell.  I've tested this assertion on macOS &gt;= 14.7 and on Raspberry PI 4 with Raspian Bullseye.  Additionally, the CI/CD test system for this project validates that everything works on <code>ubuntu-latest</code>.</p>
+<p>Python &gt;= 3.9 is required.  It's also a good idea to make sure <code>python</code> and <code>pip</code> commands are pointing to the correct version (3.9) if you are using a virtual environment like Anaconda or Miniconda.</p>
+<p>To build and use the created <code>./webapp</code> example, you must have Node.js &gt;= v20.18, and <code>npm</code> needs to be in your path.</p>
+<p>From there, check out the .sh files in the root of my_new_robot_project.  Commands to build, start in the background, run integration tests for the Python example "worthless_counter" service, and run example integration test.</p>
+<h2 id="kicking-the-tires-locally">Kicking the tires locally</h2>
+<p>You can start the services locally in the background (from your project root dir on dev machine):</p>
+<pre><code class="language-sh">./start.sh
+</code></pre>
+<p>... which will start all services in the <code>services.cfg</code> file.  Each service runs in as a process.</p>
+<p>You can start a hot development web server that will show your changes to the webapp/ code in near real time most of the time :).</p>
+<pre><code>cd webapp
+npm run dev
+</code></pre>
+<p>For more information about hacking on the code, running tests, and debugging, see <a href="https://github.com/littlebee/basic_bot/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+<h2 id="upload-to-your-robot">Upload to your robot</h2>
+<p>Also included is an example <code>upload.sh</code> script that can be used to upload your code to your robot's onboard computer.  The example <code>upload.sh</code> uses <code>rsync</code> and requires that both your local and onboard computer need to have SSH installed and properly set up.  If you can <code>ssh my_rad_robot.local</code> or by IP, you should be able to use rsync and the upload example.</p>
+<p>Example:</p>
+<pre><code>./upload.sh pi@my_raspberry_bot.local /home/pi/my_bot
+</code></pre>
+<p><code>pi</code> above is the username
+<code>my_raspberry_bot.local</code> above is the hostname to upload can be replaced by IPAddress
+<code>/home/pi/my_bot</code> is the directory you wish to upload to.  The directory will be created if it does not already exist.</p>
+<p>Notes:</p>
+<p>I work on a macbook and use iTerm2 for terminal.  One of the additions I like to make to the standard setup, is to use the same user name on the Pi that I use locally on my mac.  This allows not having to type <code>ssh raspberry@mybot.local</code>, because the name is the same just <code>ssh mybot.local</code> works.</p>
+<p>I also like to add my public key to the <code>~/.ssh/authorized_keys</code> file on the remote SBC. This will stop it from prompting you for the password on every SSH command (upload.sh uses rsync which uses ssh).   I made a <a href="https://gist.github.com/littlebee/b285f0b9d219e56fe29b7248440309a5">gist of the script</a> I use to upload my public key to new boards.</p>
+<h2 id="run-the-software-on-your-robot">Run the software on your robot</h2>
+<p>First <code>ssh</code> into the onboard computer and <code>cd path/uploaded/to</code>.</p>
+<p>Before running for the first time, in an ssh shell, install the basic_bot package:</p>
+<pre><code>python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
+</code></pre>
+<p>Then from within the the directory you uploaded to:</p>
+<pre><code>./start.sh
+</code></pre>
+<p>will start all of the services in  <code>./services.cfg</code> as individual processes running detached.  If your shell/terminal is closed, they will keep running.</p>
+<p>You can debug issues with a service by looking at the ./logs/* files for each service.</p>
+<h2 id="adding-your-own-ui-too">Adding your own UI, too?</h2>
+<p>Ya sure, you betcha!  The created <code>my_new_robot_project/webapp</code> is just an example of how to interact with central_hub.  You can add your own content or completely replace it with say Next.js if that is your thing.</p>
+<p>The created ./webapp is currently a Vite app, created with <code>yarn create vite</code>.   The <code>-m basic_bot.services.web_server</code> service currently is hard coded (TODO: fix) to look in ./webapp/dist for index.html and the rest is up to the app.</p>
+<p>If you're want to use another frontend framework, you should be able to symbolic link where ever that framework's bundler puts it's build assets like index.html to <code>./webapp/dist</code></p>
+<h3 id="will-it-run-on-windows">Will it run on Windows?</h3>
+<p>Answer is IDK, yet.  Wherever possible, I've tried to use the cross-platform pure Python file system abstraction.  If you look at the <code>start.sh</code> and <code>stop.sh</code> scripts in the root of the created project, you will see that those just call scripts which <code>pip3 install</code> or <code>conda install</code>, via SetupTools should have installed globally assuming pip3 is in your environment.</p>
+<p>So maybe <code>./start.sh</code> does nothing on Windows, but <code>bb_start</code> will?  Add a .bat file; maybe just rename <em>.sh -&gt; </em>.bat?   [Waves arms; not a windows user for years]</p>
+<h4 id="todo-add-links-to-other-bots-using-their-own-components-as-examples-like-strongarm">TODO: add links to other bots using their own components as examples (like strongarm)</h4>
+<h2 id="how-it-all-works">How it all works</h2>
+<h3 id="todo-add-updated-version-of-how-it-all-works-from-strongarm-scatbot">TODO add updated version of How It All Works from strongarm + scatbot</h3>
+<p>https://github.com/littlebee/strongarm/blob/main/README.md#how-it-all-works</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="og_original_goals/" class="btn btn-neutral float-right" title="Og original goals">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+      <span><a href="og_original_goals/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2025-01-29 02:40:19.523591+00:00
+-->
