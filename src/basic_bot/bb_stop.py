@@ -13,7 +13,8 @@ bb_stop [service] [service] [...]
 import os
 import sys
 import signal
-import psutil
+
+from basic_bot.commons.script_helpers.pid_files import is_process_running
 
 HELP = """
 Usage: python -m basic_bot.stop [service] [service] ...
@@ -25,14 +26,6 @@ Usage: python -m basic_bot.stop [service] [service] ...
 def print_help():
     print(HELP)
     sys.exit(0)
-
-
-def is_process_running(pid):
-    try:
-        psutil.Process(pid)
-        return True
-    except psutil.NoSuchProcess:
-        return False
 
 
 def main():

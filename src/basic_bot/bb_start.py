@@ -19,8 +19,10 @@ import sys
 import subprocess
 import time
 
+from basic_bot.commons.script_helpers.pid_files import is_pid_file_valid
+
 HELP = """
-Usage: python3 -m basic_bot.start [service] [service] ...
+Usage: bb_start [service] [service] ...
 
 Where: [service] = the main python file file or module for the service
 to start in the form of a relative path from the root of the project to
@@ -29,7 +31,10 @@ the src/*.py file.
 If no services are specified, all services listed in services.cfg will be started.
 Services will be started in the order they are listed in the file.
 
-Example: python3 start.py basic_bot.services.central_hub
+Example:
+  bb_start "-m basic_bot.services.central_hub" src/my_awesome_service.py
+
+... starts two of the services in the project.
 """
 
 
@@ -76,23 +81,22 @@ def main() -> None:
         log_file = f"./logs/{base_name}.log"
         pid_file = f"./pids/{base_name}.pid"
 
-        # if the pid file already exists, it may be currently
-        # running, and we should not start another instance
-        # because it will overwrite the pid file
-        if os.path.exists(pid_file):
-            print(
-                f"\nCowardly refusing to overwrite {pid_file}. \n"
-                f"Is {sub_system} already running? If so,  try running \n\n"
-                f'bb_stop "-m {sub_system}" \n\n'
-                "from the terminal or if not, delete the pid file and try again.\n"
-            )
-            continue
-
         if os.getenv("BB_ENV") == "test":
             print(f"running {sub_system} in test mode")
             append = os.getenv("BB_FILE_APPEND", "")
             log_file = f"./logs/test_{base_name}{append}.log"
             pid_file = f"./pids/test_{base_name}{append}.pid"
+
+        # if the pid file already exists, it may be currently
+        # running, and we should not start another instance
+        # because it will overwrite the pid file
+        if is_pid_file_valid(pid_file):
+            print(
+                f"\nCowardly refusing to overwrite {pid_file}. try running:\n"
+                f'bb_stop "{service}" \n\n'
+                "from the terminal or if not, delete the pid file and try again.\n"
+            )
+            continue
 
         # if the log_file already exists, rotate up to 3 times
         # appending a .number to the end of the file name

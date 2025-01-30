@@ -19,7 +19,7 @@ dependencies = [
     "psutil",
     "pytest",
     "protobuf>=3.18.0,<4",
-    "tflite-support>=0.4.0,<0.5",
+    "tflite-support",
     "websocket-client"
 ]
 requires-python = ">=3.9"
