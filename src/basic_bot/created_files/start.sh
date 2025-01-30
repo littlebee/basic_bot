@@ -1,2 +1,2 @@
 #!/bin/sh
-bb_start
+bb_start $@

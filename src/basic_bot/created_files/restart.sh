@@ -1,4 +1,4 @@
 #!/bin/sh
-bb_stop
+bb_stop $@
 sleep 2
-bb_start
+bb_start $@
