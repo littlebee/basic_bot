@@ -62,6 +62,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#validate">Validate</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#it-all-works">It all works!</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -166,7 +168,7 @@
 <span class="nv">BUG_REPORT_URL</span><span class="o">=</span><span class="s2">&quot;https://bugs.debian.org/&quot;</span>
 </code></pre></div>
 
-<p>Looks like Debian Bookworm is the new Raspian Bullseye.  Good article:  https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/</p>
+<p>Looks like Debian Bookworm is the new Raspian Bullseye.  <a href="https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/">Good article</a> on the differences.</p>
 <div class="codehilite"><pre><span></span><code>bee@pi5:~<span class="w"> </span>$<span class="w"> </span>python<span class="w"> </span>--version
 Python<span class="w"> </span><span class="m">3</span>.11.2
 bee@pi5:~<span class="w"> </span>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>--version
@@ -205,11 +207,11 @@ python3 -m pip install sounddevice
 </code></pre></div>
 
 <h2 id="validate">Validate</h2>
-<p>Tested by uploading daphbot-due to the pi (from my dev machine in the daphbot-due root project dir):</p>
+<p>Tested by uploading <a href="https://github.com/littlebee/daphbot-due">daphbot-due</a> to the pi5 (from my dev machine in the daphbot-due root project dir):</p>
 <div class="codehilite"><pre><span></span><code>./upload.sh<span class="w"> </span>pi5.local
 </code></pre></div>
 
-<p>The on the pi5:</p>
+<p>Then on the pi5:</p>
 <div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>daphbot_due
 pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 rm<span class="w"> </span>-Rf<span class="w"> </span>logs/*
@@ -221,7 +223,43 @@ rm<span class="w"> </span>-Rf<span class="w"> </span>logs/*
 cat<span class="w"> </span>logs/*
 </code></pre></div>
 
-<p>It all works!</p>
+<h2 id="it-all-works">It all works!</h2>
+<p>If the <code>basic_bot.services.vision_cv2</code> successfully started, you can open
+a browser and see the video capture and recognition stats at (http://pi5.local:5801/stats).</p>
+<p>I'm seeing some impressive stats!  Recognition is running at nearly 100% of the capture FPS at 24.79 frames per second.  Below are the stats:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;capture&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;totalFramesRead&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5938</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;totalTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">240.3178722858429</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;overallFps&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">24.70894046921789</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;fpsStartedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1738212599.538883</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;floatingFps&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">24.796676477203466</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;recognition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;last_objects_seen&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;boundingBox&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                    </span><span class="mi">16</span><span class="p">,</span>
+<span class="w">                    </span><span class="mi">8</span><span class="p">,</span>
+<span class="w">                    </span><span class="mi">624</span><span class="p">,</span>
+<span class="w">                    </span><span class="mi">456</span>
+<span class="w">                </span><span class="p">],</span>
+<span class="w">                </span><span class="nt">&quot;classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;person&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.515625</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;fps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;totalFramesRead&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5938</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;totalTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">240.08938884735107</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;overallFps&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">24.73245497648954</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;fpsStartedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1738212599.7694898</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;floatingFps&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">24.79684199179873</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;total_objects_detected&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">17774</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;last_frame_duration&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.030208587646484375</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
               
             </div>
           </div><footer>
