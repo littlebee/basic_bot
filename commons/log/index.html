@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../base_camera/">base_camera</a>
@@ -141,18 +145,21 @@ and "INFO", "DEBUG", "ERROR" prefixes.</p>
 redirect all stdout and stderr to a log file.</p>
 <p><a id="basic_bot.commons.log.debug"></a></p>
 <h4 id="debug">debug</h4>
-<pre><code class="language-python">def debug(message: str) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">debug</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Flush DEBUG: message to console only in development and test environments</p>
 <p><a id="basic_bot.commons.log.info"></a></p>
 <h4 id="info">info</h4>
-<pre><code class="language-python">def info(message: str) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">info</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Flush INFO: message to console</p>
 <p><a id="basic_bot.commons.log.error"></a></p>
 <h4 id="error">error</h4>
-<pre><code class="language-python">def error(message: str) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">error</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Flush ERROR: message to console</p>
               
             </div>

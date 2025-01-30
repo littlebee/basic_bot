@@ -83,6 +83,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="commons/base_camera/">base_camera</a>
@@ -167,16 +171,19 @@
 <li>support for vision and in frame object detection</li>
 <li>a simple <code>bb_create</code> script for creating new projects</li>
 </ul>
+<p>See official <a href="https://littlebee.github.io/basic_bot/">API Docs</a></p>
 <h2 id="status">Status</h2>
 <p>*** This is still a work in progress ***</p>
 <h3 id="updates">Updates</h3>
+<p>20250128 - We have <a href="https://littlebee.github.io/basic_bot/">online hosted docs</a>! 🎉</p>
 <p>20250127 - It can see! Working basic_bot.services.vision_cv service that uses open cv2 and tensorflow lite.  Still trying to decide what else is needed in the beta version - support for GPIO in?  Doing this in parallel with implementing the first working example of using basic_bot - <a href="https://github.com/littlebee/daphbot-due">daphbot-due</a></p>
 <p>20250120 - Basic working central_hub and web_server services merged.  Working on adding basic motor controller service similar to Scatbot.</p>
 <h2 id="getting-started">Getting Started</h2>
 <p>On your development computer (not your bot's onboard computer; see later in this doc)</p>
-<pre><code class="language-shell">python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
-bb_create my_new_project_dir
-</code></pre>
+<div class="codehilite"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/littlebee/basic_bot.git@main
+bb_create<span class="w"> </span>my_new_project_dir
+</code></pre></div>
+
 <p>The above commands will</p>
 <ul>
 <li>install the basic_bot python libs and scripts like <code>bb_create</code>, <code>bb_start</code>, <code>bb_stop</code></li>
@@ -189,12 +196,12 @@ bb_create my_new_project_dir
 <li>add build.sh and test.sh scripts to my_new_project_dir/</li>
 <li>run build.sh and test.sh scripts</li>
 </ul>
-<pre><code>
-After `bb_create` finishes you should be able to
+<div class="codehilite"><pre><span></span><code><span class="k">After</span><span class="w"> </span><span class="n n-Quoted">`bb_create`</span><span class="w"> </span><span class="n">finishes</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">able</span><span class="w"> </span><span class="k">to</span>
 
-```shell
-cd my_new_robot_project
-</code></pre>
+<span class="n n-Quoted">`</span><span class="n n-Quoted n-Quoted-Escape">``</span><span class="n n-Quoted">shell</span>
+<span class="n n-Quoted">cd my_new_robot_project</span>
+</code></pre></div>
+
 <h3 id="everything-created-is-yours-to-edit">Everything created is yours to edit</h3>
 <p><code>bb_create</code> is single use per project and will not overwrite an existing directory.</p>
 <p>The created app should run on any OS supported by Python &gt;= 3.9 with a Posix compliant shell.  I've tested this assertion on macOS &gt;= 14.7 and on Raspberry PI 4 with Raspian Bullseye.  Additionally, the CI/CD test system for this project validates that everything works on <code>ubuntu-latest</code>.</p>
@@ -203,19 +210,22 @@ cd my_new_robot_project
 <p>From there, check out the .sh files in the root of my_new_robot_project.  Commands to build, start in the background, run integration tests for the Python example "worthless_counter" service, and run example integration test.</p>
 <h2 id="kicking-the-tires-locally">Kicking the tires locally</h2>
 <p>You can start the services locally in the background (from your project root dir on dev machine):</p>
-<pre><code class="language-sh">./start.sh
-</code></pre>
+<div class="codehilite"><pre><span></span><code>./start.sh
+</code></pre></div>
+
 <p>... which will start all services in the <code>services.cfg</code> file.  Each service runs in as a process.</p>
 <p>You can start a hot development web server that will show your changes to the webapp/ code in near real time most of the time :).</p>
-<pre><code>cd webapp
+<div class="codehilite"><pre><span></span><code>cd webapp
 npm run dev
-</code></pre>
+</code></pre></div>
+
 <p>For more information about hacking on the code, running tests, and debugging, see <a href="https://github.com/littlebee/basic_bot/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
 <h2 id="upload-to-your-robot">Upload to your robot</h2>
 <p>Also included is an example <code>upload.sh</code> script that can be used to upload your code to your robot's onboard computer.  The example <code>upload.sh</code> uses <code>rsync</code> and requires that both your local and onboard computer need to have SSH installed and properly set up.  If you can <code>ssh my_rad_robot.local</code> or by IP, you should be able to use rsync and the upload example.</p>
 <p>Example:</p>
-<pre><code>./upload.sh pi@my_raspberry_bot.local /home/pi/my_bot
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="o">./</span><span class="n">upload</span><span class="o">.</span><span class="n">sh</span><span class="w"> </span><span class="n">pi</span><span class="err">@</span><span class="n">my_raspberry_bot</span><span class="o">.</span><span class="n">local</span><span class="w"> </span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">pi</span><span class="o">/</span><span class="n">my_bot</span>
+</code></pre></div>
+
 <p><code>pi</code> above is the username
 <code>my_raspberry_bot.local</code> above is the hostname to upload can be replaced by IPAddress
 <code>/home/pi/my_bot</code> is the directory you wish to upload to.  The directory will be created if it does not already exist.</p>
@@ -225,11 +235,13 @@ npm run dev
 <h2 id="run-the-software-on-your-robot">Run the software on your robot</h2>
 <p>First <code>ssh</code> into the onboard computer and <code>cd path/uploaded/to</code>.</p>
 <p>Before running for the first time, in an ssh shell, install the basic_bot package:</p>
-<pre><code>python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="n">python3</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="n">pip</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">git</span><span class="o">+</span><span class="nl">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">littlebee</span><span class="o">/</span><span class="n">basic_bot</span><span class="p">.</span><span class="n">git</span><span class="nv">@main</span>
+</code></pre></div>
+
 <p>Then from within the the directory you uploaded to:</p>
-<pre><code>./start.sh
-</code></pre>
+<div class="codehilite"><pre><span></span><code>./start.sh
+</code></pre></div>
+
 <p>will start all of the services in  <code>./services.cfg</code> as individual processes running detached.  If your shell/terminal is closed, they will keep running.</p>
 <p>You can debug issues with a service by looking at the ./logs/* files for each service.</p>
 <h2 id="adding-your-own-ui-too">Adding your own UI, too?</h2>
@@ -291,5 +303,5 @@ npm run dev
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2025-01-29 04:50:53.322617+00:00
+Build Date UTC : 2025-01-30 05:05:42.343712+00:00
 -->

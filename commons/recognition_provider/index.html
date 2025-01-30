@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../base_camera/">base_camera</a>
@@ -146,50 +150,58 @@
 <h1 id="basic_botcommonsrecognition_provider">basic_bot.commons.recognition_provider</h1>
 <p><a id="basic_bot.commons.recognition_provider.RecognitionProvider"></a></p>
 <h2 id="recognitionprovider-objects">RecognitionProvider Objects</h2>
-<pre><code class="language-python">class RecognitionProvider()
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RecognitionProvider</span><span class="p">()</span>
+</code></pre></div>
+
 <p>This class detects objects in frames it gets from the camera object passed to
 the constructor.</p>
 <p>It uses the TFLiteDetect class to detect objects in the frames.</p>
 <p>It sends the detected objects to the central hub via a websocket connection
 using the <code>recognition</code> key</p>
 <p>To use, simply instantiate it:</p>
-<pre><code class="language-python">from basic_bot.commons.recognition_provider import RecognitionProvider
-from basic_bot.commons.camera_opencv import OpenCvCamera
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">basic_bot.commons.recognition_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecognitionProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">basic_bot.commons.camera_opencv</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenCvCamera</span>
 
-camera = OpenCvCamera()
-recognition_provider = RecognitionProvider(camera)
-</code></pre>
+<span class="n">camera</span> <span class="o">=</span> <span class="n">OpenCvCamera</span><span class="p">()</span>
+<span class="n">recognition_provider</span> <span class="o">=</span> <span class="n">RecognitionProvider</span><span class="p">(</span><span class="n">camera</span><span class="p">)</span>
+</code></pre></div>
+
 <p><a id="basic_bot.commons.recognition_provider.RecognitionProvider.__init__"></a></p>
 <h4 id="__init__">__init__</h4>
-<pre><code class="language-python">def __init__(camera: Any) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="n">camera</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Constructor</p>
 <p><a id="basic_bot.commons.recognition_provider.RecognitionProvider.get_objects"></a></p>
 <h4 id="get_objects">get_objects</h4>
-<pre><code class="language-python">def get_objects() -&gt; List[Dict[str, Any]]
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_objects</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
+</code></pre></div>
+
 <p>Return the last objects seen</p>
 <p><a id="basic_bot.commons.recognition_provider.RecognitionProvider.get_next_objects"></a></p>
 <h4 id="get_next_objects">get_next_objects</h4>
-<pre><code class="language-python">def get_next_objects() -&gt; List[Dict[str, Any]]
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_next_objects</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
+</code></pre></div>
+
 <p>Wait for and return the next objects seen</p>
 <p><a id="basic_bot.commons.recognition_provider.RecognitionProvider.pause"></a></p>
 <h4 id="pause">pause</h4>
-<pre><code class="language-python">def pause() -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pause</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Pause the recognition thread</p>
 <p><a id="basic_bot.commons.recognition_provider.RecognitionProvider.resume"></a></p>
 <h4 id="resume">resume</h4>
-<pre><code class="language-python">def resume() -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">resume</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Resume the recognition thread</p>
 <p><a id="basic_bot.commons.recognition_provider.RecognitionProvider.stats"></a></p>
 <h4 id="stats">stats</h4>
-<pre><code class="language-python">@classmethod
-def stats(cls) -&gt; Dict[str, Any]
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stats</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+</code></pre></div>
+
 <p>Return the fps stats dictionary.</p>
               
             </div>

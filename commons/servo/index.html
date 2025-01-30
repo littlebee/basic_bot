@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../base_camera/">base_camera</a>
@@ -152,61 +156,71 @@
 <h1 id="basic_botcommonsservo">basic_bot.commons.servo</h1>
 <p><a id="basic_bot.commons.servo.Servo"></a></p>
 <h2 id="servo-objects">Servo Objects</h2>
-<pre><code class="language-python">class Servo()
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Servo</span><span class="p">()</span>
+</code></pre></div>
+
 <p>This class controls a single servo motor using the Adafruit PCA9685 servo controller.
 It uses a background thread to move the motor to a destination angle at a give
 fraction of the motor's range and thereby control the speed.</p>
 <p><a id="basic_bot.commons.servo.Servo.__init__"></a></p>
 <h4 id="__init__">__init__</h4>
-<pre><code class="language-python">def __init__(motor_channel: int,
-             motor_range: int = 180,
-             min_angle: int = 0,
-             max_angle: int = 180) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="n">motor_channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="n">motor_range</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">180</span><span class="p">,</span>
+             <span class="n">min_angle</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+             <span class="n">max_angle</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">180</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Constructor</p>
 <p><a id="basic_bot.commons.servo.Servo.current_angle"></a></p>
 <h4 id="current_angle">current_angle</h4>
-<pre><code class="language-python">@property
-def current_angle() -&gt; float
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nd">@property</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">current_angle</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+</code></pre></div>
+
 <p>Returns the current angle of the servo motor</p>
 <p><a id="basic_bot.commons.servo.Servo.step_delay"></a></p>
 <h4 id="step_delay">step_delay</h4>
-<pre><code class="language-python">@property
-def step_delay() -&gt; float
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nd">@property</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">step_delay</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+</code></pre></div>
+
 <p>Returns the current step delay</p>
 <p><a id="basic_bot.commons.servo.Servo.step_delay"></a></p>
 <h4 id="step_delay_1">step_delay</h4>
-<pre><code class="language-python">@step_delay.setter
-def step_delay(value: float) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nd">@step_delay</span><span class="o">.</span><span class="n">setter</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">step_delay</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Sets the step delay</p>
 <p><a id="basic_bot.commons.servo.Servo.move_to"></a></p>
 <h4 id="move_to">move_to</h4>
-<pre><code class="language-python">def move_to(angle: float) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">move_to</span><span class="p">(</span><span class="n">angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Move the servo to the specified angle</p>
 <p><a id="basic_bot.commons.servo.Servo.pause"></a></p>
 <h4 id="pause">pause</h4>
-<pre><code class="language-python">def pause() -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pause</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Pause the servo movement</p>
 <p><a id="basic_bot.commons.servo.Servo.resume"></a></p>
 <h4 id="resume">resume</h4>
-<pre><code class="language-python">def resume() -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">resume</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Resume the servo movement</p>
 <p><a id="basic_bot.commons.servo.Servo.stop_thread"></a></p>
 <h4 id="stop_thread">stop_thread</h4>
-<pre><code class="language-python">def stop_thread() -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">stop_thread</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Stop the servo movement thread</p>
 <p><a id="basic_bot.commons.servo.Servo.wait_for_motor_stopped"></a></p>
 <h4 id="wait_for_motor_stopped">wait_for_motor_stopped</h4>
-<pre><code class="language-python">def wait_for_motor_stopped() -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wait_for_motor_stopped</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Wait for the motor to stop moving</p>
               
             </div>

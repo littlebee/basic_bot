@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../base_camera/">base_camera</a>
@@ -138,14 +142,16 @@
 <h1 id="basic_botcommonstflite_detect">basic_bot.commons.tflite_detect</h1>
 <p><a id="basic_bot.commons.tflite_detect.TFLiteDetect"></a></p>
 <h2 id="tflitedetect-objects">TFLiteDetect Objects</h2>
-<pre><code class="language-python">class TFLiteDetect()
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TFLiteDetect</span><span class="p">()</span>
+</code></pre></div>
+
 <p>This class provides object detection using Tensor Flow Lite.</p>
 <p><a id="basic_bot.commons.tflite_detect.TFLiteDetect.__init__"></a></p>
 <h4 id="__init__">__init__</h4>
-<pre><code class="language-python">def __init__(model: Optional[str] = None,
-             use_coral_tpu: Optional[bool] = None) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+             <span class="n">use_coral_tpu</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Constructor</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -154,8 +160,9 @@
 </ul>
 <p><a id="basic_bot.commons.tflite_detect.TFLiteDetect.get_prediction"></a></p>
 <h4 id="get_prediction">get_prediction</h4>
-<pre><code class="language-python">def get_prediction(img: Any) -&gt; List[Dict[str, Any]]
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_prediction</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
+</code></pre></div>
+
 <p>Given an image array, return a list of detected objects.</p>
 <p>Each detected object is a dictionary with the following:</p>
 <ul>

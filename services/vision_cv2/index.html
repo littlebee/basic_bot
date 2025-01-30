@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/base_camera/">base_camera</a>
@@ -140,45 +144,50 @@ can be used in an HTML 'img' element.  The image feed is a multipart
 jpeg stream (for now; TODO: reassess this).  Assuming that the vision
 service is running on the same host machine as the browser client
 location, you can do something like:</p>
-<pre><code class="language-html">&lt;img src=&quot;http://localhost:5001/video_feed&quot; /&gt;
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;http://localhost:5001/video_feed&quot;</span> <span class="p">/&gt;</span>
+</code></pre></div>
+
 <p>The following data is provided to central_hub as fast as image capture and
 recognition can be done:</p>
-<pre><code class="language-json">{
-    &quot;recognition&quot;: [
-        {
-            &quot;bounding_box&quot;: [x1, y1, x2, y2],
-            &quot;classification&quot;: &quot;person&quot;,
-            &quot;confidence&quot;: 0.99
-        },
-        {
-            &quot;bounding_box&quot;: [x1, y1, x2, y2],
-            &quot;classification&quot;: &quot;dog&quot;,
-            &quot;confidence&quot;: 0.75
-        }
-    ]
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;recognition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;bounding_box&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">x</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="err">y</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="err">x</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="err">y</span><span class="mi">2</span><span class="p">],</span>
+<span class="w">            </span><span class="nt">&quot;classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;person&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.99</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;bounding_box&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">x</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="err">y</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="err">x</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="err">y</span><span class="mi">2</span><span class="p">],</span>
+<span class="w">            </span><span class="nt">&quot;classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dog&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.75</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
 <p>The [x1, y1, x2, y2] bounding box above is actually sent as
 the numeric values of the bounding box in the image.</p>
 <p>Origin:
     This was originally pilfered from
     https://github.com/adeept/Adeept_RaspTank/blob/a6c45e8cc7df620ad8977845eda2b839647d5a83/server/app.py</p>
-<pre><code>Which looks like it was in turn pilfered from
-https://blog.miguelgrinberg.com/post/flask-video-streaming-revisited
+<div class="codehilite"><pre><span></span><code><span class="n">Which</span><span class="w"> </span><span class="n">looks</span><span class="w"> </span><span class="ow">like</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">turn</span><span class="w"> </span><span class="n">pilfered</span><span class="w"> </span><span class="k">from</span>
+<span class="nl">https</span><span class="p">:</span><span class="o">//</span><span class="n">blog</span><span class="p">.</span><span class="n">miguelgrinberg</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">post</span><span class="o">/</span><span class="n">flask</span><span class="o">-</span><span class="n">video</span><span class="o">-</span><span class="n">streaming</span><span class="o">-</span><span class="n">revisited</span>
 
-Thank you, @adeept and @miguelgrinberg!
-</code></pre>
+<span class="n">Thank</span><span class="w"> </span><span class="n">you</span><span class="p">,</span><span class="w"> </span><span class="nv">@adeept</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">@miguelgrinberg</span><span class="err">!</span>
+</code></pre></div>
+
 <p><a id="basic_bot.services.vision_cv2.gen_rgb_video"></a></p>
 <h4 id="gen_rgb_video">gen_rgb_video</h4>
-<pre><code class="language-python">def gen_rgb_video(camera: OpenCvCamera) -&gt; Generator[bytes, None, None]
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gen_rgb_video</span><span class="p">(</span><span class="n">camera</span><span class="p">:</span> <span class="n">OpenCvCamera</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+</code></pre></div>
+
 <p>Video streaming generator function.</p>
 <p><a id="basic_bot.services.vision_cv2.video_feed"></a></p>
 <h4 id="video_feed">video_feed</h4>
-<pre><code class="language-python">@app.route(&quot;/video_feed&quot;)
-def video_feed() -&gt; Response
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/video_feed&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">video_feed</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Response</span>
+</code></pre></div>
+
 <p>Video streaming route. Put this in the src attribute of an img tag.</p>
               
             </div>

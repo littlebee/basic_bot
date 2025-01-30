@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../base_camera/">base_camera</a>
@@ -146,40 +150,46 @@
 via websockets.</p>
 <p><a id="basic_bot.commons.messages.MessageType"></a></p>
 <h2 id="messagetype-objects">MessageType Objects</h2>
-<pre><code class="language-python">class MessageType(Enum)
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MessageType</span><span class="p">(</span><span class="n">Enum</span><span class="p">)</span>
+</code></pre></div>
+
 <p>Message types for communication to/from central_hub.</p>
 <p><a id="basic_bot.commons.messages.send_message"></a></p>
 <h4 id="send_message">send_message</h4>
-<pre><code class="language-python">async def send_message(websocket: Any, message: Dict[str, Any]) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_message</span><span class="p">(</span><span class="n">websocket</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Send a message in the form of a dictionary to central_hub.</p>
 <p><a id="basic_bot.commons.messages.send_identity"></a></p>
 <h4 id="send_identity">send_identity</h4>
-<pre><code class="language-python">async def send_identity(websocket: Any, name: str) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_identity</span><span class="p">(</span><span class="n">websocket</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Send the <code>identity</code> type message to central_hub.  Name should uniquely
 identify the service.</p>
 <p><a id="basic_bot.commons.messages.send_subscribe"></a></p>
 <h4 id="send_subscribe">send_subscribe</h4>
-<pre><code class="language-python">async def send_subscribe(
-        websocket: Any, subscriptionNames: Union[List[str],
-                                                 Literal[&quot;*&quot;]]) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_subscribe</span><span class="p">(</span>
+        <span class="n">websocket</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">subscriptionNames</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                                                 <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Send the <code>subscribeState</code> message type to central_hub.</p>
 <p><code>subscriptionNames</code> should be an array of keys to subscribe or "*"
 to subscribe to all keys.</p>
 <p><a id="basic_bot.commons.messages.send_get_state"></a></p>
 <h4 id="send_get_state">send_get_state</h4>
-<pre><code class="language-python">async def send_get_state(websocket: Any,
-                         keys: Optional[List[str]] = []) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_get_state</span><span class="p">(</span><span class="n">websocket</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+                         <span class="n">keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Send the <code>getState</code> message type to central_hub optionally specifying a list
 of keys to get the state.</p>
 <p><a id="basic_bot.commons.messages.send_update_state"></a></p>
 <h4 id="send_update_state">send_update_state</h4>
-<pre><code class="language-python">async def send_update_state(websocket: Any, stateData: Dict[str, Any]) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_update_state</span><span class="p">(</span><span class="n">websocket</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">stateData</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Send the <code>updateState</code> message type to central_hub with the key-&gt;value state data to update.</p>
               
             </div>

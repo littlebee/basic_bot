@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul class="current">
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">base_camera</a>
@@ -159,29 +163,34 @@ https://blog.miguelgrinberg.com/post/flask-video-streaming-revisited</p>
 <p>Thank you, @adeept and @miguelgrinberg!</p>
 <p><a id="basic_bot.commons.base_camera.CameraEvent"></a></p>
 <h2 id="cameraevent-objects">CameraEvent Objects</h2>
-<pre><code class="language-python">class CameraEvent(object)
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CameraEvent</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+</code></pre></div>
+
 <p>An Event-like class that signals all active clients when a new frame is
 available.</p>
 <p><a id="basic_bot.commons.base_camera.CameraEvent.wait"></a></p>
 <h4 id="wait">wait</h4>
-<pre><code class="language-python">def wait() -&gt; bool
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+</code></pre></div>
+
 <p>Invoked from each client's thread to wait for the next frame.</p>
 <p><a id="basic_bot.commons.base_camera.CameraEvent.set"></a></p>
 <h4 id="set">set</h4>
-<pre><code class="language-python">def set() -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Invoked by the camera thread when a new frame is available.</p>
 <p><a id="basic_bot.commons.base_camera.CameraEvent.clear"></a></p>
 <h4 id="clear">clear</h4>
-<pre><code class="language-python">def clear() -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Invoked from each client's thread after a frame was processed.</p>
 <p><a id="basic_bot.commons.base_camera.BaseCamera"></a></p>
 <h2 id="basecamera-objects">BaseCamera Objects</h2>
-<pre><code class="language-python">class BaseCamera(object)
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BaseCamera</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+</code></pre></div>
+
 <p>BaseCamera is an abstract base class that for camera implementations.  It
 creates a background thread that reads frames from the camera and signals
 when a new frame is available.</p>
@@ -190,31 +199,35 @@ when a new frame is available.</p>
 <p>current frame is stored here by background thread</p>
 <p><a id="basic_bot.commons.base_camera.BaseCamera.__init__"></a></p>
 <h4 id="__init__">__init__</h4>
-<pre><code class="language-python">def __init__() -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Start the background camera thread if it isn't running yet.</p>
 <p><a id="basic_bot.commons.base_camera.BaseCamera.get_frame"></a></p>
 <h4 id="get_frame">get_frame</h4>
-<pre><code class="language-python">def get_frame() -&gt; Optional[bytes]
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_frame</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span>
+</code></pre></div>
+
 <p>Return the current camera frame.</p>
 <p><a id="basic_bot.commons.base_camera.BaseCamera.frames"></a></p>
 <h4 id="frames">frames</h4>
-<pre><code class="language-python">@staticmethod
-def frames() -&gt; Generator[bytes, None, None]
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">frames</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+</code></pre></div>
+
 <p>"Generator that returns frames from the camera.</p>
 <p><a id="basic_bot.commons.base_camera.BaseCamera.stats"></a></p>
 <h4 id="stats">stats</h4>
-<pre><code class="language-python">@classmethod
-def stats(cls) -&gt; dict[str, float]
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stats</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+</code></pre></div>
+
 <p>Return the fps stats dictionary.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../../og_original_goals/" class="btn btn-neutral float-left" title="Og original goals"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../setup_on_pi5/" class="btn btn-neutral float-left" title="How to setup a Raspberry Pi5"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../camera_opencv/" class="btn btn-neutral float-right" title="camera_opencv">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -238,7 +251,7 @@ def stats(cls) -&gt; dict[str, float]
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../../og_original_goals/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../../setup_on_pi5/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../camera_opencv/" style="color: #fcfcfc">Next &raquo;</a></span>

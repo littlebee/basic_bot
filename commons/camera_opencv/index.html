@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../base_camera/">base_camera</a>
@@ -137,21 +141,24 @@
 <p>An implemation of BaseCamera using OpenCV.</p>
 <p><a id="basic_bot.commons.camera_opencv.OpenCvCamera"></a></p>
 <h2 id="opencvcamera-objects">OpenCvCamera Objects</h2>
-<pre><code class="language-python">class OpenCvCamera(BaseCamera)
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">OpenCvCamera</span><span class="p">(</span><span class="n">BaseCamera</span><span class="p">)</span>
+</code></pre></div>
+
 <p>This class implements the BaseCamera interface using OpenCV.</p>
 <p>Usage:</p>
-<pre><code class="language-python">camera = OpenCvCamera()
-# get_frame() is from BaseCamera and returns a single frame
-frame = camera.get_frame()
-# you can then used the fame for example:
-jpeg = cv2.imencode(&quot;.jpg&quot;, frame)[1].tobytes()
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="n">camera</span> <span class="o">=</span> <span class="n">OpenCvCamera</span><span class="p">()</span>
+<span class="c1"># get_frame() is from BaseCamera and returns a single frame</span>
+<span class="n">frame</span> <span class="o">=</span> <span class="n">camera</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span>
+<span class="c1"># you can then used the fame for example:</span>
+<span class="n">jpeg</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imencode</span><span class="p">(</span><span class="s2">&quot;.jpg&quot;</span><span class="p">,</span> <span class="n">frame</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
+</code></pre></div>
+
 <p><a id="basic_bot.commons.camera_opencv.OpenCvCamera.frames"></a></p>
 <h4 id="frames">frames</h4>
-<pre><code class="language-python">@staticmethod
-def frames() -&gt; Generator[bytes, None, None]
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">frames</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+</code></pre></div>
+
 <p>Generator function that yields frames from the camera. Required by BaseCamera</p>
               
             </div>

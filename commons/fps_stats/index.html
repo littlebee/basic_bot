@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../base_camera/">base_camera</a>
@@ -138,20 +142,23 @@
 <h1 id="basic_botcommonsfps_stats">basic_bot.commons.fps_stats</h1>
 <p><a id="basic_bot.commons.fps_stats.FpsStats"></a></p>
 <h2 id="fpsstats-objects">FpsStats Objects</h2>
-<pre><code class="language-python">class FpsStats()
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">FpsStats</span><span class="p">()</span>
+</code></pre></div>
+
 <p>FpsStats - A class to track overall and floating frames per seconds</p>
 <p>Instantiate the class to start tracking the stats. Call increment() for each frame read.
 Call stats() to get the stats.</p>
 <p><a id="basic_bot.commons.fps_stats.FpsStats.increment"></a></p>
 <h4 id="increment">increment</h4>
-<pre><code class="language-python">def increment() -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">increment</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Increment the frame count and calculate the floating fps</p>
 <p><a id="basic_bot.commons.fps_stats.FpsStats.stats"></a></p>
 <h4 id="stats">stats</h4>
-<pre><code class="language-python">def stats() -&gt; dict[str, float]
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">stats</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+</code></pre></div>
+
 <p>Return the stats as a dictionary</p>
               
             </div>

@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../base_camera/">base_camera</a>
@@ -142,29 +146,34 @@
 <h1 id="basic_botcommonshub_state">basic_bot.commons.hub_state</h1>
 <p><a id="basic_bot.commons.hub_state.HubState"></a></p>
 <h2 id="hubstate-objects">HubState Objects</h2>
-<pre><code class="language-python">class HubState()
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HubState</span><span class="p">()</span>
+</code></pre></div>
+
 <p>This class manages the local state of the hub.  It is initialized with a default
 initial state and can be updated with new state data.</p>
 <p><a id="basic_bot.commons.hub_state.HubState.__init__"></a></p>
 <h4 id="__init__">__init__</h4>
-<pre><code class="language-python">def __init__(default_state: Dict[str, Any] = {}) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="n">default_state</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Initializes the hub state with the default state.</p>
 <p><a id="basic_bot.commons.hub_state.HubState.get"></a></p>
 <h4 id="get">get</h4>
-<pre><code class="language-python">def get(keys_requested: List[str]) -&gt; Dict[str, Any]
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="n">keys_requested</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+</code></pre></div>
+
 <p>Return the requested state data for a list of state keys.</p>
 <p><a id="basic_bot.commons.hub_state.HubState.update_state_from_message_data"></a></p>
 <h4 id="update_state_from_message_data">update_state_from_message_data</h4>
-<pre><code class="language-python">def update_state_from_message_data(message_data: Dict[str, Any]) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_state_from_message_data</span><span class="p">(</span><span class="n">message_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Update state from received message data.</p>
 <p><a id="basic_bot.commons.hub_state.HubState.serialize_state"></a></p>
 <h4 id="serialize_state">serialize_state</h4>
-<pre><code class="language-python">def serialize_state(keys_requested: Optional[List[str]] = None) -&gt; str
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">serialize_state</span><span class="p">(</span><span class="n">keys_requested</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+
 <p>Serialize the current state to JSON.</p>
               
             </div>

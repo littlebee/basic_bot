@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../base_camera/">base_camera</a>
@@ -137,18 +141,21 @@
 <p>Utility functions for handling Flask web responses and requests.</p>
 <p><a id="basic_bot.commons.web_utils.json_response"></a></p>
 <h4 id="json_response">json_response</h4>
-<pre><code class="language-python">def json_response(app, data)
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">json_response</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+
 <p>Return a JSON response.</p>
 <p><a id="basic_bot.commons.web_utils.respond_ok"></a></p>
 <h4 id="respond_ok">respond_ok</h4>
-<pre><code class="language-python">def respond_ok(app, data=None)
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">respond_ok</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre></div>
+
 <p>Return a JSON response with status ok.</p>
 <p><a id="basic_bot.commons.web_utils.respond_not_ok"></a></p>
 <h4 id="respond_not_ok">respond_not_ok</h4>
-<pre><code class="language-python">def respond_not_ok(app, status, data)
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">respond_not_ok</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+
 <p>Return a JSON response with status not ok.</p>
               
             </div>

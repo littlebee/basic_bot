@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/base_camera/">base_camera</a>
@@ -131,24 +135,25 @@
 <p>Provides motor control for a 2-wheel drive robot via the central_hub
 key: "throttles".</p>
 <p>Sending a state update to the central_hub, for example:</p>
-<pre><code class="language-json">{
-    &quot;throttles&quot;: {
-        &quot;left&quot;: 0.5,
-        &quot;right&quot;: 0.5
-    }
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;throttles&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;left&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;right&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
 <p>...would set the left and right throttles to half ahead.  You can also set
 the throttles to negative values &gt;= -1 to go in reverse.</p>
 <p>The motor control will send a state update back to the central_hub with the
 current state of the motors, for example:</p>
-<pre><code class="language-json">{
-    &quot;motors&quot;: {
-        &quot;left&quot;: 0.5,
-        &quot;right&quot;: 0.5
-    }
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;motors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;left&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;right&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
               
             </div>
           </div><footer>

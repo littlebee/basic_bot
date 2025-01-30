@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/base_camera/">base_camera</a>
@@ -132,16 +136,17 @@
 websockets.  The state of published keys is maintained in memory.</p>
 <p>This python process is meant to be run as a service by basic_bot.</p>
 <p>You can also run it in the foreground for debugging purposes.  ex:</p>
-<pre><code class="language-sh">python3 -m basic_bot.services.central_hub
-</code></pre>
+<div class="codehilite"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>basic_bot.services.central_hub
+</code></pre></div>
+
 <p>Central hub is also the publisher of several state keys:</p>
-<pre><code class="language-json">{
-    &quot;hub_stats&quot;: {
-        &quot;state_updates_recv&quot;: 0
-    },
-    &quot;subsystem_stats&quot;: {}
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;hub_stats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;state_updates_recv&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;subsystem_stats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div>
               
             </div>
           </div><footer>

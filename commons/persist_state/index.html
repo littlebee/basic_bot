@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../base_camera/">base_camera</a>
@@ -138,14 +142,16 @@
 <h1 id="basic_botcommonspersist_state">basic_bot.commons.persist_state</h1>
 <p><a id="basic_bot.commons.persist_state.PersistState"></a></p>
 <h2 id="persiststate-objects">PersistState Objects</h2>
-<pre><code class="language-python">class PersistState()
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PersistState</span><span class="p">()</span>
+</code></pre></div>
+
 <p>Class to handle persisting the bot state to a file.</p>
 <p><a id="basic_bot.commons.persist_state.PersistState.__init__"></a></p>
 <h4 id="__init__">__init__</h4>
-<pre><code class="language-python">def __init__(hub_state: HubState, file_path: str,
-             persisted_state_keys: List[str]) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="n">hub_state</span><span class="p">:</span> <span class="n">HubState</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+             <span class="n">persisted_state_keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Initialize the PersistState object and load the persisted state from
 the file if it exists.</p>
 <p><strong>Arguments</strong>:</p>
@@ -155,27 +161,28 @@ the file if it exists.</p>
 <li>persisted_state_keys: the keys to persist to the file</li>
 </ul>
 <p>Usage:</p>
-<pre><code class="language-python">from basic_bot.commons.hub_state import HubState
-from basic_bot.commons.persist_state import PersistState
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">basic_bot.commons.hub_state</span><span class="w"> </span><span class="kn">import</span> <span class="n">HubState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">basic_bot.commons.persist_state</span><span class="w"> </span><span class="kn">import</span> <span class="n">PersistState</span>
 
-# initialize the hub state
-hub_state = HubState({
-    &quot;test_key&quot;: &quot;test_value&quot;,
-    &quot;some_other_key&quot;: &quot;some_other_value&quot;
-})
+<span class="c1"># initialize the hub state</span>
+<span class="n">hub_state</span> <span class="o">=</span> <span class="n">HubState</span><span class="p">({</span>
+    <span class="s2">&quot;test_key&quot;</span><span class="p">:</span> <span class="s2">&quot;test_value&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;some_other_key&quot;</span><span class="p">:</span> <span class="s2">&quot;some_other_value&quot;</span>
+<span class="p">})</span>
 
-# hub_state will be updated with the persisted state if the file exists
-persist = PersistState(hub_state, &quot;./my_service_persisted.json&quot;, [&quot;test_key&quot;])
+<span class="c1"># hub_state will be updated with the persisted state if the file exists</span>
+<span class="n">persist</span> <span class="o">=</span> <span class="n">PersistState</span><span class="p">(</span><span class="n">hub_state</span><span class="p">,</span> <span class="s2">&quot;./my_service_persisted.json&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;test_key&quot;</span><span class="p">])</span>
 
-# ... do something that updates the hub_state
+<span class="c1"># ... do something that updates the hub_state</span>
 
-persist.persist_state()
+<span class="n">persist</span><span class="o">.</span><span class="n">persist_state</span><span class="p">()</span>
+</code></pre></div>
 
-</code></pre>
 <p><a id="basic_bot.commons.persist_state.PersistState.persist_state"></a></p>
 <h4 id="persist_state">persist_state</h4>
-<pre><code class="language-python">def persist_state() -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">persist_state</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Persist the current state to a file.</p>
               
             </div>

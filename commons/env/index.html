@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../base_camera/">base_camera</a>
@@ -138,32 +142,37 @@
 <h1 id="basic_botcommonsenv">basic_bot.commons.env</h1>
 <p>Simple utility functions to get typed environment variables with default values.</p>
 <p>Usage:</p>
-<pre><code>from basic_bot.commons import env
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">basic_bot.commons</span><span class="w"> </span><span class="kn">import</span> <span class="n">env</span>
 
-MY_INT = env.env_int(&quot;MY_INT&quot;, 5800)
-MY_STRING = env.env_string(&quot;MY_STRING&quot;, &quot;default&quot;)
-MY_FLOAT = env.env_float(&quot;MY_FLOAT&quot;, 3.14)
-MY_BOOL = env.env_bool(&quot;MY_BOOL&quot;, True)
-</code></pre>
+<span class="n">MY_INT</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">env_int</span><span class="p">(</span><span class="s2">&quot;MY_INT&quot;</span><span class="p">,</span> <span class="mi">5800</span><span class="p">)</span>
+<span class="n">MY_STRING</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">env_string</span><span class="p">(</span><span class="s2">&quot;MY_STRING&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
+<span class="n">MY_FLOAT</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">env_float</span><span class="p">(</span><span class="s2">&quot;MY_FLOAT&quot;</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">)</span>
+<span class="n">MY_BOOL</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">env_bool</span><span class="p">(</span><span class="s2">&quot;MY_BOOL&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+
 <p><a id="basic_bot.commons.env.env_string"></a></p>
 <h4 id="env_string">env_string</h4>
-<pre><code class="language-python">def env_string(name: str, default: str) -&gt; str
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">env_string</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+
 <p>Parse environment variable as string with default value.</p>
 <p><a id="basic_bot.commons.env.env_int"></a></p>
 <h4 id="env_int">env_int</h4>
-<pre><code class="language-python">def env_int(name: str, default: int) -&gt; int
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">env_int</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span>
+</code></pre></div>
+
 <p>Parse environment variable as int with default value.</p>
 <p><a id="basic_bot.commons.env.env_float"></a></p>
 <h4 id="env_float">env_float</h4>
-<pre><code class="language-python">def env_float(name: str, default: float) -&gt; float
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">env_float</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+</code></pre></div>
+
 <p>Parse environment variable as float with default value.</p>
 <p><a id="basic_bot.commons.env.env_bool"></a></p>
 <h4 id="env_bool">env_bool</h4>
-<pre><code class="language-python">def env_bool(name: str, default: bool) -&gt; bool
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">env_bool</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+</code></pre></div>
+
 <p>Parse environment variable as bool with default value.</p>
               
             </div>

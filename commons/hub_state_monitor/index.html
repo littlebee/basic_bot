@@ -47,6 +47,10 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../og_original_goals/">Og original goals</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                </li>
+              </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../base_camera/">base_camera</a>
@@ -140,8 +144,9 @@
 <h1 id="basic_botcommonshub_state_monitor">basic_bot.commons.hub_state_monitor</h1>
 <p><a id="basic_bot.commons.hub_state_monitor.HubStateMonitor"></a></p>
 <h2 id="hubstatemonitor-objects">HubStateMonitor Objects</h2>
-<pre><code class="language-python">class HubStateMonitor()
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HubStateMonitor</span><span class="p">()</span>
+</code></pre></div>
+
 <p>This class updates the process local copy of the hub state as subscribed keys
 are changed.  It starts a thread to listen for state updates from the central
 hub and applies them to the local state via hub_state.update_state_from_message_data.</p>
@@ -153,44 +158,48 @@ hub_state.update_state_from_message_data regardless of whether the on_state_upda
 callback is provided or the value it returns.  To alter the state you should
 alway send an <code>updateState</code> message to the central hub.</p>
 <p>Usage:</p>
-<pre><code class="language-python">from basic_bot.commons.hub_state import HubState
-from basic_bot.commons.hub_state_monitor import HubStateMonitor
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">basic_bot.commons.hub_state</span><span class="w"> </span><span class="kn">import</span> <span class="n">HubState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">basic_bot.commons.hub_state_monitor</span><span class="w"> </span><span class="kn">import</span> <span class="n">HubStateMonitor</span>
 
-hub_state = HubState({&quot;test_key&quot;: &quot;test_value&quot;})
-monitor = HubStateMonitor(hub_state, &quot;test_identity&quot;, [&quot;test_key&quot;])
-monitor.start()
-</code></pre>
+<span class="n">hub_state</span> <span class="o">=</span> <span class="n">HubState</span><span class="p">({</span><span class="s2">&quot;test_key&quot;</span><span class="p">:</span> <span class="s2">&quot;test_value&quot;</span><span class="p">})</span>
+<span class="n">monitor</span> <span class="o">=</span> <span class="n">HubStateMonitor</span><span class="p">(</span><span class="n">hub_state</span><span class="p">,</span> <span class="s2">&quot;test_identity&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;test_key&quot;</span><span class="p">])</span>
+<span class="n">monitor</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</code></pre></div>
+
 <p>For a more complex example using callbacks, see <a href="https://github.com/littlebee/daphbot-due/blob/aa7ed90d60df33009c5bd252c31fa0fb25076fad/src/daphbot_service.py#L75">usage in daphbot example - daphbot_service</a></p>
 <p><a id="basic_bot.commons.hub_state_monitor.HubStateMonitor.__init__"></a></p>
 <h4 id="__init__">__init__</h4>
-<pre><code class="language-python">def __init__(
-    hub_state: HubState,
-    identity: str,
-    subscribed_keys: Union[List[str], Literal[&quot;*&quot;]],
-    on_connect: Optional[Callable[
-        [WebSocketClientProtocol],
-        None,
-    ]] = None,
-    on_state_update: Optional[Callable[
-        [
-            WebSocketClientProtocol,
-            str,
-            dict,
-        ],
-        None,
-    ]] = None
-) -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="n">hub_state</span><span class="p">:</span> <span class="n">HubState</span><span class="p">,</span>
+    <span class="n">identity</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">subscribed_keys</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]],</span>
+    <span class="n">on_connect</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[</span>
+        <span class="p">[</span><span class="n">WebSocketClientProtocol</span><span class="p">],</span>
+        <span class="kc">None</span><span class="p">,</span>
+    <span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">on_state_update</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[</span>
+        <span class="p">[</span>
+            <span class="n">WebSocketClientProtocol</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">,</span>
+            <span class="nb">dict</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="kc">None</span><span class="p">,</span>
+    <span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Instantiate a HubStateMonitor object.</p>
 <p><a id="basic_bot.commons.hub_state_monitor.HubStateMonitor.start"></a></p>
 <h4 id="start">start</h4>
-<pre><code class="language-python">def start() -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Starts the background thread that listens for state updates and updates HubState</p>
 <p><a id="basic_bot.commons.hub_state_monitor.HubStateMonitor.stop"></a></p>
 <h4 id="stop">stop</h4>
-<pre><code class="language-python">def stop() -&gt; None
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
 <p>Stops the background thread that listens for state updates and updates HubState</p>
               
             </div>
