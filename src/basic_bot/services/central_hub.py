@@ -19,6 +19,84 @@ Central hub is also the publisher of several state keys:
     "subsystem_stats": {}
 }
 ```
+## Messages
+
+All data sent over the websocket to and from central_hub is in json and has the format:
+```json
+{
+     "type": "string",
+     "data": { ... }
+}
+```
+Where `data` is optional and specific to the type of message. The following messages are supported by `central-hub`:
+
+#### getState
+
+example json:
+
+```json
+{
+  "type": "getState"
+  "data": ["keyName", "keyName"]
+}
+```
+Causes `central-hub` to send the requested state via message type = "state" to the requesting client socket.
+
+`data` is optional, if specified, should be array of key names to retrieve. If omitted, all keys (complete state) is sent.
+
+
+### identity
+
+example json:
+
+```json
+{
+  "type": "identity",
+  "data": "My subsystem name"
+}
+```
+
+Causes `central-hub` to update `subsystems_stats` key of the shared state and send an "iseeu" message back to client socket with the IP address that it sees the client.
+
+### subscribeState
+
+example json:
+
+```json
+{
+  "type": "subscribeState",
+  "data": ["system_stats", "set_angles"]
+}
+```
+
+Causes `central-hub` to add the client socket to the subscribers for each of the state keys provided. Client will start receiving "stateUpdate" messages when those keys are changed. The client may also send `"data": "*"` which will subscribe it to all keys like the web UI does.
+
+### updateState
+
+example json:
+
+```json
+{
+  "type": "updateState",
+  "data": {
+    "set_angles": [127.4, 66.4, 90, 90, 0],
+    "velocity_factor": 1.5
+  }
+}
+```
+
+This message causes `central-hub` merge the receive state and the shared
+state and send `stateUpdate` messages to any subscribers. Note that the
+message sent by clients** (type: "updateState") is a different type than
+the message **sent to clients** (type: "stateUpdate").
+
+As the example above shows, it is possible to update multiple state keys at
+once, but most subsystems only ever update one top level key.
+
+The data received must be the **full data for that key**. `central-hub`
+will replace that top level key with the data received.
+
+
 
 """
 import json
@@ -181,7 +259,7 @@ async def handle_state_request(
 async def handle_state_update(message_data: Dict[str, Any]) -> None:
     global subscribers
 
-    log.info(f"handle_state_update: {message_data}")
+    log.debug(f"handle_state_update: {message_data}")
 
     hub_state.update_state_from_message_data(message_data)
     hub_state.state["hub_stats"]["state_updates_recv"] += 1

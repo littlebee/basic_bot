@@ -4,10 +4,10 @@ Provide image feed and object recognition based on open-cv for the
 video capture input.  This service will provide a list of objects
 and their bounding boxes in the image feed via central hub.
 
-A vision feed is provided via http://<ip>:<port>/video_feed that
-can be used in an HTML 'img' element.  The image feed is a multipart
-jpeg stream (for now; TODO: reassess this).  Assuming that the vision
-service is running on the same host machine as the browser client
+A video feed is provided via http://<ip>:<port>/video_feed that
+can be used as the `src` attribute to an HTML 'img' element.
+The image feed is a multipart jpeg stream (for now; TODO: reassess this).
+Assuming that the vision service is running on the same host machine as the browser client
 location, you can do something like:
 ```html
 <img src="http://localhost:5001/video_feed" />
@@ -36,7 +36,7 @@ The [x1, y1, x2, y2] bounding box above is actually sent as
 the numeric values of the bounding box in the image.
 
 Origin:
-    This was originally pilfered from
+    Some of this code was originally pilfered from
     https://github.com/adeept/Adeept_RaspTank/blob/a6c45e8cc7df620ad8977845eda2b839647d5a83/server/app.py
 
     Which looks like it was in turn pilfered from

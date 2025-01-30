@@ -1,2 +1,4 @@
 #!/bin/sh
-bb_restart
+bb_stop $@
+sleep 2
+bb_start $@

@@ -1,2 +1,2 @@
 #!/bin/bash
-bb_stop
+bb_stop $@

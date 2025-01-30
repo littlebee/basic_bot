@@ -28,7 +28,6 @@ requires-python = ">=3.9"
 bb_create = "basic_bot.bb_create:main"
 bb_start = "basic_bot.bb_start:main"
 bb_stop = "basic_bot.bb_stop:main"
-bb_restart = "basic_bot.bb_restart:main"
 
 
 [project.urls]
