@@ -143,3 +143,5 @@ I'm seeing some impressive stats!  Recognition is running at nearly 100% of the 
     }
 }
 ```
+
+Note: the above was using a USB connected camera.

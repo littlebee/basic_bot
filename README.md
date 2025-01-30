@@ -24,7 +24,7 @@ See official [API Docs](https://littlebee.github.io/basic_bot/)
 ## Getting Started
 On your development computer (not your bot's onboard computer; see later in this doc)
 
-```shell
+```sh
 python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
 bb_create my_new_project_dir
 ```
@@ -39,11 +39,10 @@ The above commands will
 - add start.sh, stop.sh, upload.sh scripts to my_new_project_dir/
 - add build.sh and test.sh scripts to my_new_project_dir/
 - run build.sh and test.sh scripts
-```
 
 After `bb_create` finishes you should be able to
 
-```shell
+```sh
 cd my_new_robot_project
 ```
 
@@ -51,7 +50,7 @@ cd my_new_robot_project
 
 `bb_create` is single use per project and will not overwrite an existing directory.
 
-The created app should run on any OS supported by Python >= 3.9 with a Posix compliant shell.  I've tested this assertion on macOS >= 14.7 and on Raspberry PI 4 with Raspian Bullseye.  Additionally, the CI/CD test system for this project validates that everything works on `ubuntu-latest`.
+The created app should run on any OS supported by Python >= 3.9 with a Posix compliant shell.  I've tested this assertion on macOS >= 14.7, on Raspberry PI 4 with Raspian Bullseye, and on the Raspberry Pi 5 w/ Debian Bookworm.  Additionally, the CI/CD test system for this project validates that everything works on `ubuntu-latest`.
 
 Python >= 3.9 is required.  It's also a good idea to make sure `python` and `pip` commands are pointing to the correct version (3.9) if you are using a virtual environment like Anaconda or Miniconda.
 
@@ -81,12 +80,13 @@ For more information about hacking on the code, running tests, and debugging, se
 Also included is an example `upload.sh` script that can be used to upload your code to your robot's onboard computer.  The example `upload.sh` uses `rsync` and requires that both your local and onboard computer need to have SSH installed and properly set up.  If you can `ssh my_rad_robot.local` or by IP, you should be able to use rsync and the upload example.
 
 Example:
-```
+```sh
 ./upload.sh pi@my_raspberry_bot.local /home/pi/my_bot
 ```
-`pi` above is the username
-`my_raspberry_bot.local` above is the hostname to upload can be replaced by IPAddress
-`/home/pi/my_bot` is the directory you wish to upload to.  The directory will be created if it does not already exist.
+
+- `pi` above is the username
+- `my_raspberry_bot.local` above is the hostname to upload can be replaced by IPAddress
+- `/home/pi/my_bot` is the directory you wish to upload to.  The directory will be created if it does not already exist.
 
 Notes:
 

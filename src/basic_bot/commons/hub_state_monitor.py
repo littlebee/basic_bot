@@ -19,8 +19,9 @@ class HubStateMonitor:
     hub and applies them to the local state via hub_state.update_state_from_message_data.
 
     Before applying the state update, it calls the on_state_update callback if it is
-    provided.  This allows the caller to do something with the state update before
-    before it is applied to the local state passed via hub_state arg.
+    provided.  This allows the caller to do something with the state update
+    before it is applied to the local state and to see the difference in current state
+    vs. to be applied state.
 
     The state update is applied to the local state via
     hub_state.update_state_from_message_data regardless of whether the on_state_update

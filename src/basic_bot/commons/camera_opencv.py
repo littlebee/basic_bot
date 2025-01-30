@@ -1,7 +1,3 @@
-"""
-An implemation of BaseCamera using OpenCV.
-"""
-
 import os
 import cv2
 from typing import Generator
@@ -20,7 +16,7 @@ class OpenCvCamera(BaseCamera):
     camera = OpenCvCamera()
     # get_frame() is from BaseCamera and returns a single frame
     frame = camera.get_frame()
-    # you can then used the fame for example:
+    # you can then used the image frame for example:
     jpeg = cv2.imencode(".jpg", frame)[1].tobytes()
     ```
     """
