@@ -52,9 +52,26 @@ sudo apt full-upgrade
 sudo reboot
 ```
 
-## Max `tflight-support` version on Bookworm is 0.1.1a
+## Max `tflight-support` version on Bookworm (Python v3.11) is 0.1.1a
 
-Basic bot vision needs tflight-support >= v0.4.0 but Bookwork and Python 3.11.   [This issue on tensorflow's GH](https://github.com/tensorflow/tensorflow/issues/64365#issuecomment-2425043238) suggests that using Python 3.9 will allow you to install tflite-support==0.4.0.
+Basic bot vision needs tflite-support >= v0.4.0.   [This issue on tensorflow's GH](https://github.com/tensorflow/tensorflow/issues/64365#issuecomment-2425043238) suggests that using Python 3.9 will allow you to install tflite-support==0.4.0.
+
+### Using Python venv
+
+```sh
+cd ~
+mkdir -p env
+cd env
+# site packages needed for picamera2
+python -m venv --system-site-packages base
+source base/bin/activate
+```
+
+
+
+
+
+### Using Anaconda (miniforge)
 
 So first install anaconda (miniforge) (makes switching and running multiple Python versions easier):
 ```sh

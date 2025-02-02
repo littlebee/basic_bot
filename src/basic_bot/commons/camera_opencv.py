@@ -1,5 +1,7 @@
 import os
+import time
 import cv2
+
 from typing import Generator
 
 from basic_bot.commons import constants as c, log
@@ -34,10 +36,7 @@ class OpenCvCamera(BaseCamera):
         OpenCvCamera.video_source = source
 
     @staticmethod
-    def frames() -> Generator[bytes, None, None]:
-        """
-        Generator function that yields frames from the camera. Required by BaseCamera
-        """
+    def init_camera() -> cv2.VideoCapture:
         log.info("initializing VideoCapture")
 
         camera = cv2.VideoCapture(
@@ -60,19 +59,36 @@ class OpenCvCamera(BaseCamera):
         if c.BB_CAMERA_ROTATION != 0:
             os.system(f"sudo v4l2-ctl --set-ctrl=rotate={c.BB_CAMERA_ROTATION}")
 
+        return camera
+
+    @staticmethod
+    def frames() -> Generator[bytes, None, None]:
+        """
+        Generator function that yields frames from the camera. Required by BaseCamera
+        """
+        camera = OpenCvCamera.init_camera()
+
+        read_error_count = 0
         while True:
             success, img = camera.read()
             if not success:
-                log.error("failed to read frame from camera")
-                continue
+                read_error_count += 1
+                if read_error_count > 10:
+                    log.error("failed to read frame from camera 10x. Raising exception")
+                    raise RuntimeError("Failed to read frame from camera 10x")
+                else:
+                    log.error(
+                        "failed to read frame from camera. Waiting for 10 seconds"
+                    )
+                    time.sleep(10)
+                    continue
+            else:
+                read_error_count = 0
 
             if img is None:
                 if not OpenCvCamera.img_is_none_messaged:
                     log.error(
                         "The camera has not read data, please check whether the camera can be used normally."
-                    )
-                    log.error(
-                        "Use the command: 'raspistill -t 1000 -o image.jpg' to check whether the camera can be used correctly."
                     )
                     OpenCvCamera.img_is_none_messaged = True
                 continue
