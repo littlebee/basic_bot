@@ -136,6 +136,7 @@ class RecognitionProvider:
                         cls.next_objects_event.set()  # send signal to clients
                         cls.total_objects_detected += num_objects
 
+                        log.info(f"recognition_provider detected: {new_objects}")
                         await messages.send_update_state(
                             websocket,
                             {
