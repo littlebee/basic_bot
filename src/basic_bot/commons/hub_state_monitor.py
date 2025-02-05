@@ -37,6 +37,9 @@ class HubStateMonitor:
     monitor = HubStateMonitor(hub_state, "test_identity", ["test_key"])
     monitor.start()
     ```
+    The above example will start a background thread that listens for state updates
+    to the "test_key" key from the central hub and updates the local state with the
+    new value.
 
     For a more complex example using callbacks, see [usage in daphbot example - daphbot_service](https://github.com/littlebee/daphbot-due/blob/aa7ed90d60df33009c5bd252c31fa0fb25076fad/src/daphbot_service.py#L75)
 

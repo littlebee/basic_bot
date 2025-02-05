@@ -2,8 +2,13 @@
     "cSpell.words": [
         "cachetools",
         "daphbot",
+        "inlinehilite",
+        "linenums",
         "Picamera",
         "pids",
-        "setuptools"
+        "pygments",
+        "pymdownx",
+        "setuptools",
+        "superfences"
     ]
 }

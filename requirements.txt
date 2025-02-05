@@ -6,6 +6,7 @@ flake8
 pytest
 mypy
 mkdocs
+mkdocs-material
 pydoc-markdown
 
 types-Flask-Cors
