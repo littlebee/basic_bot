@@ -19,6 +19,7 @@ doc_dirs: List[Tuple[str, str]] = [
     ("./src/basic_bot", "./docs/scripts"),
     ("./src/basic_bot/services", "./docs/services"),
     ("./src/basic_bot/commons", "./docs/commons"),
+    ("./src/basic_bot/debug", "./docs/debug"),
 ]
 
 for src_dir, dest_dir in doc_dirs:
