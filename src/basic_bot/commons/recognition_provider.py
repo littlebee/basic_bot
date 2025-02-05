@@ -12,14 +12,25 @@ from basic_bot.commons.fps_stats import FpsStats
 # TODO: decide whether to optionally use pytorch or tflite
 #   Maybe do another performance test and update
 # from .pytorch_detect import PytorchDetect
-
-from .tflite_detect import TFLiteDetect
-
 """
 See [issue #1](https://github.com/littlebee/scatbot-edge-ai-shootout/issues/1)
 about support for pytorch
 """
-WHICH_DETECTOR = "tflite"
+
+try:
+    from .tflite_detect import TFLiteDetect
+
+    detector = TFLiteDetect()
+except ImportError:
+
+    class TFLiteDetectMock:
+        def __init__(self):
+            pass
+
+        def get_prediction(self, frame):
+            return []
+
+    detector = TFLiteDetectMock()  # type: ignore
 
 
 class RecognitionProvider:
@@ -96,14 +107,6 @@ class RecognitionProvider:
     async def provide_state(cls) -> None:
         while True:
             try:
-                detector = TFLiteDetect()
-
-                # TODO : see https://github.com/littlebee/scatbot-edge-ai-shootout/issues/1
-                # if WHICH_DETECTOR == "tflite":
-                #     detector = TFLiteDetect()
-                # else:
-                #     detector = PytorchDetect()
-
                 log.info(
                     f"recognition connecting to hub central at {constants.BB_HUB_URI}"
                 )

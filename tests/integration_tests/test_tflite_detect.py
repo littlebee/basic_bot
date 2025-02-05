@@ -2,11 +2,13 @@ import os
 import cv2
 import pytest
 
+
 try:
-    from tflite_support.task import core
+    # first test to see if tflite_runtime is installed?
+    import tflite_runtime  # type: ignore
 except ImportError:
     """
-    tflite_support ishard to install on mac and even worse on Apple Silicon.
+    tflite_runtime is hard to install on mac and even worse on Apple Silicon.
 
     It does run on Ubuntu Linux and runs on the Raspberry Pi.  The CI/CD
     GitHub Actions runner is Ubuntu Linux and you should see it running there.
@@ -14,14 +16,14 @@ except ImportError:
     #
     #
     pytest.skip(
-        "tflite_support not installed. Skipping test_flight_detect",
+        "tflite_runtime not installed. Skipping test_flite_detect",
         allow_module_level=True,
     )
 
 from basic_bot.commons.tflite_detect import TFLiteDetect
 from basic_bot.commons import constants as c
 
-print(f"tflite_support is installed {core=}")
+print(f"tflite_runtime is installed {tflite_runtime}")
 
 TFLITE_MODEL = os.path.join(
     "src/basic_bot/created_files/models/tflite/", c.BB_TFLITE_MODEL
@@ -35,7 +37,7 @@ class TestTFLiteDetect:
         detector = TFLiteDetect(TFLITE_MODEL, False)
 
         # Get all images from test directory
-        test_image_dir = "tests/test_data/images/pets"
+        test_image_dir = "src/basic_bot/test_helpers/data/pet_images"
         image_files = [
             f
             for f in os.listdir(test_image_dir)

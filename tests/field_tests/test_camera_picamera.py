@@ -1,3 +1,13 @@
+"""
+    This is a really a unit test of basic_bot.commons.camera_picamera
+    which **only works on Raspberry Pi with Debian Bookworm installed**.
+
+    Support for Picamera2 was added because, unfortunately, opencv does
+    not work on Bookworm with a ribbon cable camera.  For more information,
+    see: https://forum.opencv.org/t/rpi5-camera-doesnt-work/17303/7
+
+"""
+
 import os
 import socket
 import cv2

@@ -1,3 +1,3 @@
 #!/bin/sh
 ./build.sh
-pip3 install .
+python -m pip install .

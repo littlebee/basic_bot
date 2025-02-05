@@ -1,8 +1,14 @@
+# these are build dependencies for basic_bot itself
+build
+cachetools
+setuptools>=57.0
 flake8
 pytest
 mypy
+mkdocs
+pydoc-markdown
+
 types-Flask-Cors
 types-psutil
 types-requests
-mkdocs
-pydoc-markdown
+

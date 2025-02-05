@@ -33,7 +33,14 @@ BB_LEFT_MOTOR_CHANNEL = env.env_int("BB_LEFT_MOTOR_CHANNEL", 1)
 BB_RIGHT_MOTOR_CHANNEL = env.env_int("BB_RIGHT_MOTOR_CHANNEL", 2)
 
 # =============== Vision service constants
-
+default_camera_module = (
+    "basic_bot.test_helpers.camera_mock"
+    if BB_ENV == "test"
+    else "basic_bot.commons.camera_opencv"
+)
+# see other supported camera modules in basic_bot.commons.camera_*
+# for example, `BB_CAMERA_MODULE=basic_bot.commons.camera_picamera`
+BB_CAMERA_MODULE = env.env_string("BB_CAMERA_MODULE", default_camera_module)
 BB_CAMERA_CHANNEL = env.env_int("BB_CAMERA_CHANNEL", 0)
 BB_CAMERA_ROTATION = env.env_int("BB_CAMERA_ROTATION", 0)
 BB_CAMERA_FPS = env.env_int("BB_CAMERA_FPS", 30)

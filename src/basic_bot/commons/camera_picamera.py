@@ -8,7 +8,7 @@ from basic_bot.commons import log
 from basic_bot.commons.base_camera import BaseCamera
 
 
-class PicameraCamera(BaseCamera):
+class Camera(BaseCamera):
     """
     This class implements the BaseCamera interface using
     [Picamera2](https://pypi.org/project/picamera2/).
@@ -17,7 +17,9 @@ class PicameraCamera(BaseCamera):
     Usage:
 
     ```python
-    camera = PicameraCamera()
+    from basic_bot.commons.camera_picamera import Camera
+
+    camera = Camera()
     # get_frame() is from BaseCamera and returns a single frame
     frame = camera.get_frame()
     # you can then used the image frame for example:

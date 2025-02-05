@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# fail on any error
 set -e
+
+python -m pip install -r requirements.txt
+
 ./build.sh
-pip3 install --editable .
+python -m pip install --editable .

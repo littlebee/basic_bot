@@ -8,14 +8,18 @@ from basic_bot.commons import constants as c, log
 from basic_bot.commons.base_camera import BaseCamera
 
 
-class OpenCvCamera(BaseCamera):
+# Note that the class name must be "Camera", see recognition_provider.py
+# where this module is dynamically imported.
+class Camera(BaseCamera):
     """
     This class implements the BaseCamera interface using OpenCV.
 
     Usage:
 
     ```python
-    camera = OpenCvCamera()
+    from basic_bot.commons.camera_opencv import Camera
+
+    camera = Camera()
     # get_frame() is from BaseCamera and returns a single frame
     frame = camera.get_frame()
     # you can then used the image frame for example:
@@ -27,21 +31,19 @@ class OpenCvCamera(BaseCamera):
     img_is_none_messaged: bool = False
 
     def __init__(self) -> None:
-        OpenCvCamera.set_video_source(c.BB_CAMERA_CHANNEL)
-        super(OpenCvCamera, self).__init__()
+        Camera.set_video_source(c.BB_CAMERA_CHANNEL)
+        super(Camera, self).__init__()
 
     @staticmethod
     def set_video_source(source: int) -> None:
         log.info(f"setting video source to {source}")
-        OpenCvCamera.video_source = source
+        Camera.video_source = source
 
     @staticmethod
     def init_camera() -> cv2.VideoCapture:
         log.info("initializing VideoCapture")
 
-        camera = cv2.VideoCapture(
-            OpenCvCamera.video_source
-        )  # , apiPreference=cv2.CAP_V4L2)
+        camera = cv2.VideoCapture(Camera.video_source)  # , apiPreference=cv2.CAP_V4L2)
         if not camera.isOpened():
             raise RuntimeError("Could not start camera.")
 
@@ -66,7 +68,7 @@ class OpenCvCamera(BaseCamera):
         """
         Generator function that yields frames from the camera. Required by BaseCamera
         """
-        camera = OpenCvCamera.init_camera()
+        camera = Camera.init_camera()
 
         read_error_count = 0
         while True:
@@ -86,11 +88,11 @@ class OpenCvCamera(BaseCamera):
                 read_error_count = 0
 
             if img is None:
-                if not OpenCvCamera.img_is_none_messaged:
+                if not Camera.img_is_none_messaged:
                     log.error(
                         "The camera has not read data, please check whether the camera can be used normally."
                     )
-                    OpenCvCamera.img_is_none_messaged = True
+                    Camera.img_is_none_messaged = True
                 continue
 
             yield img

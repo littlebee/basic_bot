@@ -11,6 +11,9 @@ package-lock.json
 /docs/commons
 /docs/scripts
 
+# debug test output files
+*_test_output.*
+
 # mac os
 .DS_Store
 
