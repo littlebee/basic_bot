@@ -22,6 +22,7 @@ try:
 
     detector = TFLiteDetect()
 except ImportError:
+    log.info("recognition_provider: Failed to import TFLiteDetect.  Using mock.")
 
     class TFLiteDetectMock:
         def __init__(self):

@@ -3,7 +3,9 @@ A python script to downgrade images in a given folder to 640x480 resolution
 using cv2.
 
 It saves the downgraded images to a new .png file with the original filename
-appended with "_downgraded".
+appended with ".480p.png".
+
+This was mostly written by CLaude 3.5 Sonnet, with some minor modifications
 """
 
 import cv2

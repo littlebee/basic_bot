@@ -81,10 +81,11 @@ python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
 
 ## Use picamera2 instead of opencv if using ribbon cable camera
 
-OpenCV camera capture will work Bookworm on with a USB camera installed.
-If you are using a ribbon cable connected camera, you will need to tell the vision
-subsystem to use the Picamera2 module that is installed as a site package on
-Debian Bookworm.
+OpenCV camera capture will NOT work on Debian Bookworm with a ribbon cable
+camera.
+
+You must either use a USB camera or use the `basic_bot.commons.camera_picamera`
+module.
 
 In your `~/.bashrc` on the robot, add the following line:
 ```sh
@@ -99,6 +100,7 @@ If you have your robot set up to start at boot via `/etc/rc.local`,
 just insert the `export ...` line above in the rc.local file before
 the line that calls your start.sh script.
 
+Restart the bot or restart the `basic_bot.services.vision` service.
 
 ## Validate
 
