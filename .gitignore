@@ -10,6 +10,7 @@ package-lock.json
 /docs/services
 /docs/commons
 /docs/scripts
+/docs/debug
 
 # debug test output files
 *_test_output.*
