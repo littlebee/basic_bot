@@ -21,20 +21,15 @@ except ImportError:
     )
 
 from basic_bot.commons.tflite_detect import TFLiteDetect
-from basic_bot.commons import constants as c
 
 print(f"tflite_runtime is installed {tflite_runtime}")
-
-TFLITE_MODEL = os.path.join(
-    "src/basic_bot/created_files/models/tflite/", c.BB_TFLITE_MODEL
-)
 
 
 class TestTFLiteDetect:
 
     def test_pet_detection(self):
         # Initialize detector
-        detector = TFLiteDetect(TFLITE_MODEL, False)
+        detector = TFLiteDetect()
 
         # Get all images from test directory
         test_image_dir = "src/basic_bot/test_helpers/data/pet_images"

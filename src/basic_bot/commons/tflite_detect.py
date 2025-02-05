@@ -32,7 +32,6 @@ class TFLiteDetect:
 
         if model is None:
             if use_coral_tpu:
-                # model = f"{TFLITE_DATA_DIR}/efficientdet_lite0_edgetpu.tflite"
                 model = c.BB_TFLITE_MODEL_CORAL
             else:
                 model = c.BB_TFLITE_MODEL

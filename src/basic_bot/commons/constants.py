@@ -60,7 +60,7 @@ BB_TFLITE_MODEL = env.env_string(
 # which model to use for object detection with BB_ENABLE_CORAL_TPU is true
 BB_TFLITE_MODEL_CORAL = env.env_string(
     "BB_TFLITE_MODEL_CORAL",
-    "ssd_mobilenet_v1_coco_quant_postprocess_edgetpu.tflite",
+    "./models/tflite/ssd_mobilenet_v1_coco_quant_postprocess_edgetpu.tflite",
 )
 # number of threads to use for tflite detection
 BB_TFLITE_THREADS = env.env_int("BB_TFLITE_THREADS", 2)
