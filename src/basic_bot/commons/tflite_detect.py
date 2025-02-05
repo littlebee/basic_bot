@@ -85,15 +85,15 @@ class TFLiteDetect:
             classId = int(detected_classes[0][i])
             score = detected_scores[0][i]
             if score > c.BB_OBJECT_DETECTION_THRESHOLD:
-                xmin = left * initial_w
-                ymin = bottom * initial_h
-                xmax = right * initial_w
-                ymax = top * initial_h
-                box = [xmin, ymin, xmax, ymax]
                 class_name = labels[classId]
                 results.append(
                     {
-                        "boundingBox": box,
+                        "boundingBox": [
+                            float(left),
+                            float(top),
+                            float(right),
+                            float(bottom),
+                        ],
                         "classification": class_name,
                         "confidence": score,
                     }
