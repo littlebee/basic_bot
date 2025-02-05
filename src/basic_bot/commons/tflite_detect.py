@@ -83,7 +83,7 @@ class TFLiteDetect:
         for i in range(int(num_boxes)):
             top, left, bottom, right = detected_boxes[0][i]
             classId = int(detected_classes[0][i])
-            score = detected_scores[0][i]
+            score = float(detected_scores[0][i])
             if score > c.BB_OBJECT_DETECTION_THRESHOLD:
                 xmin = left * initial_w
                 ymin = top * initial_h
