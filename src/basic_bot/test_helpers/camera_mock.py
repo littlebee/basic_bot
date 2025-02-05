@@ -8,8 +8,9 @@ from basic_bot.commons import log
 from basic_bot.commons.base_camera import BaseCamera
 
 log.info("Loaded basic_bot.test_helpers.camera_mock. loading images...")
-pet_image_path = os.path.join(os.getcwd(), "data", "pet_images")
-not_pet_image_path = os.path.join(os.getcwd(), "data", "not_pet_images")
+this_dir = os.path.dirname(os.path.realpath(__file__))
+pet_image_path = os.path.join(this_dir, "data", "pet_images")
+not_pet_image_path = os.path.join(this_dir, "data", "not_pet_images")
 
 
 # use cv2 to read the images from the above  into two respective lists
