@@ -48,7 +48,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi_bookworm/">How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm</a>
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
@@ -56,6 +56,10 @@
                   <li class="toctree-l1"><a class="reference internal" href="../base_camera/">base_camera</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../camera_opencv/">camera_opencv</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../camera_picamera/">camera_picamera</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../coco_lables/">coco_lables</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../constants/">constants</a>
                   </li>
@@ -94,11 +98,22 @@
                   <li class="toctree-l1"><a class="reference internal" href="../web_utils/">web_utils</a>
                   </li>
               </ul>
+              <p class="caption"><span class="caption-text">Debug</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_ai-edge-litert/">test_ai-edge-litert</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_opencv_capture/">test_opencv_capture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_opencv_img/">test_opencv_img</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_picamera2_capture/">test_picamera2_capture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_tflite_runtime/">test_tflite_runtime</a>
+                  </li>
+              </ul>
               <p class="caption"><span class="caption-text">Scripts</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../scripts/bb_create/">bb_create</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../scripts/bb_restart/">bb_restart</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../scripts/bb_start/">bb_start</a>
                   </li>
@@ -111,7 +126,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../services/motor_control_2w/">motor_control_2w</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../services/vision_cv2/">vision_cv2</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../services/vision/">vision</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../services/web_server/">web_server</a>
                   </li>
@@ -151,8 +166,9 @@
 are changed.  It starts a thread to listen for state updates from the central
 hub and applies them to the local state via hub_state.update_state_from_message_data.</p>
 <p>Before applying the state update, it calls the on_state_update callback if it is
-provided.  This allows the caller to do something with the state update before
-before it is applied to the local state passed via hub_state arg.</p>
+provided.  This allows the caller to do something with the state update
+before it is applied to the local state and to see the difference in current state
+vs. to be applied state.</p>
 <p>The state update is applied to the local state via
 hub_state.update_state_from_message_data regardless of whether the on_state_update
 callback is provided or the value it returns.  To alter the state you should

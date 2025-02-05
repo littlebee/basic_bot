@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>How to setup a Raspberry Pi5 - basic_bot Docs</title>
+    <title>How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm - basic_bot Docs</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "How to setup a Raspberry Pi5";
-        var mkdocs_page_input_path = "setup_on_pi5.md";
+        var mkdocs_page_name = "How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm";
+        var mkdocs_page_input_path = "setup_on_pi_bookworm.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -48,21 +48,33 @@
                 </li>
               </ul>
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="#">How to setup a Raspberry Pi5</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#flash-and-boot">Flash and Boot</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#ssh-into-the-pi5">SSH into the pi5</a>
+    <li class="toctree-l2"><a class="reference internal" href="#ssh-into-the-pi">SSH into the pi</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#max-tflight-support-version-on-bookworm-is-011a">Max tflight-support version on Bookworm is 0.1.1a</a>
+    <li class="toctree-l2"><a class="reference internal" href="#update-and-upgrade-os">Update and upgrade OS</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#install-port-audio-needed-by-sounddevice-pip-package">Install port audio (needed by sounddevice pip package)</a>
+    <li class="toctree-l2"><a class="reference internal" href="#setup-a-python-venv">Setup a Python venv</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#install-basic_bot-and-dependencies">Install basic_bot and dependencies</a>
+    <li class="toctree-l2"><a class="reference internal" href="#install-basic_bot-package">Install basic_bot package</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#use-picamera2-instead-of-opencv-if-using-ribbon-cable-camera">Use picamera2 instead of opencv if using ribbon cable camera</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#validate">Validate</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#install-daphbot-due-dependencies">Install daphbot-due dependencies</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#it-all-works">It all works!</a>
+    <li class="toctree-l3"><a class="reference internal" href="#upload-daphbot-due-package">Upload daphbot-due package</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#install-requirements">Install Requirements</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#start-the-daphbot-services">Start the daphbot services</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#it-all-works-with-a-usb-camera">It all works (with a USB camera)!</a>
     </li>
     </ul>
                 </li>
@@ -72,6 +84,10 @@
                   <li class="toctree-l1"><a class="reference internal" href="../commons/base_camera/">base_camera</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../commons/camera_opencv/">camera_opencv</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../commons/camera_picamera/">camera_picamera</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../commons/coco_lables/">coco_lables</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../commons/constants/">constants</a>
                   </li>
@@ -98,11 +114,22 @@
                   <li class="toctree-l1"><a class="reference internal" href="../commons/web_utils/">web_utils</a>
                   </li>
               </ul>
+              <p class="caption"><span class="caption-text">Debug</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../debug/test_ai-edge-litert/">test_ai-edge-litert</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../debug/test_opencv_capture/">test_opencv_capture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../debug/test_opencv_img/">test_opencv_img</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../debug/test_picamera2_capture/">test_picamera2_capture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../debug/test_tflite_runtime/">test_tflite_runtime</a>
+                  </li>
+              </ul>
               <p class="caption"><span class="caption-text">Scripts</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../scripts/bb_create/">bb_create</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../scripts/bb_restart/">bb_restart</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../scripts/bb_start/">bb_start</a>
                   </li>
@@ -115,7 +142,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../services/motor_control_2w/">motor_control_2w</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../services/vision_cv2/">vision_cv2</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../services/vision/">vision</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../services/web_server/">web_server</a>
                   </li>
@@ -134,7 +161,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">How to setup a Raspberry Pi5</li>
+      <li class="breadcrumb-item active">How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -143,10 +170,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="how-to-setup-a-raspberry-pi5">How to setup a Raspberry Pi5</h1>
+                <h1 id="how-to-setup-a-raspberry-pi4-and-pi5-on-raspian-bookworm">How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm</h1>
 <p>...for basic_bot, ovencv and Adafruit Braincraft Hat</p>
 <h2 id="flash-and-boot">Flash and Boot</h2>
 <p>First you need to flash an image to a microcard reader using the <a href="https://www.raspberrypi.com/software/">Raspberry Pi installer</a>.</p>
+<p>Debian Bookworm is the new Raspian Bullseye.  <a href="https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/">Good article</a> on the differences. The rest of this guide is specific to Bookwork, which at the time of this update is the default OS used by the Raspberry Pi Imager.</p>
 <p>Here is a montage of the various settings I chose:</p>
 <p><img alt="" src="../images/pi5-setup/pi5%20setup%20screen%201.jpg" style="transform:scale(.8);" />
 <img alt="" src="../images/pi5-setup/pi5%20setup%20screen%202.jpg" style="transform:scale(.8);" />
@@ -154,8 +182,11 @@
 <img alt="" src="../images/pi5-setup/pi5%20setup%20screen%204.jpg" style="transform:scale(.8);" /></p>
 <p><strong>Just answer yes to the remaining questions and ...</strong></p>
 <p><img alt="" src="../images/pi5-setup/goodtogo.jpg" style="transform:scale(.7);" />}</p>
-<h2 id="ssh-into-the-pi5">SSH into the pi5</h2>
-<p>Not sure why, but I didn't see the pi5 on my network by name <code>pi5.local</code>.  I had to initially connect via it's IP address and then run <code>sudo raspi-config</code> and change the hostname in there to "pi5.local".  Reboot and then it worked via name and you should be able to just <code>ssh pi5.local</code>.</p>
+<h2 id="ssh-into-the-pi">SSH into the pi</h2>
+<div class="codehilite"><pre><span></span><code>ssh<span class="w"> </span>pi5.local
+</code></pre></div>
+
+<p>Verify that Debian Bookwork was installed:</p>
 <div class="codehilite"><pre><span></span><code>bee@pi5:~<span class="w"> </span>$<span class="w"> </span>cat<span class="w"> </span>/etc/os-release
 <span class="nv">PRETTY_NAME</span><span class="o">=</span><span class="s2">&quot;Debian GNU/Linux 12 (bookworm)&quot;</span>
 <span class="nv">NAME</span><span class="o">=</span><span class="s2">&quot;Debian GNU/Linux&quot;</span>
@@ -168,54 +199,72 @@
 <span class="nv">BUG_REPORT_URL</span><span class="o">=</span><span class="s2">&quot;https://bugs.debian.org/&quot;</span>
 </code></pre></div>
 
-<p>Looks like Debian Bookworm is the new Raspian Bullseye.  <a href="https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/">Good article</a> on the differences.</p>
+<h2 id="update-and-upgrade-os">Update and upgrade OS</h2>
+<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>full-upgrade
+sudo<span class="w"> </span>reboot
+</code></pre></div>
+
+<p>SSH back into Raspberry Pi after reboot.</p>
+<p>Check versions:</p>
 <div class="codehilite"><pre><span></span><code>bee@pi5:~<span class="w"> </span>$<span class="w"> </span>python<span class="w"> </span>--version
 Python<span class="w"> </span><span class="m">3</span>.11.2
 bee@pi5:~<span class="w"> </span>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>--version
 pip<span class="w"> </span><span class="m">23</span>.0.1<span class="w"> </span>from<span class="w"> </span>/usr/lib/python3/dist-packages/pip<span class="w"> </span><span class="o">(</span>python<span class="w"> </span><span class="m">3</span>.11<span class="o">)</span>
 </code></pre></div>
 
-<p>💥 outa da box!  I think that will work.  Let's see what happens after apt upgrade.</p>
-<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>update
-sudo<span class="w"> </span>apt<span class="w"> </span>full-upgrade
-sudo<span class="w"> </span>reboot
+<h2 id="setup-a-python-venv">Setup a Python venv</h2>
+<p>Unfortunately some things like Picamera2 require the shipped
+python libs so be sure to include <code>--system-site-packages</code></p>
+<p>On the Raspberry device:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~
+mkdir<span class="w"> </span>-p<span class="w"> </span>env
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>--system-site-packages<span class="w"> </span>env/bb
+<span class="nb">source</span><span class="w"> </span>env/bb/bin/activate
 </code></pre></div>
 
-<h2 id="max-tflight-support-version-on-bookworm-is-011a">Max <code>tflight-support</code> version on Bookworm is 0.1.1a</h2>
-<p>Basic bot vision needs tflight-support &gt;= v0.4.0 but Bookwork and Python 3.11.   <a href="https://github.com/tensorflow/tensorflow/issues/64365#issuecomment-2425043238">This issue on tensorflow's GH</a> suggests that using Python 3.9 will allow you to install tflite-support==0.4.0.</p>
-<p>So first install anaconda (miniforge) (makes switching and running multiple Python versions easier):</p>
-<div class="codehilite"><pre><span></span><code>wget<span class="w"> </span>https://github.com/conda-forge/miniforge/releases/latest/download/miniforge3-linux-aarch64.sh
-chmod<span class="w"> </span>+x<span class="w"> </span>miniforge3-linux-aarch64.sh
-
-<span class="c1"># note do not use sudo here</span>
-./miniforge3-linux-aarch64.sh
-</code></pre></div>
-
-<p>...agree to the license and accept the default location (/home/me/miniforge3)</p>
-<p>Create and activate a new conda env based on python 3.9.2:</p>
-<div class="codehilite"><pre><span></span><code>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>basic_bot<span class="w"> </span><span class="nv">python</span><span class="o">==</span><span class="m">3</span>.9.2
-conda<span class="w"> </span>activate<span class="w"> </span>basic_bot
-</code></pre></div>
-
-<h2 id="install-port-audio-needed-by-sounddevice-pip-package">Install port audio (needed by sounddevice pip package)</h2>
-<div class="codehilite"><pre><span></span><code>sudo apt-get install portaudio19-dev
-python3 -m pip install sounddevice
-</code></pre></div>
-
-<h2 id="install-basic_bot-and-dependencies">Install basic_bot and dependencies</h2>
+<h2 id="install-basic_bot-package">Install basic_bot package</h2>
 <div class="codehilite"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/littlebee/basic_bot.git@main
 </code></pre></div>
 
+<h2 id="use-picamera2-instead-of-opencv-if-using-ribbon-cable-camera">Use picamera2 instead of opencv if using ribbon cable camera</h2>
+<p>OpenCV camera capture will NOT work on Debian Bookworm with a ribbon cable
+camera.</p>
+<p>You must either use a USB camera or use the <code>basic_bot.commons.camera_picamera</code>
+module.</p>
+<p>In your <code>~/.bashrc</code> on the robot, add the following line:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">BB_CAMERA_MODULE</span><span class="o">=</span><span class="s2">&quot;basic_bot.commons.camera_picamera</span>
+</code></pre></div>
+
+<p>Save the file, exit and then source it:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>~/.bashrc
+</code></pre></div>
+
+<p>If you have your robot set up to start at boot via <code>/etc/rc.local</code>,
+just insert the <code>export ...</code> line above in the rc.local file before
+the line that calls your start.sh script.</p>
+<p>Restart the bot or restart the <code>basic_bot.services.vision</code> service.</p>
 <h2 id="validate">Validate</h2>
-<p>Tested by uploading <a href="https://github.com/littlebee/daphbot-due">daphbot-due</a> to the pi5 (from my dev machine in the daphbot-due root project dir):</p>
+<h3 id="install-daphbot-due-dependencies">Install daphbot-due dependencies</h3>
+<p>Install port audio (needed by sounddevice pip package)</p>
+<div class="codehilite"><pre><span></span><code>sudo apt-get install portaudio19-dev
+python -m pip install sounddevice
+</code></pre></div>
+
+<h3 id="upload-daphbot-due-package">Upload daphbot-due package</h3>
+<p>Tested by uploading <a href="https://github.com/littlebee/daphbot-due">daphbot-due</a> to the Raspberry (from my dev machine in the daphbot-due root project dir):</p>
 <div class="codehilite"><pre><span></span><code>./upload.sh<span class="w"> </span>pi5.local
 </code></pre></div>
 
-<p>Then on the pi5:</p>
+<h3 id="install-requirements">Install Requirements</h3>
+<p>ssh into pi5.local and:</p>
 <div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>daphbot_due
 pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 rm<span class="w"> </span>-Rf<span class="w"> </span>logs/*
-./start.sh
+</code></pre></div>
+
+<h3 id="start-the-daphbot-services">Start the daphbot services</h3>
+<div class="codehilite"><pre><span></span><code>./start.sh
 </code></pre></div>
 
 <p>wait a sec and then clear the termimal, cat the logs and look for errors:</p>
@@ -223,8 +272,8 @@ rm<span class="w"> </span>-Rf<span class="w"> </span>logs/*
 cat<span class="w"> </span>logs/*
 </code></pre></div>
 
-<h2 id="it-all-works">It all works!</h2>
-<p>If the <code>basic_bot.services.vision_cv2</code> successfully started, you can open
+<h2 id="it-all-works-with-a-usb-camera">It all works (with a USB camera)!</h2>
+<p>If the <code>basic_bot.services.vision</code> successfully started, you can open
 a browser and see the video capture and recognition stats at (http://pi5.local:5801/stats).</p>
 <p>I'm seeing some impressive stats!  Recognition is running at nearly 100% of the capture FPS at 24.79 frames per second.  Below are the stats:</p>
 <div class="codehilite"><pre><span></span><code><span class="p">{</span>

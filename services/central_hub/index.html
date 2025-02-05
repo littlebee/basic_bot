@@ -48,7 +48,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi_bookworm/">How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm</a>
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
@@ -56,6 +56,10 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/base_camera/">base_camera</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/camera_opencv/">camera_opencv</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../commons/camera_picamera/">camera_picamera</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../commons/coco_lables/">coco_lables</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/constants/">constants</a>
                   </li>
@@ -82,11 +86,22 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/web_utils/">web_utils</a>
                   </li>
               </ul>
+              <p class="caption"><span class="caption-text">Debug</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_ai-edge-litert/">test_ai-edge-litert</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_opencv_capture/">test_opencv_capture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_opencv_img/">test_opencv_img</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_picamera2_capture/">test_picamera2_capture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_tflite_runtime/">test_tflite_runtime</a>
+                  </li>
+              </ul>
               <p class="caption"><span class="caption-text">Scripts</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../scripts/bb_create/">bb_create</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../scripts/bb_restart/">bb_restart</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../scripts/bb_start/">bb_start</a>
                   </li>
@@ -97,11 +112,23 @@
               <ul class="current">
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">central_hub</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#messages">Messages</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#getstate">getState</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#identity">identity</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#subscribestate">subscribeState</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#updatestate">updateState</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../motor_control_2w/">motor_control_2w</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../vision_cv2/">vision_cv2</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../vision/">vision</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../web_server/">web_server</a>
                   </li>
@@ -147,6 +174,63 @@ websockets.  The state of published keys is maintained in memory.</p>
 <span class="w">    </span><span class="nt">&quot;subsystem_stats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
 <span class="p">}</span>
 </code></pre></div>
+
+<h2 id="messages">Messages</h2>
+<p>All data sent over the websocket to and from central_hub is in json and has the format:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">     </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Where <code>data</code> is optional and specific to the type of message. The following messages are supported by <code>central-hub</code>:</p>
+<h4 id="getstate">getState</h4>
+<p>example json:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="nt">&quot;getState&quot;</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;keyName&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;keyName&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Causes <code>central-hub</code> to send the requested state via message type = "state" to the requesting client socket.</p>
+<p><code>data</code> is optional, if specified, should be array of key names to retrieve. If omitted, all keys (complete state) is sent.</p>
+<h3 id="identity">identity</h3>
+<p>example json:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;identity&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My subsystem name&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Causes <code>central-hub</code> to update <code>subsystems_stats</code> key of the shared state and send an "iseeu" message back to client socket with the IP address that it sees the client.</p>
+<h3 id="subscribestate">subscribeState</h3>
+<p>example json:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;subscribeState&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;system_stats&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;set_angles&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Causes <code>central-hub</code> to add the client socket to the subscribers for each of the state keys provided. Client will start receiving "stateUpdate" messages when those keys are changed. The client may also send <code>"data": "*"</code> which will subscribe it to all keys like the web UI does.</p>
+<h3 id="updatestate">updateState</h3>
+<p>example json:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;updateState&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;set_angles&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">127.4</span><span class="p">,</span><span class="w"> </span><span class="mf">66.4</span><span class="p">,</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;velocity_factor&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.5</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>This message causes <code>central-hub</code> merge the receive state and the shared
+state and send <code>stateUpdate</code> messages to any subscribers. Note that the
+message sent by clients<strong> (type: "updateState") is a different type than
+the message </strong>sent to clients** (type: "stateUpdate").</p>
+<p>As the example above shows, it is possible to update multiple state keys at
+once, but most subsystems only ever update one top level key.</p>
+<p>The data received must be the <strong>full data for that key</strong>. <code>central-hub</code>
+will replace that top level key with the data received.</p>
               
             </div>
           </div><footer>

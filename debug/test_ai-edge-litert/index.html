@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>motor_control_2w - basic_bot Docs</title>
+    <title>test_ai-edge-litert - basic_bot Docs</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "motor_control_2w";
-        var mkdocs_page_input_path = "services/motor_control_2w.md";
+        var mkdocs_page_name = "test_ai-edge-litert";
+        var mkdocs_page_input_path = "debug/test_ai-edge-litert.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -87,16 +87,20 @@
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Debug</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_ai-edge-litert/">test_ai-edge-litert</a>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">test_ai-edge-litert</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#img">img</a>
+    </li>
+    </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_opencv_capture/">test_opencv_capture</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../test_opencv_capture/">test_opencv_capture</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_opencv_img/">test_opencv_img</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../test_opencv_img/">test_opencv_img</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_picamera2_capture/">test_picamera2_capture</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../test_picamera2_capture/">test_picamera2_capture</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../debug/test_tflite_runtime/">test_tflite_runtime</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../test_tflite_runtime/">test_tflite_runtime</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Scripts</span></p>
@@ -109,16 +113,14 @@
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Services</span></p>
-              <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../central_hub/">central_hub</a>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../services/central_hub/">central_hub</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">motor_control_2w</a>
-    <ul class="current">
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../services/motor_control_2w/">motor_control_2w</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../vision/">vision</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../services/vision/">vision</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../web_server/">web_server</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../services/web_server/">web_server</a>
                   </li>
               </ul>
       </div>
@@ -135,8 +137,8 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">Services</li>
-      <li class="breadcrumb-item active">motor_control_2w</li>
+          <li class="breadcrumb-item">Debug</li>
+      <li class="breadcrumb-item active">test_ai-edge-litert</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -145,36 +147,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <p><a id="basic_bot.services.motor_control_2w"></a></p>
-<h1 id="basic_botservicesmotor_control_2w">basic_bot.services.motor_control_2w</h1>
-<p>Provides motor control for a 2-wheel drive robot via the central_hub
-key: "throttles".</p>
-<p>Sending a state update to the central_hub, for example:</p>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;throttles&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;left&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;right&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
+                <p><a id="basic_bot.debug.test_ai-edge-litert"></a></p>
+<h1 id="basic_botdebugtest_ai-edge-litert">basic_bot.debug.test_ai-edge-litert</h1>
+<p>This diagnostic script will test the installation and setup of the Google
+<a href="https://ai.google.dev/edge/litert/inference#run-python">ai-edge-litert</a></p>
+<p>It uses opencv to open the test image file and then runs the model inference on the image.</p>
+<p>Needs to have ai-edge-litert from Google installed:</p>
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>ai-edge-litert
 </code></pre></div>
 
-<p>...would set the left and right throttles to half ahead.  You can also set
-the throttles to negative values &gt;= -1 to go in reverse.</p>
-<p>The motor control will send a state update back to the central_hub with the
-current state of the motors, for example:</p>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;motors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;left&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;right&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
+<p>Unfortunately the package will not install on Macs or Windows.  It will install on
+Linux and Raspberry Pi (arm64).</p>
+<p><code>ai-edge-litert</code> is suppose to be the future replacement of the tflite_runtime package.</p>
+<p>Usage:</p>
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>src.basic_bot.debug.test_ai-edge-litert
 </code></pre></div>
+
+<p><a id="basic_bot.debug.test_ai-edge-litert.img"></a></p>
+<h4 id="img">img</h4>
+<p>type: ignore</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../central_hub/" class="btn btn-neutral float-left" title="central_hub"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../vision/" class="btn btn-neutral float-right" title="vision">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../commons/web_utils/" class="btn btn-neutral float-left" title="web_utils"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../test_opencv_capture/" class="btn btn-neutral float-right" title="test_opencv_capture">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -197,10 +194,10 @@ current state of the motors, for example:</p>
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../central_hub/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../../commons/web_utils/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../vision/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../test_opencv_capture/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

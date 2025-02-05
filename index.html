@@ -84,7 +84,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                <li class="toctree-l1"><a class="reference internal" href="setup_on_pi_bookworm/">How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm</a>
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
@@ -92,6 +92,10 @@
                   <li class="toctree-l1"><a class="reference internal" href="commons/base_camera/">base_camera</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="commons/camera_opencv/">camera_opencv</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/camera_picamera/">camera_picamera</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="commons/coco_lables/">coco_lables</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="commons/constants/">constants</a>
                   </li>
@@ -118,11 +122,22 @@
                   <li class="toctree-l1"><a class="reference internal" href="commons/web_utils/">web_utils</a>
                   </li>
               </ul>
+              <p class="caption"><span class="caption-text">Debug</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="debug/test_ai-edge-litert/">test_ai-edge-litert</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="debug/test_opencv_capture/">test_opencv_capture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="debug/test_opencv_img/">test_opencv_img</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="debug/test_picamera2_capture/">test_picamera2_capture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="debug/test_tflite_runtime/">test_tflite_runtime</a>
+                  </li>
+              </ul>
               <p class="caption"><span class="caption-text">Scripts</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="scripts/bb_create/">bb_create</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="scripts/bb_restart/">bb_restart</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="scripts/bb_start/">bb_start</a>
                   </li>
@@ -135,7 +150,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="services/motor_control_2w/">motor_control_2w</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="services/vision_cv2/">vision_cv2</a>
+                  <li class="toctree-l1"><a class="reference internal" href="services/vision/">vision</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="services/web_server/">web_server</a>
                   </li>
@@ -196,15 +211,13 @@ bb_create<span class="w"> </span>my_new_project_dir
 <li>add build.sh and test.sh scripts to my_new_project_dir/</li>
 <li>run build.sh and test.sh scripts</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="k">After</span><span class="w"> </span><span class="n n-Quoted">`bb_create`</span><span class="w"> </span><span class="n">finishes</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">able</span><span class="w"> </span><span class="k">to</span>
-
-<span class="n n-Quoted">`</span><span class="n n-Quoted n-Quoted-Escape">``</span><span class="n n-Quoted">shell</span>
-<span class="n n-Quoted">cd my_new_robot_project</span>
+<p>After <code>bb_create</code> finishes you should be able to</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>my_new_robot_project
 </code></pre></div>
 
 <h3 id="everything-created-is-yours-to-edit">Everything created is yours to edit</h3>
 <p><code>bb_create</code> is single use per project and will not overwrite an existing directory.</p>
-<p>The created app should run on any OS supported by Python &gt;= 3.9 with a Posix compliant shell.  I've tested this assertion on macOS &gt;= 14.7 and on Raspberry PI 4 with Raspian Bullseye.  Additionally, the CI/CD test system for this project validates that everything works on <code>ubuntu-latest</code>.</p>
+<p>The created app should run on any OS supported by Python &gt;= 3.9 with a Posix compliant shell.  I've tested this assertion on macOS &gt;= 14.7, on Raspberry PI 4 with Raspian Bullseye, and on the Raspberry Pi 5 w/ Debian Bookworm.  Additionally, the CI/CD test system for this project validates that everything works on <code>ubuntu-latest</code>.</p>
 <p>Python &gt;= 3.9 is required.  It's also a good idea to make sure <code>python</code> and <code>pip</code> commands are pointing to the correct version (3.9) if you are using a virtual environment like Anaconda or Miniconda.</p>
 <p>To build and use the created <code>./webapp</code> example, you must have Node.js &gt;= v20.18, and <code>npm</code> needs to be in your path.</p>
 <p>From there, check out the .sh files in the root of my_new_robot_project.  Commands to build, start in the background, run integration tests for the Python example "worthless_counter" service, and run example integration test.</p>
@@ -223,12 +236,14 @@ npm run dev
 <h2 id="upload-to-your-robot">Upload to your robot</h2>
 <p>Also included is an example <code>upload.sh</code> script that can be used to upload your code to your robot's onboard computer.  The example <code>upload.sh</code> uses <code>rsync</code> and requires that both your local and onboard computer need to have SSH installed and properly set up.  If you can <code>ssh my_rad_robot.local</code> or by IP, you should be able to use rsync and the upload example.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><code><span class="o">./</span><span class="n">upload</span><span class="o">.</span><span class="n">sh</span><span class="w"> </span><span class="n">pi</span><span class="err">@</span><span class="n">my_raspberry_bot</span><span class="o">.</span><span class="n">local</span><span class="w"> </span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">pi</span><span class="o">/</span><span class="n">my_bot</span>
+<div class="codehilite"><pre><span></span><code>./upload.sh<span class="w"> </span>pi@my_raspberry_bot.local<span class="w"> </span>/home/pi/my_bot
 </code></pre></div>
 
-<p><code>pi</code> above is the username
-<code>my_raspberry_bot.local</code> above is the hostname to upload can be replaced by IPAddress
-<code>/home/pi/my_bot</code> is the directory you wish to upload to.  The directory will be created if it does not already exist.</p>
+<ul>
+<li><code>pi</code> above is the username</li>
+<li><code>my_raspberry_bot.local</code> above is the hostname to upload can be replaced by IPAddress</li>
+<li><code>/home/pi/my_bot</code> is the directory you wish to upload to.  The directory will be created if it does not already exist.</li>
+</ul>
 <p>Notes:</p>
 <p>I work on a macbook and use iTerm2 for terminal.  One of the additions I like to make to the standard setup, is to use the same user name on the Pi that I use locally on my mac.  This allows not having to type <code>ssh raspberry@mybot.local</code>, because the name is the same just <code>ssh mybot.local</code> works.</p>
 <p>I also like to add my public key to the <code>~/.ssh/authorized_keys</code> file on the remote SBC. This will stop it from prompting you for the password on every SSH command (upload.sh uses rsync which uses ssh).   I made a <a href="https://gist.github.com/littlebee/b285f0b9d219e56fe29b7248440309a5">gist of the script</a> I use to upload my public key to new boards.</p>
@@ -303,5 +318,5 @@ npm run dev
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2025-01-30 17:53:29.637738+00:00
+Build Date UTC : 2025-02-05 06:25:49.919401+00:00
 -->

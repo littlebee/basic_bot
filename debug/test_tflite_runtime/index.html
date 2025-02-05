@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>bb_restart - basic_bot Docs</title>
+    <title>test_tflite_runtime - basic_bot Docs</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "bb_restart";
-        var mkdocs_page_input_path = "scripts/bb_restart.md";
+        var mkdocs_page_name = "test_tflite_runtime";
+        var mkdocs_page_input_path = "debug/test_tflite_runtime.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -48,7 +48,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi5/">How to setup a Raspberry Pi5</a>
+                <li class="toctree-l1"><a class="reference internal" href="../../setup_on_pi_bookworm/">How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm</a>
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">Commons</span></p>
@@ -56,6 +56,10 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/base_camera/">base_camera</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/camera_opencv/">camera_opencv</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../commons/camera_picamera/">camera_picamera</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../commons/coco_lables/">coco_lables</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/constants/">constants</a>
                   </li>
@@ -82,17 +86,30 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../commons/web_utils/">web_utils</a>
                   </li>
               </ul>
-              <p class="caption"><span class="caption-text">Scripts</span></p>
+              <p class="caption"><span class="caption-text">Debug</span></p>
               <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../bb_create/">bb_create</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../test_ai-edge-litert/">test_ai-edge-litert</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">bb_restart</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../test_opencv_capture/">test_opencv_capture</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../test_opencv_img/">test_opencv_img</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../test_picamera2_capture/">test_picamera2_capture</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">test_tflite_runtime</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#img">img</a>
+    </li>
     </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../bb_start/">bb_start</a>
+              </ul>
+              <p class="caption"><span class="caption-text">Scripts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../scripts/bb_create/">bb_create</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../bb_stop/">bb_stop</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../scripts/bb_start/">bb_start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../scripts/bb_stop/">bb_stop</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Services</span></p>
@@ -101,7 +118,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../services/motor_control_2w/">motor_control_2w</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../services/vision_cv2/">vision_cv2</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../services/vision/">vision</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../services/web_server/">web_server</a>
                   </li>
@@ -120,8 +137,8 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">Scripts</li>
-      <li class="breadcrumb-item active">bb_restart</li>
+          <li class="breadcrumb-item">Debug</li>
+      <li class="breadcrumb-item active">test_tflite_runtime</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -130,14 +147,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <p><a id="basic_bot.bb_restart"></a></p>
-<h1 id="basic_botbb_restart">basic_bot.bb_restart</h1>
+                <p><a id="basic_bot.debug.test_tflite_runtime"></a></p>
+<h1 id="basic_botdebugtest_tflite_runtime">basic_bot.debug.test_tflite_runtime</h1>
+<p>Tests that the TensorFlow Lite runtime is installed and working.</p>
+<p>Usage:</p>
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>src.basic_bot.debug.test_tflite_runtime
+</code></pre></div>
+
+<p>Must have TensorFlow Lite installed:</p>
+<div class="codehilite"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>tflite-runtime
+</code></pre></div>
+
+<p>The above may fail on mac (apple silicon) and windows.  It should work on Ubuntu Linux and Raspberry Pi.</p>
+<p>src:
+https://www.hackster.io/news/benchmarking-tensorflow-and-tensorflow-lite-on-raspberry-pi-5-b9156d58a6a2
+https://github.com/aallan/benchmarking-ml-on-the-edge/blob/98467e058732a6626b6fb382980477b2121b34d2/benchmark_tf.py#L115</p>
+<p><a id="basic_bot.debug.test_tflite_runtime.img"></a></p>
+<h4 id="img">img</h4>
+<p>type: ignore</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../bb_create/" class="btn btn-neutral float-left" title="bb_create"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../bb_start/" class="btn btn-neutral float-right" title="bb_start">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../test_picamera2_capture/" class="btn btn-neutral float-left" title="test_picamera2_capture"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../scripts/bb_create/" class="btn btn-neutral float-right" title="bb_create">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -160,10 +193,10 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../bb_create/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../test_picamera2_capture/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../bb_start/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../../scripts/bb_create/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
