@@ -52,14 +52,10 @@ BB_VISION_FOV = 62
 BB_OBJECT_DETECTION_THRESHOLD = env.env_float("BB_OBJECT_DETECTION_THRESHOLD", 0.5)
 # to enable the Coral USB TPU, you must use the tflite_detector and set this to True
 BB_ENABLE_CORAL_TPU = env.env_bool("BB_ENABLE_CORAL_TPU", False)
-# path to the directory containing the tflite model and labels
-BB_TFLITE_DATA_DIR = env.env_string(
-    "BB_TFLITE_DATA_DIR", os.path.join("models", "tflite")
-)
 # which model to use for object detection.  default is the model from the coral site
 # which is faster than the model from the tensorflow hub
 BB_TFLITE_MODEL = env.env_string(
-    "BB_TFLITE_MODEL", "ssd_mobilenet_v1_coco_quant_postprocess.tflite"
+    "BB_TFLITE_MODEL", "./models/tflite/ssd_mobilenet_v1_coco_quant_postprocess.tflite"
 )
 # which model to use for object detection with BB_ENABLE_CORAL_TPU is true
 BB_TFLITE_MODEL_CORAL = env.env_string(

@@ -1,3 +1,4 @@
+import os
 import cv2
 import numpy as np
 import tflite_runtime.interpreter as tflite  # type: ignore
@@ -32,9 +33,12 @@ class TFLiteDetect:
         if model is None:
             if use_coral_tpu:
                 # model = f"{TFLITE_DATA_DIR}/efficientdet_lite0_edgetpu.tflite"
-                model = f"{c.BB_TFLITE_DATA_DIR}/{c.BB_TFLITE_MODEL_CORAL}"
+                model = c.BB_TFLITE_MODEL_CORAL
             else:
-                model = f"{c.BB_TFLITE_DATA_DIR}/{c.BB_TFLITE_MODEL}"
+                model = c.BB_TFLITE_MODEL
+
+        if model.startswith("./"):
+            model = os.path.join(os.path.dirname(__file__), model[2:])
 
         log.info(f"TFliteDetect using model={model}, use_coral_tpu={use_coral_tpu}")
 
