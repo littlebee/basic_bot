@@ -1,3 +1,5 @@
+recursive-include src/basic_bot/test_helpers/data *
+recursive-include src/basic_bot/commons/models *
 recursive-include src/basic_bot/created_files *
 recursive-exclude src/basic_bot/created_files/webapp/node_modules *
 recursive-exclude src/basic_bot/created_files/webapp/dist *

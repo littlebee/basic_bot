@@ -1,11 +1,14 @@
 
-# How to setup a Raspberry Pi5
+# How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm
 
 ...for basic_bot, ovencv and Adafruit Braincraft Hat
 
 ## Flash and Boot
 
 First you need to flash an image to a microcard reader using the [Raspberry Pi installer](https://www.raspberrypi.com/software/).
+
+Debian Bookworm is the new Raspian Bullseye.  [Good article](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/) on the differences. The rest of this guide is specific to Bookwork, which at the time of this update is the default OS used by the Raspberry Pi Imager.
+
 
 Here is a montage of the various settings I chose:
 
@@ -18,10 +21,13 @@ __Just answer yes to the remaining questions and ...__
 
 ![](images/pi5-setup/goodtogo.jpg){: style="transform:scale(.7);"}}
 
-## SSH into the pi5
+## SSH into the pi
 
-Not sure why, but I didn't see the pi5 on my network by name `pi5.local`.  I had to initially connect via it's IP address and then run `sudo raspi-config` and change the hostname in there to "pi5.local".  Reboot and then it worked via name and you should be able to just `ssh pi5.local`.
+```sh
+ssh pi5.local
+```
 
+Verify that Debian Bookwork was installed:
 ```sh
 bee@pi5:~ $ cat /etc/os-release
 PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
@@ -35,8 +41,18 @@ SUPPORT_URL="https://www.debian.org/support"
 BUG_REPORT_URL="https://bugs.debian.org/"
 ```
 
-Looks like Debian Bookworm is the new Raspian Bullseye.  [Good article](https://www.raspberrypi.com/news/bookworm-the-new-version-of-raspberry-pi-os/) on the differences.
 
+## Update and upgrade OS
+
+
+```sh
+sudo apt update
+sudo apt full-upgrade
+sudo reboot
+```
+SSH back into Raspberry Pi after reboot.
+
+Check versions:
 ```sh
 bee@pi5:~ $ python --version
 Python 3.11.2
@@ -44,56 +60,76 @@ bee@pi5:~ $ python -m pip --version
 pip 23.0.1 from /usr/lib/python3/dist-packages/pip (python 3.11)
 ```
 
-💥 outa da box!  I think that will work.  Let's see what happens after apt upgrade.
+## Setup a Python venv
 
+Unfortunately some things like Picamera2 require the shipped
+python libs so be sure to include `--system-site-packages`
+
+On the Raspberry device:
 ```sh
-sudo apt update
-sudo apt full-upgrade
-sudo reboot
+cd ~
+mkdir -p env
+python -m venv --system-site-packages env/bb
+source env/bb/bin/activate
 ```
 
-## Max `tflight-support` version on Bookworm is 0.1.1a
+## Install basic_bot package
 
-Basic bot vision needs tflight-support >= v0.4.0 but Bookwork and Python 3.11.   [This issue on tensorflow's GH](https://github.com/tensorflow/tensorflow/issues/64365#issuecomment-2425043238) suggests that using Python 3.9 will allow you to install tflite-support==0.4.0.
-
-So first install anaconda (miniforge) (makes switching and running multiple Python versions easier):
-```sh
-wget https://github.com/conda-forge/miniforge/releases/latest/download/miniforge3-linux-aarch64.sh
-chmod +x miniforge3-linux-aarch64.sh
-
-# note do not use sudo here
-./miniforge3-linux-aarch64.sh
-```
-...agree to the license and accept the default location (/home/me/miniforge3)
-
-Create and activate a new conda env based on python 3.9.2:
-```sh
-conda create -n basic_bot python==3.9.2
-conda activate basic_bot
-```
-
-## Install port audio (needed by sounddevice pip package)
-```
-sudo apt-get install portaudio19-dev
-python3 -m pip install sounddevice
-```
-
-## Install basic_bot and dependencies
 ```sh
 python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
 ```
 
+## Use picamera2 instead of opencv if using ribbon cable camera
+
+OpenCV camera capture will NOT work on Debian Bookworm with a ribbon cable
+camera.
+
+You must either use a USB camera or use the `basic_bot.commons.camera_picamera`
+module.
+
+In your `~/.bashrc` on the robot, add the following line:
+```sh
+export BB_CAMERA_MODULE="basic_bot.commons.camera_picamera
+```
+Save the file, exit and then source it:
+```sh
+source ~/.bashrc
+```
+
+If you have your robot set up to start at boot via `/etc/rc.local`,
+just insert the `export ...` line above in the rc.local file before
+the line that calls your start.sh script.
+
+Restart the bot or restart the `basic_bot.services.vision` service.
+
 ## Validate
-Tested by uploading [daphbot-due](https://github.com/littlebee/daphbot-due) to the pi5 (from my dev machine in the daphbot-due root project dir):
+
+### Install daphbot-due dependencies
+
+Install port audio (needed by sounddevice pip package)
+```
+sudo apt-get install portaudio19-dev
+python -m pip install sounddevice
+```
+
+### Upload daphbot-due package
+
+Tested by uploading [daphbot-due](https://github.com/littlebee/daphbot-due) to the Raspberry (from my dev machine in the daphbot-due root project dir):
 ```sh
 ./upload.sh pi5.local
 ```
 
-Then on the pi5:
+### Install Requirements
+
+ssh into pi5.local and:
 ```sh
 cd daphbot_due
 pip install -r requirements.txt
 rm -Rf logs/*
+```
+
+### Start the daphbot services
+```sh
 ./start.sh
 ```
 
@@ -103,9 +139,9 @@ clear
 cat logs/*
 ```
 
-## It all works!
+## It all works (with a USB camera)!
 
-If the `basic_bot.services.vision_cv2` successfully started, you can open
+If the `basic_bot.services.vision` successfully started, you can open
 a browser and see the video capture and recognition stats at (http://pi5.local:5801/stats).
 
 I'm seeing some impressive stats!  Recognition is running at nearly 100% of the capture FPS at 24.79 frames per second.  Below are the stats:

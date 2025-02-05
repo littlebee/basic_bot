@@ -33,7 +33,14 @@ BB_LEFT_MOTOR_CHANNEL = env.env_int("BB_LEFT_MOTOR_CHANNEL", 1)
 BB_RIGHT_MOTOR_CHANNEL = env.env_int("BB_RIGHT_MOTOR_CHANNEL", 2)
 
 # =============== Vision service constants
-
+default_camera_module = (
+    "basic_bot.test_helpers.camera_mock"
+    if BB_ENV == "test"
+    else "basic_bot.commons.camera_opencv"
+)
+# see other supported camera modules in basic_bot.commons.camera_*
+# for example, `BB_CAMERA_MODULE=basic_bot.commons.camera_picamera`
+BB_CAMERA_MODULE = env.env_string("BB_CAMERA_MODULE", default_camera_module)
 BB_CAMERA_CHANNEL = env.env_int("BB_CAMERA_CHANNEL", 0)
 BB_CAMERA_ROTATION = env.env_int("BB_CAMERA_ROTATION", 0)
 BB_CAMERA_FPS = env.env_int("BB_CAMERA_FPS", 30)
@@ -45,19 +52,15 @@ BB_VISION_FOV = 62
 BB_OBJECT_DETECTION_THRESHOLD = env.env_float("BB_OBJECT_DETECTION_THRESHOLD", 0.5)
 # to enable the Coral USB TPU, you must use the tflite_detector and set this to True
 BB_ENABLE_CORAL_TPU = env.env_bool("BB_ENABLE_CORAL_TPU", False)
-# path to the directory containing the tflite model and labels
-BB_TFLITE_DATA_DIR = env.env_string(
-    "BB_TFLITE_DATA_DIR", os.path.join("models", "tflite")
-)
 # which model to use for object detection.  default is the model from the coral site
 # which is faster than the model from the tensorflow hub
 BB_TFLITE_MODEL = env.env_string(
-    "BB_TFLITE_MODEL", "ssd_mobilenet_v1_coco_quant_postprocess.tflite"
+    "BB_TFLITE_MODEL", "./models/tflite/ssd_mobilenet_v1_coco_quant_postprocess.tflite"
 )
 # which model to use for object detection with BB_ENABLE_CORAL_TPU is true
 BB_TFLITE_MODEL_CORAL = env.env_string(
     "BB_TFLITE_MODEL_CORAL",
-    "ssd_mobilenet_v1_coco_quant_postprocess_edgetpu.tflite",
+    "./models/tflite/ssd_mobilenet_v1_coco_quant_postprocess_edgetpu.tflite",
 )
 # number of threads to use for tflite detection
 BB_TFLITE_THREADS = env.env_int("BB_TFLITE_THREADS", 2)

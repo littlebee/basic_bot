@@ -1,17 +1,18 @@
-from tflite_support.task import core  # type: ignore
-from tflite_support.task import processor  # type: ignore
-from tflite_support.task import vision  # type: ignore
+import os
+import cv2
+import numpy as np
+import tflite_runtime.interpreter as tflite  # type: ignore
+
 from typing import Optional, List, Dict, Any
 
 from basic_bot.commons import constants as c, log
+from basic_bot.commons.coco_lables import coco_lables as labels
 
 
 class TFLiteDetect:
     """
     This class provides object detection using Tensor Flow Lite.
     """
-
-    detector: vision.ObjectDetector
 
     # args are used for testing
     def __init__(
@@ -31,25 +32,26 @@ class TFLiteDetect:
 
         if model is None:
             if use_coral_tpu:
-                # model = f"{TFLITE_DATA_DIR}/efficientdet_lite0_edgetpu.tflite"
-                model = f"{c.BB_TFLITE_DATA_DIR}/{c.BB_TFLITE_MODEL_CORAL}"
+                model = c.BB_TFLITE_MODEL_CORAL
             else:
-                model = f"{c.BB_TFLITE_DATA_DIR}/{c.BB_TFLITE_MODEL}"
+                model = c.BB_TFLITE_MODEL
+
+        if model.startswith("./"):
+            model = os.path.join(os.path.dirname(__file__), model[2:])
 
         log.info(f"TFliteDetect using model={model}, use_coral_tpu={use_coral_tpu}")
 
-        base_options = core.BaseOptions(
-            file_name=model,
-            use_coral=(use_coral_tpu),
-            num_threads=c.BB_TFLITE_THREADS,
-        )
-        detection_options = processor.DetectionOptions(
-            max_results=3, score_threshold=0.3
-        )
-        options = vision.ObjectDetectorOptions(
-            base_options=base_options, detection_options=detection_options
-        )
-        self.detector = vision.ObjectDetector.create_from_options(options)
+        # Load TFLite model and allocate tensors.
+        self.interpreter = tflite.Interpreter(model_path=model, num_threads=4)
+        self.interpreter.allocate_tensors()
+
+        self.input_details = self.interpreter.get_input_details()
+        self.output_details = self.interpreter.get_output_details()
+        self.height = self.input_details[0]["shape"][1]
+        self.width = self.input_details[0]["shape"][2]
+        self.floating_model = False
+        if self.input_details[0]["dtype"] == np.float32:
+            self.floating_model = True
 
     def get_prediction(self, img: Any) -> List[Dict[str, Any]]:
         """
@@ -62,37 +64,39 @@ class TFLiteDetect:
         - confidence: float (0-1)
 
         """
-        input_tensor = vision.TensorImage.create_from_array(img)
-        detection_result = self.detector.detect(input_tensor)
+        initial_h, initial_w, channels = img.shape
+        frame = cv2.resize(img, (self.width, self.height))
+
+        input_data = np.expand_dims(frame, axis=0)
+        if self.floating_model:
+            input_data = (np.float32(input_data) - 127.5) / 127.5  # type: ignore
+        self.interpreter.set_tensor(self.input_details[0]["index"], input_data)
+
+        log.debug("Running inference...")
+        self.interpreter.invoke()
+        detected_boxes = self.interpreter.get_tensor(self.output_details[0]["index"])
+        detected_classes = self.interpreter.get_tensor(self.output_details[1]["index"])
+        detected_scores = self.interpreter.get_tensor(self.output_details[2]["index"])
+        num_boxes = self.interpreter.get_tensor(self.output_details[3]["index"])
+
         results = []
-        if detection_result.detections:
-            for detection in detection_result.detections:
-                # at some point the tensor-flow API changed from
-                # classes to categories and from class_name to category_name
-                categories = (
-                    detection.categories
-                    if hasattr(detection, "categories")
-                    else detection.classes
-                )
-                bestClassification = max(categories, key=lambda x: x.score)
-                class_name = (
-                    bestClassification.category_name
-                    if hasattr(bestClassification, "category_name")
-                    else bestClassification.class_name
-                )
+        for i in range(int(num_boxes)):
+            top, left, bottom, right = detected_boxes[0][i]
+            classId = int(detected_classes[0][i])
+            score = float(detected_scores[0][i])
+            if score > c.BB_OBJECT_DETECTION_THRESHOLD:
+                xmin = left * initial_w
+                ymin = top * initial_h
+                xmax = right * initial_w
+                ymax = bottom * initial_h
+                box = [float(xmin), float(ymin), float(xmax), float(ymax)]
+                class_name = labels[classId]
                 results.append(
                     {
-                        "boundingBox": [
-                            detection.bounding_box.origin_x,
-                            detection.bounding_box.origin_y,
-                            detection.bounding_box.origin_x
-                            + detection.bounding_box.width,
-                            detection.bounding_box.origin_y
-                            + detection.bounding_box.height,
-                        ],
+                        "boundingBox": box,
                         "classification": class_name,
-                        "confidence": bestClassification.score,
+                        "confidence": score,
                     }
                 )
-
+        log.debug(f"tflite_detect results: {results}")
         return results

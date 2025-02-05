@@ -5,23 +5,28 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "basic_bot"
 version = "0.1.0"
-authors = [{name="Bee Wilkerson", email="bee.wilkerson@ymail.com" }]
+authors = [{ name = "Bee Wilkerson", email = "bee.wilkerson@ymail.com" }]
 description = "A simpler alternative to ROS"
 readme = "README.md"
 dependencies = [
     "build",
+    "setuptools>=57.0",
     "cachetools",
     "requests",
     "websockets==10.4",
     "flask",
     "flask-cors",
+    "numpy<2",
     "opencv-python>=4.11",
     "psutil",
     "pytest",
     "protobuf>=3.18.0,<4",
-    "tflite-support",
-    "websocket-client"
+    "tflite-runtime; platform_system=='Linux'",
+    "websocket-client",
 ]
+# These are the dependencies of the installed basic_bot package
+#  for dev / build dependencies, use `pip install -r requirements.txt`
+
 requires-python = ">=3.9"
 
 [project.scripts]
