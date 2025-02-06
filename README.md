@@ -25,9 +25,9 @@ See official [API Docs](https://littlebee.github.io/basic_bot/)
 On your development computer (not your bot's onboard computer; see later in this doc)
 
 ```sh
-python3 -m venv my_new_project_venv
+python -m venv my_new_project_venv
 source my_new_project_venv/bin/activate
-python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
+python -m pip install git+https://github.com/littlebee/basic_bot.git@main
 bb_create my_new_project_dir
 ```
 The above commands will
@@ -70,7 +70,7 @@ You can start the services locally in the background (from your project root dir
 ... which will start all services in the `services.cfg` file.  Each service runs in as a process.
 
 You can start a hot development web server that will show your changes to the webapp/ code in near real time most of the time :).
-```
+```sh
 cd webapp
 npm run dev
 ```
@@ -89,7 +89,7 @@ Example:
 
 - `pi` above is the username
 - `my_raspberry_bot.local` above is the hostname to upload can be replaced by IPAddress
-- `/home/pi/my_bot` is the directory you wish to upload to.  The directory will be created if it does not already exist.
+- `/home/pi/my_bot` is the optional directory you wish to upload to. If not specified, the default is `home/$USER/basic_bot`. The directory will be created if it does not already exist.
 
 Notes:
 
@@ -103,12 +103,14 @@ I also like to add my public key to the `~/.ssh/authorized_keys` file on the rem
 First `ssh` into the onboard computer and `cd path/uploaded/to`.
 
 Before running for the first time, in an ssh shell, install the basic_bot package:
-```
+```sh
+python -m venv my_new_project_venv
+source my_new_project_venv/bin/activate
 python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
 ```
 
 Then from within the the directory you uploaded to:
-```
+```sh
 ./start.sh
 ```
 will start all of the services in  `./services.cfg` as individual processes running detached.  If your shell/terminal is closed, they will keep running.
