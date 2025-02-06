@@ -7,10 +7,7 @@ package-lock.json
 
 # generated docs see ./build-docs.py
 /docs/index.md
-/docs/services
-/docs/commons
-/docs/scripts
-/docs/debug
+/docs/Api Docs
 
 # debug test output files
 *_test_output.*

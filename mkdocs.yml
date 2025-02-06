@@ -1,13 +1,18 @@
 site_name: basic_bot Docs
 theme:
-  name: readthedocs
+  name: material
+  collapse_navigation: true
+  sticky_navigation: false
+  features:
+    - search.highlight
+    - navigation.path
+
 markdown_extensions:
   - attr_list
-  - codehilite
-
-#   - admonition
-#   - jetblack_markdown.autodoc:
-#       ignore_all: false
-#       ignore_inherited: true
-#       prefer_docstring: true
-#       follow_module_tree: False
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

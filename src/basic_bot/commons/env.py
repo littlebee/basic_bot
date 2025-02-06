@@ -2,7 +2,8 @@
 Simple utility functions to get typed environment variables with default values.
 
 Usage:
-```
+
+```python
 from basic_bot.commons import env
 
 MY_INT = env.env_int("MY_INT", 5800)
