@@ -77,7 +77,7 @@ def gen_rgb_video(camera: BaseCamera) -> Generator[bytes, None, None]:
     while True:
         frame = camera.get_frame()
 
-        jpeg = cv2.imencode(".jpg", frame)[1].tobytes()
+        jpeg = cv2.imencode(".jpg", frame)[1].tobytes()  # type: ignore
         yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n")
 
 

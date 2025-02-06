@@ -77,8 +77,8 @@ detected_scores = interpreter.get_tensor(output_details[2]["index"])
 num_boxes = interpreter.get_tensor(output_details[3]["index"])
 
 
-img = Image.open(test_image)  # type: ignore
-draw = ImageDraw.Draw(img, "RGBA")
+editable_img = Image.open(test_image)
+draw = ImageDraw.Draw(editable_img, "RGBA")
 font_file = model_path = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "testdata", "Helvetica.ttf")
 )
@@ -117,5 +117,5 @@ for i in range(int(num_boxes)):
         )
 
 output_file = os.path.join(os.getcwd(), "tflite_runtime_test_output.jpg")
-img.save(output_file)
+editable_img.save(output_file)
 print("Saved to ", output_file)

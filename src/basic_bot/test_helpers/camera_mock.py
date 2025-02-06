@@ -49,4 +49,4 @@ class Camera(BaseCamera):
             else:
                 img = not_pet_images[random.randint(0, len(not_pet_images) - 1)]
 
-            yield img
+            yield img  # type: ignore

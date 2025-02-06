@@ -80,7 +80,7 @@ start = time.time()
 
 writer = cv2.VideoWriter(
     video_file,
-    cv2.VideoWriter_fourcc(*"mp4v"),  # type: ignore
+    -1,  # cv2.VideoWriter_fourcc(*"mp4v"),  # type: ignore
     30,
     size,
 )
