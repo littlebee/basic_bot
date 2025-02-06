@@ -25,11 +25,14 @@ See official [API Docs](https://littlebee.github.io/basic_bot/)
 On your development computer (not your bot's onboard computer; see later in this doc)
 
 ```sh
+python3 -m venv my_new_project_venv
+source my_new_project_venv/bin/activate
 python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
 bb_create my_new_project_dir
 ```
 The above commands will
 
+- create a virtual python environment for this project and it's dependencies, and the current shell to use it.
 - install the basic_bot python libs and scripts like `bb_create`, `bb_start`, `bb_stop`
 - create a project directory named `my_new_robot_project`
 - add files for the basic shell of a webapp
