@@ -95,4 +95,4 @@ class Camera(BaseCamera):
                     Camera.img_is_none_messaged = True
                 continue
 
-            yield img
+            yield img  # type: ignore
