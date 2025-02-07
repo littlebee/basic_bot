@@ -21,7 +21,8 @@ def teardown_module():
 # This is the test running on my mac pro m3, not sure if 10ms latency
 # is a reasonable time for the monitor to connect and get the initial state
 # and receive the updates after updating.
-EXPECTED_LATENCY = 0.01  # seconds
+EXPECTED_UPDATE_LATENCY = 0.001  # 1 ms
+EXPECTED_HANDSHAKE_LATENCY = 0.01  # 10 ms
 
 
 class TestHubStateMonitor:
@@ -49,7 +50,7 @@ class TestHubStateMonitor:
 
         try:
             # reasonable time for the monitor to connect and get the initial state
-            time.sleep(EXPECTED_LATENCY)
+            time.sleep(EXPECTED_HANDSHAKE_LATENCY)
             callback.assert_called_once_with(
                 monitor.connected_socket,
                 "state",
@@ -62,7 +63,7 @@ class TestHubStateMonitor:
             hub.send_update_state(ws_client, {"foo": UPDATED_FOO})
             # reasonable time for the monitor to get the update and hubstate monitor
             # to call the callback
-            time.sleep(EXPECTED_LATENCY)
+            time.sleep(EXPECTED_UPDATE_LATENCY)
             callback.assert_called_once_with(
                 monitor.connected_socket,
                 "stateUpdate",
@@ -86,7 +87,7 @@ class TestHubStateMonitor:
         monitor.start()
 
         try:
-            time.sleep(EXPECTED_LATENCY)
+            time.sleep(EXPECTED_HANDSHAKE_LATENCY)
             on_connect.assert_called_once_with(monitor.connected_socket)
         finally:
             monitor.stop()
@@ -156,7 +157,7 @@ class TestHubStateMonitor:
         throughput = MESSAGES_TO_SEND / overall_duration
         print(f"throughput: {throughput} messsages per second")
 
-        assert p90_latency < EXPECTED_LATENCY
+        assert p90_latency < EXPECTED_UPDATE_LATENCY
         assert throughput > 1000
 
         monitor.stop()
