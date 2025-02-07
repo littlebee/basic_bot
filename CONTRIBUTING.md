@@ -6,20 +6,21 @@ Thank you, in advance, for your pull requests!
 
 ## Prereq
 
-First need to install build and test dependencies:
-```sh
-pip install -r requirements.txt
-```
-
-Install mypy types:
-```sh
-mypy --install-types
-```
-
 Make sure your `python` is Python 3.9 or later:
 ```sh
 python --version
 ```
+
+Install build and test dependencies:
+```sh
+python -m pip install -r requirements.txt
+```
+
+Install mypy types:
+```sh
+python -m mypy --install-types
+```
+
 
 ## Building
 
@@ -92,6 +93,9 @@ single test using `pytest -vv` and `pytest -k` respectively.  For example:
 ```sh
 pytest -vv tests/integration_tests/test_central_hub.py -k test_connect_identify
 ```
+
+The `-s` argument to `pytest` can be used to see prints to stdout from the test file as it runs instead of only on fail.
+
 
 You can dump all logs to a screen and quickly look for errors.  It's easier to
 read if only running one test. To figure out which service a specific line
