@@ -98,10 +98,9 @@ class TestHubStateMonitor:
 
         self.recvd_all = threading.Event()
         self.recvd_all.clear()
-
-        self.recv_count = 0
         self.recv_latencies = []
 
+        # this method is called in the thread that HubStateMonitor creates
         def on_state_update(
             _ws,
             msg_type,
@@ -111,8 +110,7 @@ class TestHubStateMonitor:
                 return
             print(f"on_state_update: {data}")
             self.recv_latencies.append(time.time() - data["time_sent"])
-            self.recv_count += 1
-            if self.recv_count == MESSAGES_TO_SEND:
+            if len(self.recv_latencies) == MESSAGES_TO_SEND:
                 self.recvd_all.set()
 
         monitor = HubStateMonitor(
@@ -124,7 +122,7 @@ class TestHubStateMonitor:
         )
         monitor.start()
 
-        print("test waiting for monitor connection")
+        print("test waiting for monitor connected")
         connected.wait()
 
         overall_start = time.time()
