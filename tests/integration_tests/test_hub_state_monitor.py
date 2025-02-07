@@ -1,4 +1,5 @@
 import time
+import threading
 from unittest.mock import Mock
 
 import basic_bot.test_helpers.central_hub as hub
@@ -20,11 +21,11 @@ def teardown_module():
 # This is the test running on my mac pro m3, not sure if 10ms latency
 # is a reasonable time for the monitor to connect and get the initial state
 # and receive the updates after updating.
-EXPECTED_LATENCY = 0.01  # seconds
+EXPECTED_UPDATE_LATENCY = 0.001  # 1 ms
+EXPECTED_HANDSHAKE_LATENCY = 0.01  # 10 ms
 
 
 class TestHubStateMonitor:
-
     def test_updates_with_initial(self):
         INITIAL_FOO = "bar"
         UPDATED_FOO = "baz"
@@ -49,7 +50,7 @@ class TestHubStateMonitor:
 
         try:
             # reasonable time for the monitor to connect and get the initial state
-            time.sleep(EXPECTED_LATENCY)
+            time.sleep(EXPECTED_HANDSHAKE_LATENCY)
             callback.assert_called_once_with(
                 monitor.connected_socket,
                 "state",
@@ -62,7 +63,7 @@ class TestHubStateMonitor:
             hub.send_update_state(ws_client, {"foo": UPDATED_FOO})
             # reasonable time for the monitor to get the update and hubstate monitor
             # to call the callback
-            time.sleep(EXPECTED_LATENCY)
+            time.sleep(EXPECTED_UPDATE_LATENCY)
             callback.assert_called_once_with(
                 monitor.connected_socket,
                 "stateUpdate",
@@ -86,7 +87,77 @@ class TestHubStateMonitor:
         monitor.start()
 
         try:
-            time.sleep(EXPECTED_LATENCY)
+            time.sleep(EXPECTED_HANDSHAKE_LATENCY)
             on_connect.assert_called_once_with(monitor.connected_socket)
         finally:
             monitor.stop()
+
+    def test_round_trip_latency(self):
+        MESSAGES_TO_SEND = 100
+        connected = threading.Event()
+        connected.clear()
+
+        self.recvd_all = threading.Event()
+        self.recvd_all.clear()
+        self.recv_latencies = []
+
+        # this method is called in the thread that HubStateMonitor creates
+        def on_state_update(
+            _ws,
+            msg_type,
+            data,
+        ):
+            if msg_type != "stateUpdate":
+                return
+            print(f"on_state_update: {data}")
+            self.recv_latencies.append(time.time() - data["time_sent"])
+            if len(self.recv_latencies) == MESSAGES_TO_SEND:
+                self.recvd_all.set()
+
+        monitor = HubStateMonitor(
+            hub_state=HubState({"time_sent": 0}),
+            identity="TestHubStateMonitor-latency_test_monitor",
+            subscribed_keys=["time_sent"],
+            on_state_update=on_state_update,
+            on_connect=lambda _: connected.set(),
+        )
+        monitor.start()
+
+        print("test waiting for monitor connected")
+        connected.wait()
+
+        overall_start = time.time()
+        ws_client = hub.connect("TestHubStateMonitor-latency_test_client")
+        for _i in range(0, MESSAGES_TO_SEND):
+            hub.send_update_state(ws_client, {"time_sent": time.time()})
+            # minimal sleep to allow the hub state monitor thread to have a chance to
+            # process messages
+            time.sleep(0.0001)
+
+        print(f"{MESSAGES_TO_SEND} messages sent, waiting for all to be received")
+        self.recvd_all.wait()
+        print("all messages received")
+
+        overall_duration = time.time() - overall_start
+        assert len(self.recv_latencies) == MESSAGES_TO_SEND  # sanity check
+
+        avg_latency = sum(self.recv_latencies) / len(self.recv_latencies)
+        print(f"average latency: {avg_latency}")
+        print(f"{self.recv_latencies=}")
+        print(f"{overall_duration=}")
+
+        sorted_data = sorted(self.recv_latencies)
+        p90_index = int(0.9 * len(sorted_data))
+        p90_value = sorted_data[p90_index]
+        relevant_data = [x for x in sorted_data if x <= p90_value]
+
+        p90_latency = sum(relevant_data) / len(relevant_data)
+        print(f"p90 latency: {p90_latency}")
+
+        throughput = MESSAGES_TO_SEND / overall_duration
+        print(f"throughput: {throughput} messsages per second")
+
+        assert p90_latency < EXPECTED_UPDATE_LATENCY
+        assert throughput > 1000
+
+        monitor.stop()
