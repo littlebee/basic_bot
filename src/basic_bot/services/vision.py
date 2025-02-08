@@ -44,8 +44,6 @@ Origin:
 
     Thank you, @adeept and @miguelgrinberg!
 """
-
-import os
 import importlib
 import threading
 
