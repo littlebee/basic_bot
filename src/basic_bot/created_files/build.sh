@@ -1,11 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
-# if [ "$(which npm)"=="" ]; then
-#     echo "\n******************* ERROR *******************"
-#     echo "Unable to build the webapp because npm not found.\nPlease install nodejs."
-#     echo "*********************************************\n\n"
-#     exit 1
-# fi
+if [ "$(which npm)"=="" ]; then
+    echo ""
+    echo "******************* WARNNG *******************"
+    echo "May fail to build the webapp because npm not found."
+    echo "Please install nodejs."
+    echo "*********************************************"
+    echo ""
+fi
 
 
 # echo on
