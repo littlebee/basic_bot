@@ -30,7 +30,8 @@ video_file = os.path.join(os.getcwd(), "picamera2_capture_test_output.mp4")
 # from camera
 camera = Picamera2()
 camera.configure(
-    camera.create_preview_configuration(main={"format": "XRGB8888", "size": size})
+    # camera.create_preview_configuration(main={"format": "XRGB8888", "size": size})
+    camera.create_video_configuration(main={"format": "RGB888", "size": size})
 )
 camera.start()
 
@@ -41,7 +42,7 @@ print(f"recording {DURATION} secs of video...")
 start = time.time()
 num_frames = 0
 captured_frames = []
-while True:
+while time.time() - start <= DURATION:
     frame = camera.capture_array("main")
 
     if frame is not None:
@@ -51,30 +52,26 @@ while True:
         print(f"ERROR: Failed to capture frame {num_frames}.")
         exit(1)
 
-    if time.time() - start >= DURATION:
-        break
-
 duration = time.time() - start
-print(f"recorded {num_frames} frames in {duration}s ({num_frames/duration:.2f} fps)")
+capture_fps = num_frames / duration
+print(f"recorded {num_frames} frames in {duration}s ({capture_fps:.2f} fps)")
 
 print(f"\nSaving video to {video_file}")
 start = time.time()
 writer = cv2.VideoWriter(
     video_file,
     cv2.VideoWriter_fourcc(*"mp4v"),  # type: ignore
-    30,
+    capture_fps,
     size,
 )
 for frame in captured_frames:
     writer.write(frame)
 
 duration = time.time() - start
-print(
-    f"saved {len(captured_frames)} frames in {duration}s ({num_frames/duration:.2f} fps)"
-)
+print(f"saved {num_frames} frames in {duration}s ({num_frames/duration:.2f} fps)")
 
 
-# When everything done, release
+# When everything is done, release
 # the video capture and video
 # write objects
 writer.release()

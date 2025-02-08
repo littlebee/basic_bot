@@ -35,7 +35,7 @@ model_path = os.path.abspath(
     os.path.join(
         os.path.dirname(__file__),
         "..",
-        "created_files",
+        "commons",
         "models",
         "tflite",
         "ssd_mobilenet_v1_coco_quant_postprocess.tflite",

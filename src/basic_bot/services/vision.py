@@ -60,9 +60,17 @@ from basic_bot.commons.base_camera import BaseCamera
 from basic_bot.commons.recognition_provider import RecognitionProvider
 from typing import Generator
 
-camera_module = importlib.import_module(c.BB_CAMERA_MODULE)
-camera = camera_module.Camera()
+# when running tests, assume we are headless and use the
+# mock camera which provides random images that should
+# be half with pet in image and half without pet in image
+if c.BB_ENV == "test":
+    log.info("Running in test mode, using camera_mock")
+    camera_lib = "basic_bot.test_helpers.camera_mock"
+else:
+    camera_lib = c.BB_CAMERA_MODULE
 
+camera_module = importlib.import_module(camera_lib)
+camera = camera_module.Camera()
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)

@@ -3,7 +3,6 @@
 """
 
 coco_lables = [
-    "__background__",
     "person",
     "bicycle",
     "car",
@@ -15,6 +14,7 @@ coco_lables = [
     "boat",
     "traffic light",
     "fire hydrant",
+    "N/A",
     "stop sign",
     "parking meter",
     "bench",

@@ -1,5 +1,5 @@
 
-# How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm
+# Setup basic_bot on a Raspberry Pi4 or Pi5 with Debian Bookworm
 
 ...for basic_bot, ovencv and tflite
 
@@ -81,8 +81,8 @@ python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
 
 ## Use picamera2 instead of opencv if using ribbon cable camera
 
-OpenCV camera capture will NOT work on Debian Bookworm with a ribbon cable
-camera.
+As of Feb 7, 2025, OpenCV camera capture [will NOT work on Debian Bookworm
+with a ribbon cable camera](https://github.com/opencv/opencv/issues/21653).
 
 You must either use a USB camera or use the `basic_bot.commons.camera_picamera`
 module.
