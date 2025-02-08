@@ -35,6 +35,7 @@ def test_create_project(temp_dir):
 
     # Run bb_create command
     result = subprocess.run(["bb_create", project_name], capture_output=True, text=True)
+    print(f"test_create_project: output from bb_create {result}")
     assert result.returncode == 0
 
     # Check if project directory was created
