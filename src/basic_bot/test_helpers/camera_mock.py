@@ -51,15 +51,9 @@ class Camera(BaseCamera):
             # for testing, half of the frames are pet images and half are not pet images
             if frame_count % 2 == 0:
                 index = random.randint(0, len(pet_images) - 1)
-                log.debug(
-                    f"camera_mock: yielding pet image: {pet_image_files[index]} frame_count: {frame_count}"
-                )
                 img = pet_images[index]
             else:
                 index = random.randint(0, len(not_pet_images) - 1)
-                log.debug(
-                    f"camera_mock: yielding not pet image: {not_pet_image_files[index]} fame_count: {frame_count}"
-                )
                 img = not_pet_images[index]
 
             yield img  # type: ignore

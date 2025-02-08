@@ -100,12 +100,6 @@ def video_feed() -> Response:
 @app.route("/stats")
 def send_stats() -> Response:
     """Return the FPS and other stats of the vision service."""
-    (cpu_temp, *rest) = [
-        int(i) / 1000
-        for i in os.popen("cat /sys/devices/virtual/thermal/thermal_zone*/temp")
-        .read()
-        .split()
-    ]
     return web_utils.json_response(
         app,
         {
