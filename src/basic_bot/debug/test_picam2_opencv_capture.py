@@ -13,6 +13,7 @@ import sys
 import time
 
 from picamera2 import Picamera2  # type: ignore
+from libcamera import controls  # type: ignore
 import cv2
 
 DURATION = 10
@@ -21,53 +22,45 @@ video_channel = 0
 if len(sys.argv) > 1:
     video_channel = int(sys.argv[1])
 
-size = (1280, 720)
+size = (640, 480)
 video_file = os.path.join(os.getcwd(), "picamera2_capture_test_output.mp4")
 
 
 # Create an object to read
 # from camera
 camera = Picamera2()
+camera.configure(
+    camera.create_video_configuration(main={"format": "RGB888", "size": size})
+)
 camera.start()
 
-# print(
-#     f"starting video_channel={video_channel} size={size} capture_fps={capture_fps}",
-# )
+# Set the camera to continuous autofocus
+camera.set_controls({"AfMode": controls.AfModeEnum.Continuous})
 
 print(f"recording {DURATION} secs of video...")
 start = time.time()
 num_frames = 0
 captured_frames = []
-while True:
-    frame = camera.capture_array()
+while time.time() - start <= DURATION:
+    frame = camera.capture_array("main")
 
     if frame is not None:
-        # Write the frame into the
-        # file 'filename.avi'
-        # writer.write(frame)
         captured_frames.append(frame)
         num_frames += 1
     else:
         print(f"ERROR: Failed to capture frame {num_frames}.")
         exit(1)
 
-    # runs for 30s
-    if time.time() - start >= DURATION:
-        break
-
 duration = time.time() - start
-print(f"recorded {num_frames} frames in {duration}s ({num_frames/duration:.2f} fps)")
+capture_fps = num_frames / duration
+print(f"recorded {num_frames} frames in {duration}s ({capture_fps:.2f} fps)")
 
 print(f"\nSaving video to {video_file}")
-# Below VideoWriter object will create
-# a frame of above defined The output
-# is stored in 'filename.avi' file.
 start = time.time()
-
 writer = cv2.VideoWriter(
     video_file,
     cv2.VideoWriter_fourcc(*"mp4v"),  # type: ignore
-    30,
+    capture_fps,
     size,
 )
 for frame in captured_frames:
@@ -77,7 +70,7 @@ duration = time.time() - start
 print(f"saved {num_frames} frames in {duration}s ({num_frames/duration:.2f} fps)")
 
 
-# When everything done, release
+# When everything is done, release
 # the video capture and video
 # write objects
 writer.release()

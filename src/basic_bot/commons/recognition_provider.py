@@ -17,27 +17,15 @@ See [issue #1](https://github.com/littlebee/scatbot-edge-ai-shootout/issues/1)
 about support for pytorch
 """
 
-try:
-    from .tflite_detect import TFLiteDetect
+from .tflite_detect import TFLiteDetect
 
-    detector = TFLiteDetect()
-except ImportError:
-    log.info("recognition_provider: Failed to import TFLiteDetect.  Using mock.")
-
-    class TFLiteDetectMock:
-        def __init__(self):
-            pass
-
-        def get_prediction(self, frame):
-            return []
-
-    detector = TFLiteDetectMock()  # type: ignore
+detector = TFLiteDetect()
 
 
 class RecognitionProvider:
     """
-    This class detects objects in frames it gets from the camera object passed to
-    the constructor.
+    This singleton class detects objects in frames it gets from the camera
+    object passed to the constructor.
 
     It uses the TFLiteDetect class to detect objects in the frames.
 
@@ -45,6 +33,7 @@ class RecognitionProvider:
     using the `recognition` key
 
     To use, simply instantiate it:
+
     ```python
     from basic_bot.commons.recognition_provider import RecognitionProvider
     from basic_bot.commons.camera_opencv import OpenCvCamera
@@ -114,10 +103,10 @@ class RecognitionProvider:
                 async with websockets.connect(constants.BB_HUB_URI) as websocket:
                     await messages.send_identity(websocket, "recognition")
                     while True:
-                        # if not cls.pause_event.is_set():
-                        #     log.info(f"recognition waiting on pause event")
-                        #     cls.pause_event.wait()
-                        #     log.info(f"recognition resumed")
+                        if not cls.pause_event.is_set():
+                            log.info("recognition waiting on pause event")
+                            cls.pause_event.wait()
+                            log.info("recognition resumed")
 
                         frame = cls.camera.get_frame()
 
@@ -136,7 +125,6 @@ class RecognitionProvider:
                         cls.next_objects_event.set()  # send signal to clients
                         cls.total_objects_detected += num_objects
 
-                        log.info(f"recognition_provider detected: {new_objects}")
                         await messages.send_update_state(
                             websocket,
                             {

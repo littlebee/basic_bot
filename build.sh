@@ -15,5 +15,5 @@ python3 -m flake8 src/basic_bot
 echo "Running mypy \(typechecker\): $(python3 -m mypy --version)"
 python3 -m mypy src/basic_bot
 
-echo "Building package"
+echo "Building pip package"
 python3 -m build

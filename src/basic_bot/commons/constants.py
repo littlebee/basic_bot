@@ -65,7 +65,8 @@ BB_TFLITE_MODEL_CORAL = env.env_string(
 # number of threads to use for tflite detection
 BB_TFLITE_THREADS = env.env_int("BB_TFLITE_THREADS", 2)
 # http port used by the vision service for video streaming
-BB_VISION_PORT = env.env_int("BB_VISION_PORT", 5801)
+port = 5802 if BB_ENV == "test" else 5801
+BB_VISION_PORT = env.env_int("BB_VISION_PORT", port)
 BB_DISABLE_RECOGNITION_PROVIDER = env.env_bool("BB_DISABLE_RECOGNITION_PROVIDER", False)
 
 # ## See [issue #1](https://github.com/littlebee/scatbot-edge-ai-shootout/issues/1)

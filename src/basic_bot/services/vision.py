@@ -44,8 +44,6 @@ Origin:
 
     Thank you, @adeept and @miguelgrinberg!
 """
-
-import os
 import importlib
 import threading
 
@@ -60,9 +58,17 @@ from basic_bot.commons.base_camera import BaseCamera
 from basic_bot.commons.recognition_provider import RecognitionProvider
 from typing import Generator
 
-camera_module = importlib.import_module(c.BB_CAMERA_MODULE)
-camera = camera_module.Camera()
+# when running tests, assume we are headless and use the
+# mock camera which provides random images that should
+# be half with pet in image and half without pet in image
+if c.BB_ENV == "test":
+    log.info("Running in test mode, using camera_mock")
+    camera_lib = "basic_bot.test_helpers.camera_mock"
+else:
+    camera_lib = c.BB_CAMERA_MODULE
 
+camera_module = importlib.import_module(camera_lib)
+camera = camera_module.Camera()
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -77,7 +83,7 @@ def gen_rgb_video(camera: BaseCamera) -> Generator[bytes, None, None]:
     while True:
         frame = camera.get_frame()
 
-        jpeg = cv2.imencode(".jpg", frame)[1].tobytes()
+        jpeg = cv2.imencode(".jpg", frame)[1].tobytes()  # type: ignore
         yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n")
 
 
@@ -92,12 +98,6 @@ def video_feed() -> Response:
 @app.route("/stats")
 def send_stats() -> Response:
     """Return the FPS and other stats of the vision service."""
-    (cpu_temp, *rest) = [
-        int(i) / 1000
-        for i in os.popen("cat /sys/devices/virtual/thermal/thermal_zone*/temp")
-        .read()
-        .split()
-    ]
     return web_utils.json_response(
         app,
         {
