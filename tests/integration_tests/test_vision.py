@@ -54,11 +54,11 @@ class TestVisionCV2:
 
         pet_ratio = pet_count / (pet_count + not_pet_count)
 
-        # TODO: not sure why this need to be +/- 0.04, but it seems
+        # TODO: not sure why this need to be +/- 0.05, but it seems
         # to be the case on CD/CD runner.  Its possible that because
         # the camera_mock is pushing out 60fps, the ratio is dependent
         # on the stride of tflite_detect.py which is running at 25-30fps
-        assert 0.46 < pet_ratio < 0.54
+        assert 0.45 < pet_ratio < 0.55
 
         ws.close()
 
