@@ -36,15 +36,21 @@ jobs:
 
           # needed for bb_create e2e test
           sudo apt install -y nodejs
+          echo 'node and npm versions:'
           node --version
           npm --version
+          echo 'Install deps npm path:'
+          which npm
 
         # this also runs build.sh which in turn runs mypy
       - name: Run build and install
         run: ./install-dev.sh
 
       - name: Run tests
-        run: ./test.sh
+        run: |
+          echo 'npm path:'
+          which npm
+          ./test.sh
 
       - name: Upload log artifacts
         if: always()
