@@ -20,7 +20,7 @@
     
     
       
-        <title>How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm - basic_bot Docs</title>
+        <title>Setup basic_bot on a Raspberry Pi4 or Pi5 with Debian Bookworm - basic_bot Docs</title>
       
     
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#how-to-setup-a-raspberry-pi4-and-pi5-on-raspian-bookworm" class="md-skip">
+        <a href="#setup-basic_bot-on-a-raspberry-pi4-or-pi5-with-debian-bookworm" class="md-skip">
           Skip to content
         </a>
       
@@ -98,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm
+              Setup basic_bot on a Raspberry Pi4 or Pi5 with Debian Bookworm
             
           </span>
         </div>
@@ -1252,7 +1252,7 @@
           
   
   <span class="md-ellipsis">
-    How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm
+    Setup basic_bot on a Raspberry Pi4 or Pi5 with Debian Bookworm
     
   </span>
   
@@ -1264,7 +1264,7 @@
         
   
   <span class="md-ellipsis">
-    How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm
+    Setup basic_bot on a Raspberry Pi4 or Pi5 with Debian Bookworm
     
   </span>
   
@@ -1539,7 +1539,7 @@
 
 
 
-<h1 id="how-to-setup-a-raspberry-pi4-and-pi5-on-raspian-bookworm">How to setup a Raspberry Pi4 and Pi5 on Raspian bookworm</h1>
+<h1 id="setup-basic_bot-on-a-raspberry-pi4-or-pi5-with-debian-bookworm">Setup basic_bot on a Raspberry Pi4 or Pi5 with Debian Bookworm</h1>
 <p>...for basic_bot, ovencv and tflite</p>
 <h2 id="flash-and-boot">Flash and Boot</h2>
 <p>First you need to flash an image to a microcard reader using the <a href="https://www.raspberrypi.com/software/">Raspberry Pi installer</a>.</p>
@@ -1591,8 +1591,8 @@ python libs so be sure to include <code>--system-site-packages</code> below.</p>
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/littlebee/basic_bot.git@main
 </span></code></pre></div>
 <h2 id="use-picamera2-instead-of-opencv-if-using-ribbon-cable-camera">Use picamera2 instead of opencv if using ribbon cable camera</h2>
-<p>OpenCV camera capture will NOT work on Debian Bookworm with a ribbon cable
-camera.</p>
+<p>As of Feb 7, 2025, OpenCV camera capture <a href="https://github.com/opencv/opencv/issues/21653">will NOT work on Debian Bookworm
+with a ribbon cable camera</a>.</p>
 <p>You must either use a USB camera or use the <code>basic_bot.commons.camera_picamera</code>
 module.</p>
 <p>In your <code>~/.bashrc</code> on the robot, add the following line:
