@@ -44,7 +44,7 @@ class TestTFLiteDetect:
 
             assert (
                 found_pet
-            ), f"No cat/dog detected with >50% confidence in {image_file} predictions: {predictions}"
+            ), f"Should have found cat or dog in {image_file} predictions: {predictions}"
 
     def test_non_pet_detection(self):
         # Initialize detector
@@ -81,4 +81,4 @@ class TestTFLiteDetect:
 
             assert (
                 not found_pet
-            ), f"No cat/dog detected with >50% confidence in {image_file} predictions: {predictions}"
+            ), f"Should not have found cat or dog in {image_file} predictions: {predictions}"

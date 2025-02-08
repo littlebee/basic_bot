@@ -30,7 +30,6 @@ video_file = os.path.join(os.getcwd(), "picamera2_capture_test_output.mp4")
 # from camera
 camera = Picamera2()
 camera.configure(
-    # camera.create_preview_configuration(main={"format": "XRGB8888", "size": size})
     camera.create_video_configuration(main={"format": "RGB888", "size": size})
 )
 camera.start()
