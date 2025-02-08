@@ -69,9 +69,9 @@ Run the main test.sh script from the project root dir:
 ...will run all of the tests in test/integration_tests and test/e2e_tests
 
 
-## TIPS
+## Tips
 
-### DEBUGGING DOCS GENERATION
+### Debugging Docs Generation
 
 #### Cheat Sheet
 
@@ -81,7 +81,7 @@ https://yakworks.github.io/docmark/cheat-sheet/
 
 - need a blank line before the dash or asterisk
 
-### DEBUGGING TESTS
+### Debugging Tests
 
 It is easier to start with an empty logs dir.  From the root of your project dir:
 ```sh
@@ -103,3 +103,10 @@ was output to, scan up in the logs for identity
 ```sh
 cat logs/*
 ```
+
+### Debugging CI/CD Test
+
+Click into the details of the CICD run.  Look for the "Run Tests"
+task and open it. Scroll to the bottom of the test output to find the failing test.
+
+Sometimes it may not be obvious what failed from the test output.  Below the "Run Tests" step is the "Upload log artifacts" step.  Open it and you should see a link at the bottom labled "Artifact download URL:"  Click on it to download.  Unzip and inspect logs.
