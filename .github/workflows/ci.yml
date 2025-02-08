@@ -34,7 +34,7 @@ jobs:
           pip install -r requirements.txt
           chmod +x ./*.sh
 
-          # needed for bb_create e2d test
+          # needed for bb_create e2e test
           sudo apt install -y nodejs
           node --version
           npm --version
