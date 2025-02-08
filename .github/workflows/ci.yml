@@ -27,14 +27,17 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get install -y python3-pip
+          sudo apt install -y python3-pip
           pip install --upgrade pip
-
-      - name: Install dependencies
-        run: |
+          pip --version
           pip install build setuptools wheel
           pip install -r requirements.txt
           chmod +x ./*.sh
+
+          # needed for bb_create e2d test
+          sudo apt install -y nodejs
+          node --version
+          npm --version
 
         # this also runs build.sh which in turn runs mypy
       - name: Run build and install
