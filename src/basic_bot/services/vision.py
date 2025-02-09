@@ -68,7 +68,7 @@ else:
     camera_lib = c.BB_CAMERA_MODULE
 
 camera_module = importlib.import_module(camera_lib)
-camera = camera_module.Camera()
+camera = camera_module.Camera()  # type: ignore
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)

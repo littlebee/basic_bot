@@ -10,8 +10,8 @@ description = "A simpler alternative to ROS"
 readme = "README.md"
 dependencies = [
     "build",
-    "setuptools>=57.0",
     "cachetools",
+    "setuptools>=57.0",
     "requests",
     "websockets==10.4",
     "flask",
