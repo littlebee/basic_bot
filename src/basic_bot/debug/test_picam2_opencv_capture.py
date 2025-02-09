@@ -35,7 +35,12 @@ camera.configure(
 camera.start()
 
 # Set the camera to continuous autofocus
-camera.set_controls({"AfMode": controls.AfModeEnum.Continuous})
+try:
+    # on PI4 bullseye with Raspberry Camera Module 2, this fails with:
+    # RuntimeError: Control AfMode is not advertised by libcamera
+    camera.set_controls({"AfMode": controls.AfModeEnum.Continuous})
+except:
+    print("Failed to set autofocus mode to continuous.  This is not fatal.")
 
 print(f"recording {DURATION} secs of video...")
 start = time.time()

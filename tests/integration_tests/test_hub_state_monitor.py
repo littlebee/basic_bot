@@ -17,12 +17,17 @@ def teardown_module():
 
 
 # This may need adjusting.
-#
-# This is the test running on my mac pro m3, not sure if 10ms latency
-# is a reasonable time for the monitor to connect and get the initial state
-# and receive the updates after updating.
-EXPECTED_UPDATE_LATENCY = 0.001  # 1 ms
-EXPECTED_HANDSHAKE_LATENCY = 0.01  # 10 ms
+# On the Mac, CI/CD runner, and Raspberry Pi5, the latency
+# is under 1ms.  But on the Raspberry Pi4, bullseye it is around
+# 4 - 5ms.
+EXPECTED_UPDATE_LATENCY = 0.01  # 50 ms
+EXPECTED_HANDSHAKE_LATENCY = 0.1  # 100 ms
+
+# This is also much faster on everything but the Raspberry Pi4. :/
+# On the Rasberry Pi4, bullseye, it is around 500 messages per second,
+# but on the Mac, CI/CD runner, and Raspberry Pi5, it is well over
+# 1000 messages per second.
+EXPECTED_THROUGHPUT = 400  # messages per second
 
 
 class TestHubStateMonitor:
@@ -122,42 +127,43 @@ class TestHubStateMonitor:
             on_connect=lambda _: connected.set(),
         )
         monitor.start()
+        try:
+            print("test waiting for monitor connected")
+            connected.wait()
 
-        print("test waiting for monitor connected")
-        connected.wait()
+            overall_start = time.time()
+            ws_client = hub.connect("TestHubStateMonitor-latency_test_client")
+            for _i in range(0, MESSAGES_TO_SEND):
+                hub.send_update_state(ws_client, {"time_sent": time.time()})
+                # minimal sleep to allow the hub state monitor thread to have a chance to
+                # process messages
+                time.sleep(0.0001)
 
-        overall_start = time.time()
-        ws_client = hub.connect("TestHubStateMonitor-latency_test_client")
-        for _i in range(0, MESSAGES_TO_SEND):
-            hub.send_update_state(ws_client, {"time_sent": time.time()})
-            # minimal sleep to allow the hub state monitor thread to have a chance to
-            # process messages
-            time.sleep(0.0001)
+            print(f"{MESSAGES_TO_SEND} messages sent, waiting for all to be received")
+            self.recvd_all.wait()
+            print("all messages received")
 
-        print(f"{MESSAGES_TO_SEND} messages sent, waiting for all to be received")
-        self.recvd_all.wait()
-        print("all messages received")
+            overall_duration = time.time() - overall_start
+            assert len(self.recv_latencies) == MESSAGES_TO_SEND  # sanity check
 
-        overall_duration = time.time() - overall_start
-        assert len(self.recv_latencies) == MESSAGES_TO_SEND  # sanity check
+            avg_latency = sum(self.recv_latencies) / len(self.recv_latencies)
+            print(f"average latency: {avg_latency}")
+            print(f"{self.recv_latencies=}")
+            print(f"{overall_duration=}")
 
-        avg_latency = sum(self.recv_latencies) / len(self.recv_latencies)
-        print(f"average latency: {avg_latency}")
-        print(f"{self.recv_latencies=}")
-        print(f"{overall_duration=}")
+            sorted_data = sorted(self.recv_latencies)
+            p90_index = int(0.9 * len(sorted_data))
+            p90_value = sorted_data[p90_index]
+            relevant_data = [x for x in sorted_data if x <= p90_value]
 
-        sorted_data = sorted(self.recv_latencies)
-        p90_index = int(0.9 * len(sorted_data))
-        p90_value = sorted_data[p90_index]
-        relevant_data = [x for x in sorted_data if x <= p90_value]
+            p90_latency = sum(relevant_data) / len(relevant_data)
+            print(f"p90 latency: {p90_latency}")
 
-        p90_latency = sum(relevant_data) / len(relevant_data)
-        print(f"p90 latency: {p90_latency}")
+            throughput = MESSAGES_TO_SEND / overall_duration
+            print(f"throughput: {throughput} messsages per second")
 
-        throughput = MESSAGES_TO_SEND / overall_duration
-        print(f"throughput: {throughput} messsages per second")
+            assert p90_latency < EXPECTED_UPDATE_LATENCY
+            assert throughput > EXPECTED_THROUGHPUT
 
-        assert p90_latency < EXPECTED_UPDATE_LATENCY
-        assert throughput > 1000
-
-        monitor.stop()
+        finally:
+            monitor.stop()
