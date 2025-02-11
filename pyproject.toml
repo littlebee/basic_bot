@@ -16,6 +16,7 @@ dependencies = [
     "websockets==10.4",
     "flask",
     "flask-cors",
+    "jsonschema",
     "numpy<2",
     "opencv-python>=4.11",
     "psutil",

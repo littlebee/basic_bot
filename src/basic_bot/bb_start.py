@@ -1,91 +1,87 @@
 #!/usr/bin/env python3
 """
 bb_start is a script to start services in the background. It reads a
-list of services from the 'services.cfg' file or from the command line
-arguments file.
+list of services from the `basic_bot.yml` file unless a configuration
+file is specified on the command line.
 
-stdout and stderr are redirected to log files in the 'logs' directory.
+For each service started, bb_start writes the PID of the service to a
+file in the 'pids' directory.  The PID file is used by the `bb_stop`.
+`stdout` and `stderr` are redirected to a log files in the 'logs'
+directory with the name of the service from the configuration file.
 
-The PID of each service is written to a file in the 'pids' directory
-and used by the `bb_stop` script to stop the service.
 
-Usage:
+For more information on usage:
+```sh
+bb_start --help
 ```
-bb_start [service] [service] [...]
-```
+
 """
+import argparse
 import os
-import sys
 import subprocess
 import time
+import yaml
+from jsonschema import validate, ValidationError
+
 
 from basic_bot.commons.script_helpers.pid_files import is_pid_file_valid
-
-HELP = """
-Usage: bb_start [service] [service] ...
-
-Where: [service] = the main python file file or module for the service
-to start in the form of a relative path from the root of the project to
-the src/*.py file.
-
-If no services are specified, all services listed in services.cfg will be started.
-Services will be started in the order they are listed in the file.
-
-Example:
-  bb_start "-m basic_bot.services.central_hub" src/my_awesome_service.py
-
-... starts two of the services in the project.
-"""
+from basic_bot.commons import constants as c
 
 
-def print_help() -> None:
-    print(HELP)
-    sys.exit(0)
+arg_parser = argparse.ArgumentParser(prog="bb_start", description=__doc__)
+arg_parser.add_argument(
+    "-f",
+    "--file",
+    help="configuration file from which to read services and configuration",
+    default="./basic_bot.yml",
+)
+
+
+def validate_unique_names(config):
+    service_names = []
+    for service in config["services"]:
+        service_name = service["name"]
+        if service_name in service_names:
+            raise ValidationError(f"Service name {service_name} is not unique")
+        service_names.append(service_name)
+    return True
 
 
 def main() -> None:
-
-    if len(sys.argv) > 1 and (sys.argv[1] == "-h" or sys.argv[1] == "--help"):
-        print_help()
+    args = arg_parser.parse_args()
 
     os.makedirs("./logs", exist_ok=True)
     os.makedirs("./pids", exist_ok=True)
 
-    to_start = []
+    try:
+        with open(args.file, "r") as f:
+            config = yaml.safe_load(f)
+        validate(config, config_file_schema)
+        validate_unique_names(config)
+    except FileNotFoundError:
+        print(f"Error: File not found: {args.file}")
+    except yaml.YAMLError:
+        print(f"Error: Invalid YAML syntax: {args.file}")
+    except ValidationError as e:
+        print(f"Validation error: {e.message}")
 
-    # comment this out to stop all services from logging every message
-    # sent or received
-    os.environ["LOG_ALL_MESSAGES"] = "1"
+    env_vars = config.get("env", {})
+    env_vars.update(config.get(f"{c.BB_ENV}_env", {}))
 
-    if len(sys.argv) > 1:
-        to_start = sys.argv[1:]
-    else:
-        with open("./services.cfg", "r") as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith("#"):
-                    to_start.append(line)
+    services = config["services"]
+    print(f"starting {len(services)} services")
 
-    arraylength = len(to_start)
-    print(f"starting {arraylength} services")
+    for service in services:
+        service_name = service["name"]
+        log_file = service.get("log_file", f"./logs/{service_name}.log")
+        pid_file = service.get("pid_file", f"./pids/{service_name}.pid")
 
-    for service in to_start:
-        sub_system = service
-        is_module = False
+        service_env = env_vars.copy()
+        service_env.update(service.get("env", {}))
+        service_env.update(service.get(f"{c.BB_ENV}_env", {}))
 
-        if service.startswith("-m "):
-            is_module = True
-            sub_system = service[3:]
-
-        base_name = os.path.basename(sub_system)
-        log_file = f"./logs/{base_name}.log"
-        pid_file = f"./pids/{base_name}.pid"
-
-        if os.getenv("BB_ENV") == "test":
-            print(f"running {sub_system} in test mode")
-            append = os.getenv("BB_FILE_APPEND", "")
-            log_file = f"./logs/test_{base_name}{append}.log"
-            pid_file = f"./pids/test_{base_name}{append}.pid"
+        if os.getenv("BB_ENV") == "test" or service_env.get("BB_ENV") == "test":
+            print(f"running {service_name} in test mode")
 
         # if the pid file already exists, it may be currently
         # running, and we should not start another instance
@@ -93,7 +89,7 @@ def main() -> None:
         if is_pid_file_valid(pid_file):
             print(
                 f"\nCowardly refusing to overwrite {pid_file}. try running:\n"
-                f'bb_stop "{service}" \n\n'
+                f'bb_stop "{service_name}" \n\n'
                 "from the terminal or if not, delete the pid file and try again.\n"
             )
             continue
@@ -109,20 +105,19 @@ def main() -> None:
                 os.remove(new_log_file)
             os.rename(old_log_file, new_log_file)
 
-        print(f"Starting {sub_system}...")
-
-        args = ["python", "-m", sub_system] if is_module else ["python3", sub_system]
+        print(f"Starting {service_name}...")
 
         with open(log_file, "w") as log, open(pid_file, "w") as pid:
-            process = subprocess.Popen(args, stdout=log, stderr=log)
-            pid.write(str(process.pid))
-            print(
-                f"Started service: {service} and PID {process.pid} and logging to {log_file}"
-            )
-
-        if sub_system == "basic_bot.services.central_hub":
-            # let the central hub start up before starting the remaining services
-            time.sleep(1)
+            process = subprocess.Popen(service["run"], stdout=log, stderr=log)
+            time.sleep(0.5)
+            if process.poll() is not None:
+                print(f"Error starting service: {service}")
+                log.write(f"Error starting service: {service}")
+            else:
+                pid.write(str(process.pid))
+                print(
+                    f"Started service: {service} and PID {process.pid} and logging to {log_file}"
+                )
 
 
 if __name__ == "__main__":

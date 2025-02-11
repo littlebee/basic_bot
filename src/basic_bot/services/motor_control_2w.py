@@ -36,17 +36,18 @@ import websockets.client
 
 from basic_bot.commons import constants as c, messages, log
 
-if c.BB_ENV == "production":
+try:
     from adafruit_motorkit import MotorKit  # type: ignore
 
     kit = MotorKit(c.BB_MOTOR_I2C_ADDRESS)
     motors = [kit.motor1, kit.motor2, kit.motor3, kit.motor4]
     left_motor = motors[c.BB_LEFT_MOTOR_CHANNEL]
     right_motor = motors[c.BB_RIGHT_MOTOR_CHANNEL]
-else:
+except ImportError:
     # stub out the motor controller for testing and local (mac/windows) development
     log.info(
-        "basic_bot.services.motor_control_2w not running in BB_ENV=production. Using stub motor controller"
+        "basic_bot.services.motor_control_2w failed to load adafruit_motorkit."
+        "Using stub motor controller. This is expected in development. "
     )
 
     class Motor:
