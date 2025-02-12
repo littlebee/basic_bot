@@ -26,7 +26,7 @@ from basic_bot.commons.script_helpers.log_files import get_log_time
 from basic_bot.commons.config_file_schema import config_file_schema
 
 
-arg_parser = argparse.ArgumentParser(prog="bb_start", description=__doc__)
+arg_parser = argparse.ArgumentParser(prog="bb_stop", description=__doc__)
 arg_parser.add_argument(
     "-f",
     "--file",
