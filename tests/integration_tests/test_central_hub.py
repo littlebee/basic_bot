@@ -1,5 +1,5 @@
 import basic_bot.test_helpers.central_hub as hub
-import basic_bot.test_helpers.start_stop as bbss
+import basic_bot.test_helpers.start_stop as sst
 
 # semi-random values to use for testing
 TEST_ANGLES_1 = [10, 50, 180, 120, 90, 0]
@@ -7,11 +7,11 @@ TEST_ANGLES_2 = [15, 55, 175, 115, 95, 5]
 
 
 def setup_module():
-    bbss.start_services(["-m basic_bot.services.central_hub"])
+    sst.start_service("central_hub", "python -m basic_bot.services.central_hub")
 
 
 def teardown_module():
-    bbss.stop_services(["-m basic_bot.services.central_hub"])
+    sst.stop_service("central_hub")
 
 
 class TestCentralHub:

@@ -1,42 +1,45 @@
 import os
-import time
 
-from typing import List
+from typing import Tuple
+
+from basic_bot import bb_start, bb_stop
 
 
-def start_services(service_list: List[str]) -> None:
+def get_files_for_service(service_name: str) -> Tuple[str, str]:
+    log_file = os.path.join(os.getcwd(), "logs", f"test_{service_name}.log")
+    pid_file = os.path.join(os.getcwd(), "pids", f"test_{service_name}.pid")
+    return log_file, pid_file
+
+
+def start_service(service_name: str, run_cmd: str) -> None:
     """
-    Starts requested subsystems as detached processes using same start script
-    used to start on the bot.  This is useful for integration and e2e tests.
+    Starts requested service using bb_start command.  This is useful
+    for integration and e2e tests.
 
-    BB_ENV=test is used to ensure that the services are started in the
+    BB_ENV=test is forced to ensure that the services are started in the
     test environment which means motor control, vision camera, and other
     hardware specific modules are mocked.
 
     Args:
 
-    - service_list = the names of the subsystems to start.  Which should be
-        the base file names of the service main file in src/ directory.
+        service_name = the name of the service. "test_" is prepended to the
+            service name to create pid and and log files that are distinct from
+            the services which may be running for development.
+
+        run_cmd = the command to start the service.
     """
-
-    for service_name in service_list:
-        cmd = f'BB_ENV=test bb_start "{service_name}"'
-        print(f"starting {service_name} with command: {cmd}")
-        exit_code = os.system(cmd)
-        assert exit_code == 0
-
-    time.sleep(1)  # give all the services time to start
+    env = {"BB_ENV": "test"}
+    log_file, pid_file = get_files_for_service(service_name)
+    bb_start.start_service(f"test_{service_name}", run_cmd, log_file, pid_file, env)
 
 
-def stop_services(service_list: List[str]) -> None:
+def stop_service(service_name) -> None:
     """
-    stops subsystems and restores the central hub state to what it was before the tests started
+    stops the requested service using bb_stop command.
 
     Args:
-        service_list = the names of the subsystems to start.  Which should be the base file names of the
-                service main file in src/ directory.
+        service_name: the name of the service to stop as it was passed to
+            start_service function above
     """
-
-    for service_name in service_list:
-        exit_code = os.system(f'BB_ENV=test bb_stop "{service_name}"')
-        assert exit_code == 0
+    log_file, pid_file = get_files_for_service(service_name)
+    bb_stop.stop_service(f"test_{service_name}", log_file, pid_file)

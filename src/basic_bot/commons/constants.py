@@ -9,6 +9,12 @@ See the [bb_start documentation](https://littlebee.github.io/basic_bot/Api%20Doc
 
 """
 
+#
+#  Development Note:  If you change the name of the this file, or
+#   it's relative path, you will need to update the /build_docs.py script
+#
+
+
 import os
 import basic_bot.commons.env as env
 

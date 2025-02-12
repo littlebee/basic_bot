@@ -3,17 +3,17 @@ import threading
 from unittest.mock import Mock
 
 import basic_bot.test_helpers.central_hub as hub
-import basic_bot.test_helpers.start_stop as bbss
+import basic_bot.test_helpers.start_stop as sst
 from basic_bot.commons.hub_state_monitor import HubStateMonitor
 from basic_bot.commons.hub_state import HubState
 
 
 def setup_module():
-    bbss.start_services(["-m basic_bot.services.central_hub"])
+    sst.start_service("central_hub", "python -m basic_bot.services.central_hub")
 
 
 def teardown_module():
-    bbss.stop_services(["-m basic_bot.services.central_hub"])
+    sst.stop_service("central_hub")
 
 
 # This may need adjusting.

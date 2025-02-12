@@ -1,0 +1,23 @@
+bot_name: "basic_bot"
+version: "0.1.0"
+
+# environment variables that are common to all services
+# these are evaluated before the service specific
+# environment variables.  Service environment variables
+# will override these if they have the same key.
+env:
+  BB_LOG_ALL_MESSAGES: false
+
+services:
+  - name: "central_hub"
+    run: "python -m basic_bot.services.central_hub"
+    env:
+      BB_LOG_ALL_MESSAGES: "true"
+
+  - name: "web_server"
+    run: "python -m basic_bot.services.web_server"
+
+  - name: "vision"
+    run: "python -m basic_bot.services.vision"
+    production_env:
+      BB_CAMERA_MODULE: "basic_bot.commons.camera_picamera"
