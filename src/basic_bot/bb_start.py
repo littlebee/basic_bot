@@ -145,6 +145,8 @@ def start_services(config):
 
 
 def main() -> None:
+    args = arg_parser.parse_args()
+
     try:
         with open(args.file, "r") as f:
             config = yaml.safe_load(f)
