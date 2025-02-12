@@ -82,6 +82,9 @@ def start_service(
     log_file = log_file or f"./logs/{service_name}.log"
     pid_file = pid_file or f"./pids/{service_name}.pid"
 
+    os.makedirs("./logs", exist_ok=True)
+    os.makedirs("./pids", exist_ok=True)
+
     if os.getenv("BB_ENV") == "test":
         print(f"running {service_name} in test mode")
 
@@ -142,11 +145,6 @@ def start_services(config):
 
 
 def main() -> None:
-    args = arg_parser.parse_args()
-
-    os.makedirs("./logs", exist_ok=True)
-    os.makedirs("./pids", exist_ok=True)
-
     try:
         with open(args.file, "r") as f:
             config = yaml.safe_load(f)
