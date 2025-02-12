@@ -3,8 +3,8 @@
 if [ "$(which npm)"=="" ]; then
     echo ""
     echo "******************* WARNNG *******************"
-    echo "May fail to build the webapp because npm not found."
-    echo "Please install nodejs."
+    echo "May fail to build the webapp if npm not found."
+    echo "If it fails, please install nodejs."
     echo "*********************************************"
     echo ""
 fi

@@ -12,4 +12,4 @@ pydoc-markdown
 types-Flask-Cors
 types-psutil
 types-requests
-
+types-PyYAML

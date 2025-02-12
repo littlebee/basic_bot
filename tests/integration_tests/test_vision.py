@@ -4,20 +4,18 @@ import basic_bot.test_helpers.skip_unless_tflite_runtime  # noqa: F401
 import requests
 
 import basic_bot.test_helpers.central_hub as hub
-import basic_bot.test_helpers.start_stop as bbss
+import basic_bot.test_helpers.start_stop as sst
 import basic_bot.commons.constants as c
 
 
 def setup_module():
-    bbss.start_services(
-        ["-m basic_bot.services.central_hub", "-m basic_bot.services.vision"]
-    )
+    sst.start_service("central_hub", "python -m basic_bot.services.central_hub")
+    sst.start_service("vision", "python -m basic_bot.services.vision")
 
 
 def teardown_module():
-    bbss.stop_services(
-        ["-m basic_bot.services.central_hub", "-m basic_bot.services.vision"]
-    )
+    sst.stop_service("central_hub")
+    sst.stop_service("vision")
 
 
 class TestVisionCV2:

@@ -1,100 +1,100 @@
 #!/usr/bin/env python3
 """
-`bb_stop` is a script to stop services running in the background that
-where started by `bb_start`. It reads a list of services from the
-'services.cfg' file or from the command line.
+`bb_stop` is a script to stop basic_bot services started with `bb_start`
 
-Usage:
-```
-bb_stop [service] [service] [...]
+The services to stop are read from the `basic_bot.yml` file unless a
+`--file filename` is specified on the command line.
+
+
+For more information on usage:
+```sh
+bb_stop --help
 ```
 
 """
+import argparse
 import os
-import sys
 import signal
+import yaml
+from jsonschema import validate, ValidationError
 
-from basic_bot.commons.script_helpers.pid_files import is_process_running
-
-HELP = """
-Usage: python -m basic_bot.stop [service] [service] ...
-
-[service] is optional.  If not specified, all services listed in services.cfg in reverse order.
-"""
+from typing import Optional
 
 
-def print_help():
-    print(HELP)
-    sys.exit(0)
+from basic_bot.commons.script_helpers.pid_files import is_pid_file_valid
+from basic_bot.commons.script_helpers.log_files import get_log_time
+from basic_bot.commons.config_file_schema import config_file_schema
 
 
-def main():
-    if len(sys.argv) > 1 and (sys.argv[1] == "-h" or sys.argv[1] == "--help"):
-        print_help()
+arg_parser = argparse.ArgumentParser(prog="bb_stop", description=__doc__)
+arg_parser.add_argument(
+    "-f",
+    "--file",
+    help="configuration file from which to read services and configuration",
+    default="./basic_bot.yml",
+)
 
-    to_stop = []
 
-    if len(sys.argv) > 1:
-        to_stop = sys.argv[1:]
-    else:
-        with open("./services.cfg", "r") as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith("#"):
-                    to_stop.append(line)
+def stop_service(
+    service_name: str,
+    log_file: Optional[str],
+    pid_file: Optional[str],
+) -> None:
+    log_file = log_file or f"./logs/{service_name}.log"
+    pid_file = pid_file or f"./pids/{service_name}.pid"
 
-    arraylength = len(to_stop)
-    print(f"stopping {arraylength} services")
-
-    # stop in reverse order as start
-    for service in reversed(to_stop):
-        start_cmd = service
-        sub_system = start_cmd
-
-        if start_cmd.startswith("-m "):
-            sub_system = start_cmd[3:]
-
-        print(f"stopping {sub_system}")
-
-        base_name = os.path.basename(sub_system)
-        log_file = f"./logs/{base_name}.log"
-        pid_file = f"./pids/{base_name}.pid"
-
-        if os.getenv("BB_ENV") == "test":
-            print("stopping test mode process...")
-            append = os.getenv("BB_FILE_APPEND", "")
-            log_file = f"./logs/test_{base_name}{append}.log"
-            pid_file = f"./pids/test_{base_name}{append}.pid"
-
+    # if the pid file already exists, it may be currently
+    # running, and we should not start another instance
+    # because it will overwrite the pid file
+    if not is_pid_file_valid(pid_file):
         print(
-            f"stopping {sub_system} at {os.popen('date').read().strip()}",
-            file=open(log_file, "a"),
+            f"Error: Service {service_name} is not running or o PID file: {pid_file} not found.  Skipping"
+        )
+        try:
+            os.remove(pid_file)
+        except FileNotFoundError:
+            pass
+        return
+
+    print(f"Stopping service: {service_name}")
+
+    with open(log_file, "w") as log:
+        log.write(f"{get_log_time()}: Stopping service: {service_name}\n")
+
+    with open(pid_file, "r") as f:
+        pid = f.read().strip()
+        print(f"Sending SIGTERM to service {service_name} with PID: {pid}")
+        os.kill(int(pid), signal.SIGTERM)
+
+    os.remove(pid_file)
+
+
+def stop_services(config):
+    services = config["services"]
+    print(f"stopping {len(services)} services")
+
+    for service in services:
+        stop_service(
+            service["name"],
+            service.get("log_file"),
+            service.get("pid_file"),
         )
 
-        if os.path.isfile(pid_file):
-            with open(pid_file, "r") as pidfile:
-                pid = int(pidfile.read().strip())
-                # first check if the process is still running
-                if not is_process_running(pid):
-                    print(
-                        f"pid file found for {sub_system} but process is not running. removing pid file"
-                    )
-                    os.remove(pid_file)
-                    continue
 
-                try:
-                    os.kill(pid, signal.SIGTERM)
-                    os.remove(pid_file)
-                    print(f"Stopped service: {sub_system} with PID {pid}")
-                except OSError as e:
-                    print(f"kill failed for {sub_system}. \n {e}")
-                    print(
-                        f"Maybe retry using `sudo python3 -m basic_bot.stop` and if that fails, manually delete the .pid file at ({pid_file})"
-                    )
-        else:
-            print(f"pid file not found for {sub_system} (skipping)")
+def main() -> None:
+    args = arg_parser.parse_args()
 
-    sys.exit(0)
+    try:
+        with open(args.file, "r") as f:
+            config = yaml.safe_load(f)
+        validate(config, config_file_schema)
+        stop_services(config)
+    except FileNotFoundError:
+        print(f"Error: File not found: {args.file}")
+    except yaml.YAMLError:
+        print(f"Error: Invalid YAML syntax: {args.file}")
+    except ValidationError as e:
+        print(f"Config file validation error: {e.message}")
 
 
 if __name__ == "__main__":

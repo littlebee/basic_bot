@@ -67,7 +67,7 @@ You can start the services locally in the background (from your project root dir
 ```sh
 ./start.sh
 ```
-... which will start all services in the `services.cfg` file.  Each service runs in as a process.
+... which will start all services in the `` file.  Each service runs in as a process.
 
 You can start a hot development web server that will show your changes to the webapp/ code in near real time most of the time :).
 ```sh

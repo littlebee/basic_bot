@@ -8,6 +8,8 @@ package-lock.json
 # generated docs see ./build-docs.py
 /docs/index.md
 /docs/Api Docs
+/docs/Configuration/Config File Schema.md
+/docs/Configuration/Environment Variables.md
 
 # debug test output files
 *_test_output.*

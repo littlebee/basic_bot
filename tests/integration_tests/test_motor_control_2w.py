@@ -1,17 +1,17 @@
 import basic_bot.test_helpers.central_hub as hub
-import basic_bot.test_helpers.start_stop as bbss
+import basic_bot.test_helpers.start_stop as sst
 
 
 def setup_module():
-    bbss.start_services(
-        ["-m basic_bot.services.central_hub", "-m basic_bot.services.motor_control_2w"]
+    sst.start_service("central_hub", "python -m basic_bot.services.central_hub")
+    sst.start_service(
+        "motor_control_2w", "python -m basic_bot.services.motor_control_2w"
     )
 
 
 def teardown_module():
-    bbss.stop_services(
-        ["-m basic_bot.services.central_hub", "-m basic_bot.services.motor_control_2w"]
-    )
+    sst.stop_service("central_hub")
+    sst.stop_service("motor_control_2w")
 
 
 class TestMotorControl2w:
