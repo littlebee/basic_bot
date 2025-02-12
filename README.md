@@ -25,22 +25,24 @@ See official [API Docs](https://littlebee.github.io/basic_bot/)
 On your development computer (not your bot's onboard computer; see later in this doc)
 
 ```sh
+# first create or activate a python venv
 python -m venv my_new_project_venv
 source my_new_project_venv/bin/activate
-python -m pip install git+https://github.com/littlebee/basic_bot.git@main
-bb_create my_new_project_dir
-```
-The above commands will
 
-- create a virtual python environment for this project and it's dependencies, and the current shell to use it.
-- install the basic_bot python libs and scripts like `bb_create`, `bb_start`, `bb_stop`
-- create a project directory named `my_new_robot_project`
+# installs the basic_bot package
+python -m pip install git+https://github.com/littlebee/basic_bot.git@main
+
+# creates a new robotics project
+bb_create my_new_robot_project
+```
+The bb_create command above will
+
 - add files for the basic shell of a webapp
 - add test of webapp
 - add files for example service that increments a counter
 - add test for example service
-- add start.sh, stop.sh, upload.sh scripts to my_new_project_dir/
-- add build.sh and test.sh scripts to my_new_project_dir/
+- add start.sh, stop.sh, upload.sh scripts to my_new_robot_project/
+- add build.sh and test.sh scripts to my_new_robot_project/
 - run build.sh and test.sh scripts
 
 After `bb_create` finishes you should be able to
@@ -113,7 +115,7 @@ Then from within the the directory you uploaded to:
 ```sh
 ./start.sh
 ```
-will start all of the services in  `./services.cfg` as individual processes running detached.  If your shell/terminal is closed, they will keep running.
+will start all of the services in  `./basic_bot.yml` as individual processes running detached.  If your shell/terminal is closed, they will keep running.
 
 You can debug issues with a service by looking at the ./logs/* files for each service.
 
