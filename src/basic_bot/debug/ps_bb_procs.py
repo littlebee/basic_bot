@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Finds and lists all processes matching that were started by bb_start.
+Finds and lists all processes that were started by bb_start.
 
 When `bb_start` is used to start a process, it adds a `via=bb_start` to the
 command line. You can also see the list of processes started by `bb_start` by
