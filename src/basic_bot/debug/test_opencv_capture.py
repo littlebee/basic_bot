@@ -61,7 +61,15 @@ while True:
         captured_frames.append(frame)
         num_frames += 1
     else:
-        print(f"ERROR: return from video.read={ret}")
+        print(
+            f"\n\nERROR: return from video.read={ret}.  \n"
+            "\n"
+            "This will happen if you are using a ribbon cable camera with \n"
+            'Pi4 or Pi5. See "Installation Guides" for Pi4 and Pi5 in the \n'
+            "basic_bot docs for how to use the ribbon cable camera with opencv. \n"
+            "\n"
+            "Also try running `python -m basic_bot.debug.test_picam2_opencv_capture`\n"
+        )
         exit(1)
 
     # runs for 30s
