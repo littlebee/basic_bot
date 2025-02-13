@@ -14,17 +14,25 @@ class Camera(BaseCamera):
     [Picamera2](https://pypi.org/project/picamera2/).
 
     To use the Picamera2, you need to be running on a Raspberry Pi
-    Bookworm with a camera module installed.
+    Bullseye or Bookworm with a ribbon cable camera module installed.
 
     To use with the vision service, you need to set the environment
     variable `BB_CAMERA_MODULE=basic_bot.commons.camera_picamera`
-    before the vision service is started.  By default the vision
-    service uses the opencv camera module which ATM, on Bookworm
-    will work for USB, but [not for ribbon cable cameras](https://github.com/opencv/opencv/issues/21653).
+    before the vision service is started.  You can al
+
+    ```yml
+    - name: "vision"
+      run: "python -m basic_bot.services.vision"
+      production_env:
+        BB_CAMERA_MODULE: "basic_bot.commons.camera_picamera"
+    ```
+
+    By default the vision service uses opencv camera capture which ATM works
+    on Bullseye and Bookworm with USB camera, but [not for ribbon cable cameras](https://github.com/opencv/opencv/issues/21653).
     See also the [Installation Guide for Bookworm](https://github.com/littlebee/basic_bot/blob/main/docs/Installation%20Guides/setup_on_pi_bookworm.md#use-picamera2-instead-of-opencv-if-using-ribbon-cable-camera).
 
 
-    Usage:
+    Direct Usage:
 
     ```python
     from basic_bot.commons.camera_picamera import Camera

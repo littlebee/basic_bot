@@ -104,16 +104,49 @@ I also like to add my public key to the `~/.ssh/authorized_keys` file on the rem
 
 First `ssh` into the onboard computer and `cd path/uploaded/to`.
 
-Before running for the first time, in an ssh shell, install the basic_bot package:
+### Install basic_bot onboard
+
 ```sh
+# first create and source a python venv for your project
 python -m venv my_new_project_venv
 source my_new_project_venv/bin/activate
+
+# install basic_bot
 python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
 ```
 
-Then from within the the directory you uploaded to:
+### Add BB_ENV export
+
+The onboard computer of the robot is considered the "production" environment.
+Some basic_bot modules (like motor controllers) may load mock versions of
+themselves when not running in the production environment. This is intended
+to keep from accidentally, for example, running the bot off of your workbench
+or your robotic arm smacking you in the face because you ran tests or diagnostics
+on the onboard system.
+
+The following command will add `BB_ENV=production` to the environment variables
+for your OS user when running a bash shell:
 ```sh
-./start.sh
+echo "export BB_ENV=production" >> ~/.bashrc
+```
+
+You can also prefix env vars on the command line in most shells:
+```sh
+BB_ENV=production bb_start
+```
+
+If you plan on starting your robot software at boot using `/etc/rc.local`, just
+add the export below to rc.local before starting your robot.
+```sh
+export BB_ENV=production
+
+/path/to/scriptThatStartsMyBot.sh
+```
+
+# Start the onboard services
+Then **`cd` the the directory** you uploaded to:
+```sh
+bb_start
 ```
 will start all of the services in  `./basic_bot.yml` as individual processes running detached.  If your shell/terminal is closed, they will keep running.
 
@@ -127,7 +160,7 @@ The created ./webapp is currently a Vite app, created with `yarn create vite`.  
 
 If you're want to use another frontend framework, you should be able to symbolic link where ever that framework's bundler puts it's build assets like index.html to `./webapp/dist`
 
-### Will it run on Windows?
+## Will it run on Windows?
 
  Answer is IDK, yet.  Wherever possible, I've tried to use the cross-platform pure Python file system abstraction.  If you look at the `start.sh` and `stop.sh` scripts in the root of the created project, you will see that those just call scripts which `pip3 install ` or `conda install `, via SetupTools should have installed globally assuming pip3 is in your environment.
 

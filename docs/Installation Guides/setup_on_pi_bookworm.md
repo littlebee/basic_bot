@@ -79,26 +79,16 @@ source env/bb/bin/activate
 python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
 ```
 
+## Add BB_ENV export
+
+See https://littlebee.github.io/basic_bot/#run-the-software-on-your-robot
+
 ## Use picamera2 instead of opencv if using ribbon cable camera
 
-As of Feb 7, 2025, OpenCV camera capture [will NOT work on Debian Bookworm or Bullseye
+As of Feb 7, 2025, OpenCV camera capture [will NOT work on Debian Bullseye or Bookworm
 with a ribbon cable camera](https://github.com/opencv/opencv/issues/21653).
 
 You must either use a USB camera or use the `basic_bot.commons.camera_picamera`
 module.
 
-In your `~/.bashrc` on the robot, add the following line:
-```sh
-export BB_CAMERA_MODULE="basic_bot.commons.camera_picamera
-```
-Save the file, exit and then source it:
-```sh
-source ~/.bashrc
-```
-
-If you have your robot set up to start at boot via `/etc/rc.local`,
-just insert the `export ...` line above in the rc.local file before
-the line that calls your start.sh script.
-
-Restart the bot or restart the `basic_bot.services.vision` service.
-
+See the [API docs for using camera_picamera](https://littlebee.github.io/basic_bot/Api%20Docs/commons/camera_picamera/) for more information about how to use.
