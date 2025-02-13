@@ -104,19 +104,15 @@ I also like to add my public key to the `~/.ssh/authorized_keys` file on the rem
 
 First `ssh` into the onboard computer and `cd path/uploaded/to`.
 
-### Install basic_bot onboard
+### Create and source python venv
 
-Unfortunately some things like Picamera2 require the shipped
-python libs so be sure to include `--system-site-packages` below
-when running on Raspberry Pi 4 or 5.
+Unfortunately some things like Picamera2 require the shipped python libs
+so be sure to include `--system-site-packages` below when running on
+Raspberry Pi 4 or 5.
 
 ```sh
-# first create and source a python venv for your project
 python -m venv --system-site-packages my_new_project_venv
 source my_new_project_venv/bin/activate
-
-# install basic_bot
-python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
 ```
 
 ### Upgrade pip
@@ -127,6 +123,14 @@ a good idea to get the latest `pip`
 ```sh
 python -m pip install --upgrade pip
 ```
+
+
+### Install basic_bot onboard
+
+```sh
+python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
+```
+
 
 ### Add BB_ENV export
 
@@ -156,7 +160,8 @@ export BB_ENV=production
 /path/to/scriptThatStartsMyBot.sh
 ```
 
-# Start the onboard services
+## Start the onboard services
+
 Then **`cd` the the directory** you uploaded to:
 ```sh
 bb_start
@@ -173,19 +178,28 @@ The created ./webapp is currently a Vite app, created with `yarn create vite`.  
 
 If you're want to use another frontend framework, you should be able to symbolic link where ever that framework's bundler puts it's build assets like index.html to `./webapp/dist`
 
+## Build non Python services?
+
+Sure, anything that thing you can run from a shell prompt, you can use as a service and `bb_start` and `bb_stop` will manage it in the background.   All you need is websockets and JSON parsing support in your language of choice and you can do it!
+
+See [central_hub service docs](https://littlebee.github.io/basic_bot/Api%20Docs/services/central_hub/) for more information on the interface for subscribing and publishing state.
+
+## Examples
+
+[daphbot-due](https://github.com/littlebee/daphbot-due) (In progress) A robot for keeping your pet off of the kitchen counter.
+
+[stongarm](https://github.com/littlebee/strong-arm) (TBD: need to back port it to using bb). A robotic arm application with visual simulation.
+
+[svgarm]() (TBD: dream stage) A robotic arm that can be mounted above a whiteboard and draw svgs sent to it.
+
 ## Will it run on Windows?
 
- Answer is IDK, yet.  Wherever possible, I've tried to use the cross-platform pure Python file system abstraction.  If you look at the `start.sh` and `stop.sh` scripts in the root of the created project, you will see that those just call scripts which `pip3 install ` or `conda install `, via SetupTools should have installed globally assuming pip3 is in your environment.
+Answer is IDK, yet.  Wherever possible, I've tried to use the cross-platform, pure Python, file system and os abstractions.
 
- So maybe `./start.sh` does nothing on Windows, but `bb_start` will?  Add a .bat file; maybe just rename *.sh -> *.bat?   [Waves arms; not a windows user for years]
-
-
-#### TODO: add links to other bots using their own components as examples (like strongarm)
-
+See also, https://github.com/littlebee/basic_bot/issues/61
 
 
 ## How it all works
-
 
 ### TODO add updated version of How It All Works from strongarm + scatbot
 

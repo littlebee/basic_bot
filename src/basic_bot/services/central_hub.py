@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Provides an ultra-light pub/sub service with < 10ms latecy over
+Provides an ultra-light pub/sub service with < 5ms latecy over
 websockets.  The state of published keys is maintained in memory.
 
 This python process is meant to be run as a service by basic_bot.
