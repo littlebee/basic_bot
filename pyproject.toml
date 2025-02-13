@@ -22,8 +22,12 @@ dependencies = [
     "psutil",
     "pytest",
     "protobuf>=3.18.0,<4",
+    # tflite-runtime is currently only supported on Linux
     "tflite-runtime; platform_system=='Linux'",
+    # TODO: move to requirements.txt?  I think this is only used for
+    #   the basic_bot integrations tests
     "websocket-client",
+    "pyyaml",
 ]
 # These are the dependencies of the installed basic_bot package
 #  for dev / build dependencies, use `pip install -r requirements.txt`

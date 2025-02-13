@@ -36,8 +36,13 @@ log.debug(
 
 class Camera(BaseCamera):
     """
-    This class implements a mock of BaseCamera interface
-    using a set of static images from ($cwd)/data/
+    This class implements a mock of BaseCamera interface using a set of
+    static images. The images are loaded from the pet_images and not_pet_images
+    test data. The mock camera will provide 50% pet images and 50%
+    non pet image frames at 60 frames per second.
+
+    When running in BB_ENV=test, the vision service will use this mock camera
+    in place of camera configured by BB_CAMERA_MODULE.
     """
 
     @staticmethod

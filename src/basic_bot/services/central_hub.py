@@ -7,7 +7,7 @@ This python process is meant to be run as a service by basic_bot.
 
 You can also run it in the foreground for debugging purposes.  ex:
 ```sh
-python3 -m basic_bot.services.central_hub
+python -m basic_bot.services.central_hub
 ```
 
 Central hub is also the publisher of several state keys:

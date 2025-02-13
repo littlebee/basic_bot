@@ -1,4 +1,11 @@
+
 #!/bin/sh
+
+echo "Stopping services...
 bb_stop $@
-sleep 2
+
+echo "Sleeping for 5 seconds"
+sleep 5
+
+echo "Starting services..."
 bb_start $@

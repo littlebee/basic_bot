@@ -128,7 +128,7 @@ python -m pip install --upgrade pip
 ### Install basic_bot onboard
 
 ```sh
-python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
+python -m pip install git+https://github.com/littlebee/basic_bot.git@main
 ```
 
 
@@ -145,6 +145,7 @@ The following command will add `BB_ENV=production` to the environment variables
 for your OS user when running a bash shell:
 ```sh
 echo "export BB_ENV=production" >> ~/.bashrc
+source ~/.bashrc
 ```
 
 You can also prefix env vars on the command line in most shells:
@@ -168,7 +169,27 @@ bb_start
 ```
 will start all of the services in  `./basic_bot.yml` as individual processes running detached.  If your shell/terminal is closed, they will keep running.
 
+
+## Debugging issues
+
 You can debug issues with a service by looking at the ./logs/* files for each service.
+
+basic_bot also provides several scripts in the `basic_bot.debug` package that can be used to diagnose 3rd party software like opencv and Tensor Flow Lite.
+
+First stop all services:
+```sh
+bb_stop
+```
+
+To see if your opencv installation is working correctly with your robot's camera:
+```sh
+python -m python -m basic_bot.debug.test_opencv_capture
+```
+
+The above may fail because opencv capture doesn't work with libcamera (Pi4 and Pi5) yet.  Try this on Raspbery:
+```sh
+python -m python -m basic_bot.debug.test_picam2_opencv_capture
+```
 
 ## Adding your own UI, too?
 
@@ -178,11 +199,13 @@ The created ./webapp is currently a Vite app, created with `yarn create vite`.  
 
 If you're want to use another frontend framework, you should be able to symbolic link where ever that framework's bundler puts it's build assets like index.html to `./webapp/dist`
 
+
 ## Build non Python services?
 
 Sure, anything that you can run from a shell prompt, you can use as a service and `bb_start` and `bb_stop` will manage it in the background.   All you need is websockets and JSON parsing support in your language of choice and you can do it!
 
 See [central_hub service docs](https://littlebee.github.io/basic_bot/Api%20Docs/services/central_hub/) for more information on the interface for subscribing and publishing state.
+
 
 ## Examples
 
@@ -191,6 +214,7 @@ See [central_hub service docs](https://littlebee.github.io/basic_bot/Api%20Docs/
 [stongarm](https://github.com/littlebee/strong-arm) (TBD: need to back port it to using bb). A robotic arm application with visual simulation.
 
 [svgarm]() (TBD: dream stage) A robotic arm that can be mounted above a whiteboard and draw svgs sent to it.
+
 
 ## Will it run on Windows?
 
