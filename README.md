@@ -180,7 +180,7 @@ If you're want to use another frontend framework, you should be able to symbolic
 
 ## Build non Python services?
 
-Sure, anything that thing you can run from a shell prompt, you can use as a service and `bb_start` and `bb_stop` will manage it in the background.   All you need is websockets and JSON parsing support in your language of choice and you can do it!
+Sure, anything that you can run from a shell prompt, you can use as a service and `bb_start` and `bb_stop` will manage it in the background.   All you need is websockets and JSON parsing support in your language of choice and you can do it!
 
 See [central_hub service docs](https://littlebee.github.io/basic_bot/Api%20Docs/services/central_hub/) for more information on the interface for subscribing and publishing state.
 
@@ -201,9 +201,11 @@ See also, https://github.com/littlebee/basic_bot/issues/61
 
 ## How it all works
 
-### TODO add updated version of How It All Works from strongarm + scatbot
+Start with the docs for [[central_hub service docs](https://littlebee.github.io/basic_bot/Api%20Docs/services/central_hub/)]
 
-https://github.com/littlebee/strongarm/blob/main/README.md#how-it-all-works
+### TODO add updated version of How It All Works from scatbot
+
+!()[https://github.com/littlebee/scatbot/blob/c2800de8906b14173201d16030e8d390157eb641/docs/img/scatbot-systems-diagram.png]
 
 
 
