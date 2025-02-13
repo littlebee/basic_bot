@@ -1511,27 +1511,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#setup-a-python-venv" class="md-nav__link">
+  <a href="#install-basic-bot" class="md-nav__link">
     <span class="md-ellipsis">
-      Setup a Python venv
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-pip" class="md-nav__link">
-    <span class="md-ellipsis">
-      Upgrade pip
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#install-basic_bot-package" class="md-nav__link">
-    <span class="md-ellipsis">
-      Install basic_bot package
+      Install Basic Bot
     </span>
   </a>
   
@@ -1703,27 +1685,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#setup-a-python-venv" class="md-nav__link">
+  <a href="#install-basic-bot" class="md-nav__link">
     <span class="md-ellipsis">
-      Setup a Python venv
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-pip" class="md-nav__link">
-    <span class="md-ellipsis">
-      Upgrade pip
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#install-basic_bot-package" class="md-nav__link">
-    <span class="md-ellipsis">
-      Install basic_bot package
+      Install Basic Bot
     </span>
   </a>
   
@@ -1789,38 +1753,15 @@ SSH back into Raspberry Pi after reboot.</p>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>bee@pi4:~<span class="w"> </span>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>--version
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>pip<span class="w"> </span><span class="m">20</span>.3.4<span class="w"> </span>from<span class="w"> </span>/usr/lib/python3/dist-packages/pip<span class="w"> </span><span class="o">(</span>python<span class="w"> </span><span class="m">3</span>.9<span class="o">)</span>
 </span></code></pre></div></p>
-<h2 id="setup-a-python-venv">Setup a Python venv</h2>
-<p>Unfortunately some things like Picamera2 require the shipped
-python libs so be sure to include <code>--system-site-packages</code> below.</p>
-<p>On the Raspberry device:
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>~
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>env
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>--system-site-packages<span class="w"> </span>env/bb
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">source</span><span class="w"> </span>env/bb/bin/activate
-</span></code></pre></div></p>
-<h2 id="upgrade-pip">Upgrade pip</h2>
-<p>basic_bot package install requires a newer version of pip than ships with
-Python 3.9 on Bullseye
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
-</span></code></pre></div></p>
-<h2 id="install-basic_bot-package">Install basic_bot package</h2>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/littlebee/basic_bot.git@main
-</span></code></pre></div>
+<h2 id="install-basic-bot">Install Basic Bot</h2>
+<p>Follow the <a href="https://littlebee.github.io/basic_bot/#run-the-software-on-your-robot">instructions in Getting Started</a> for installing and
+running basic_bot.</p>
 <h2 id="use-picamera2-instead-of-opencv-if-using-ribbon-cable-camera">Use picamera2 instead of opencv if using ribbon cable camera</h2>
 <p>As of Feb 7, 2025, OpenCV camera capture <a href="https://github.com/opencv/opencv/issues/21653">will NOT work on Debian Bullseye or Bookworm
 with a ribbon cable camera</a>.</p>
 <p>You must either use a USB camera or use the <code>basic_bot.commons.camera_picamera</code>
 module.</p>
-<p>In your <code>~/.bashrc</code> on the robot, add the following line:
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">BB_CAMERA_MODULE</span><span class="o">=</span><span class="s2">&quot;basic_bot.commons.camera_picamera</span>
-</span></code></pre></div>
-Save the file, exit and then source it:
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">source</span><span class="w"> </span>~/.bashrc
-</span></code></pre></div></p>
-<p>If you have your robot set up to start at boot via <code>/etc/rc.local</code>,
-just insert the <code>export ...</code> line above in the rc.local file before
-the line that calls your start.sh script.</p>
-<p>Restart the bot or restart the <code>basic_bot.services.vision</code> service.</p>
+<p>See the <a href="https://littlebee.github.io/basic_bot/Api%20Docs/commons/camera_picamera/">API docs for using camera_picamera</a> for more information about how to use.</p>
 
 
 
