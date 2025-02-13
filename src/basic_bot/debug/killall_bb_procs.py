@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """
-Finds all processes started by bb_start and  kills them with signal 15
+Finds all processes started by bb_start and kills them with signal 15.
+It also removes all files in the local pids directory.
+
+usage:
+```sh
+python -m src.basic_bot.debug.killall_bb_procs
+```
 """
 import os
 import psutil

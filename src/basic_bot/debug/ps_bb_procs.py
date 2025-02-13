@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
+"""
+Finds and lists all processes that were started by bb_start.
 
-# Finds all processes matching "python -m basic_bot.*" and kills
-# them with signal 15
+When `bb_start` is used to start a process, it adds a `via=bb_start` to the
+command line. You can also see the list of processes started by `bb_start` by
+using `ps -ef | grep "via=bb_start"` from the terminal.
+
+usage:
+```sh
+python -m src.basic_bot.debug.ps_bb_procs
+```
+"""
 import psutil
 
 if __name__ == "__main__":

@@ -60,7 +60,7 @@ if input_details[0]["dtype"] == np.float32:
 
 print("reading test image")
 img = cv2.imread(test_image)
-initial_h, initial_w, channels = img.shape
+initial_h, initial_w, channels = img.shape  # type: ignore
 frame = cv2.resize(img, (width, height))
 
 input_data = np.expand_dims(frame, axis=0)
