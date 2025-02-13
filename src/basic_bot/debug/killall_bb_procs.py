@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
+"""
+Finds all processes started by bb_start and kills them with signal 15.
+It also removes all files in the local pids directory.
 
-# Finds all processes matching "python -m basic_bot.*" and kills
-# them with signal 15
+usage:
+```sh
+python -m src.basic_bot.debug.killall_bb_procs
+```
+"""
+import os
 import psutil
+import signal
 
 if __name__ == "__main__":
     matching_processes = []
@@ -17,10 +25,15 @@ if __name__ == "__main__":
             pass
 
     if matching_processes:
-        print("Found processes started by bb_start:")
         for process in matching_processes:
             print(
-                f"PID: {process.pid}, Name: {process.name()}, Command: {' '.join(process.cmdline())}"
+                f"Killing PID: {process.pid}, Name: {process.name()}, Command: {' '.join(process.cmdline())}"
             )
+            process.send_signal(signal.SIGTERM)
+
     else:
         print("No processes found matching the regex.")
+
+    # remove all files in the pids directory
+    for pid_file in os.listdir("./pids"):
+        os.remove(f"./pids/{pid_file}")

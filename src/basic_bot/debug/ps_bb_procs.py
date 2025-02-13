@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 """
-Finds all processes started by bb_start and  kills them with signal 15
+Finds and lists all processes matching that were started by bb_start.
+
+When `bb_start` is used to start a process, it adds a `via=bb_start` to the
+command line. You can also see the list of processes started by `bb_start` by
+using `ps -ef | grep "via=bb_start"` from the terminal.
+
+usage:
+```sh
+python -m src.basic_bot.debug.ps_bb_procs
+```
 """
-import os
 import psutil
-import signal
 
 if __name__ == "__main__":
     matching_processes = []
@@ -19,15 +26,10 @@ if __name__ == "__main__":
             pass
 
     if matching_processes:
+        print("Found processes started by bb_start:")
         for process in matching_processes:
             print(
-                f"Killing PID: {process.pid}, Name: {process.name()}, Command: {' '.join(process.cmdline())}"
+                f"PID: {process.pid}, Name: {process.name()}, Command: {' '.join(process.cmdline())}"
             )
-            process.send_signal(signal.SIGTERM)
-
     else:
         print("No processes found matching the regex.")
-
-    # remove all files in the pids directory
-    for pid_file in os.listdir("./pids"):
-        os.remove(f"./pids/{pid_file}")

@@ -48,7 +48,7 @@ def stop_service(
     # because it will overwrite the pid file
     if not is_pid_file_valid(pid_file):
         print(
-            f"Error: Service {service_name} is not running or o PID file: {pid_file} not found.  Skipping"
+            f"WARN: Service {service_name} is not running or o PID file: {pid_file} not found.  Skipping"
         )
         try:
             os.remove(pid_file)
