@@ -60,28 +60,11 @@ bee@pi5:~ $ python -m pip --version
 pip 23.0.1 from /usr/lib/python3/dist-packages/pip (python 3.11)
 ```
 
-## Setup a Python venv
+## Install Basic Bot
 
-Unfortunately some things like Picamera2 require the shipped
-python libs so be sure to include `--system-site-packages` below.
+Follow the [instructions in Getting Started](https://littlebee.github.io/basic_bot/#run-the-software-on-your-robot) for installing and
+running basic_bot.
 
-On the Raspberry device:
-```sh
-cd ~
-mkdir -p env
-python -m venv --system-site-packages env/bb
-source env/bb/bin/activate
-```
-
-## Install basic_bot package
-
-```sh
-python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
-```
-
-## Add BB_ENV export
-
-See https://littlebee.github.io/basic_bot/#run-the-software-on-your-robot
 
 ## Use picamera2 instead of opencv if using ribbon cable camera
 

@@ -106,13 +106,26 @@ First `ssh` into the onboard computer and `cd path/uploaded/to`.
 
 ### Install basic_bot onboard
 
+Unfortunately some things like Picamera2 require the shipped
+python libs so be sure to include `--system-site-packages` below
+when running on Raspberry Pi 4 or 5.
+
 ```sh
 # first create and source a python venv for your project
-python -m venv my_new_project_venv
+python -m venv --system-site-packages my_new_project_venv
 source my_new_project_venv/bin/activate
 
 # install basic_bot
 python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
+```
+
+### Upgrade pip
+
+basic_bot package install requires a newer version of pip than ships with
+Python 3.9 on Bullseye and possibly other Linux based OS.  Generally, it's
+a good idea to get the latest `pip`
+```sh
+python -m pip install --upgrade pip
 ```
 
 ### Add BB_ENV export

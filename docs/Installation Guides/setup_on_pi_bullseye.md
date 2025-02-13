@@ -55,36 +55,11 @@ bee@pi4:~ $ python -m pip --version
 pip 20.3.4 from /usr/lib/python3/dist-packages/pip (python 3.9)
 ```
 
-## Setup a Python venv
+## Install Basic Bot
 
-Unfortunately some things like Picamera2 require the shipped
-python libs so be sure to include `--system-site-packages` below.
+Follow the [instructions in Getting Started](https://littlebee.github.io/basic_bot/#run-the-software-on-your-robot) for installing and
+running basic_bot.
 
-On the Raspberry device:
-```sh
-cd ~
-mkdir -p env
-python -m venv --system-site-packages env/bb
-source env/bb/bin/activate
-```
-
-## Upgrade pip
-
-basic_bot package install requires a newer version of pip than ships with
-Python 3.9 on Bullseye
-```sh
-python -m pip install --upgrade pip
-```
-
-## Install basic_bot package
-
-```sh
-python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
-```
-
-## Add BB_ENV export
-
-See https://littlebee.github.io/basic_bot/#run-the-software-on-your-robot
 
 ## Use picamera2 instead of opencv if using ribbon cable camera
 
