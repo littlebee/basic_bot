@@ -55,32 +55,11 @@ bee@pi4:~ $ python -m pip --version
 pip 20.3.4 from /usr/lib/python3/dist-packages/pip (python 3.9)
 ```
 
-## Setup a Python venv
+## Install Basic Bot
 
-Unfortunately some things like Picamera2 require the shipped
-python libs so be sure to include `--system-site-packages` below.
+Follow the [instructions in Getting Started](https://littlebee.github.io/basic_bot/#run-the-software-on-your-robot) for installing and
+running basic_bot.
 
-On the Raspberry device:
-```sh
-cd ~
-mkdir -p env
-python -m venv --system-site-packages env/bb
-source env/bb/bin/activate
-```
-
-## Upgrade pip
-
-basic_bot package install requires a newer version of pip than ships with
-Python 3.9 on Bullseye
-```sh
-python -m pip install --upgrade pip
-```
-
-## Install basic_bot package
-
-```sh
-python3 -m pip install git+https://github.com/littlebee/basic_bot.git@main
-```
 
 ## Use picamera2 instead of opencv if using ribbon cable camera
 
@@ -90,18 +69,4 @@ with a ribbon cable camera](https://github.com/opencv/opencv/issues/21653).
 You must either use a USB camera or use the `basic_bot.commons.camera_picamera`
 module.
 
-In your `~/.bashrc` on the robot, add the following line:
-```sh
-export BB_CAMERA_MODULE="basic_bot.commons.camera_picamera
-```
-Save the file, exit and then source it:
-```sh
-source ~/.bashrc
-```
-
-If you have your robot set up to start at boot via `/etc/rc.local`,
-just insert the `export ...` line above in the rc.local file before
-the line that calls your start.sh script.
-
-Restart the bot or restart the `basic_bot.services.vision` service.
-
+See the [API docs for using camera_picamera](https://littlebee.github.io/basic_bot/Api%20Docs/commons/camera_picamera/) for more information about how to use.
