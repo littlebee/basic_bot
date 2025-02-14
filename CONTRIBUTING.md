@@ -55,9 +55,9 @@ mkdocs serve
 ```
 ...and browsing to the url shown in the console (http://127.0.0.1:8000/)
 
-After building, and verifying, you can deploy the docs to gh-pages:
+### To deploy to GitHub Pages
 ```sh
-mkdocs gh-deploy
+./deploy-docs.sh
 ```
 
 ## Testing
