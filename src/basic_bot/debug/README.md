@@ -1,5 +1,5 @@
 
-# basic_bot.debug
+# basic_bot.debug package index
 
 This package is a collection of individual test programs meant to validate the correct setup and installation of 3rd party packages like opencv and tensorflow.
 

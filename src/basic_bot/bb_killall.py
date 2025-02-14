@@ -1,18 +1,28 @@
 #!/usr/bin/env python3
 """
 Finds all processes started by bb_start and kills them with signal 15.
-It also removes all files in the local pids directory.
+It also removes all files in the local pids directory if they exist.
+
+This script differs from `bb_stop` in that it works more like the *nix
+`killall` command, which sends a signal to all processes that match a
+query.   It does not discriminate based on any `basic_bot.yml` file
+like `bb_stop` does.
+
+See also: `bb_ps` script.
+
+bb_killall is a script installed in the path by pip install of basic_bot.
 
 usage:
 ```sh
-python -m src.basic_bot.debug.killall_bb_procs
+bb_killall
 ```
 """
 import os
 import psutil
 import signal
 
-if __name__ == "__main__":
+
+def main():
     matching_processes = []
     for process in psutil.process_iter(["pid", "name", "cmdline"]):
         try:
@@ -37,3 +47,7 @@ if __name__ == "__main__":
     # remove all files in the pids directory
     for pid_file in os.listdir("./pids"):
         os.remove(f"./pids/{pid_file}")
+
+
+if __name__ == "__main__":
+    main()

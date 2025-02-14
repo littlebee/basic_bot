@@ -6,14 +6,17 @@ When `bb_start` is used to start a process, it adds a `via=bb_start` to the
 command line. You can also see the list of processes started by `bb_start` by
 using `ps -ef | grep "via=bb_start"` from the terminal.
 
+bb_ps is a script installed in the path by pip install of basic_bot.
+
 usage:
 ```sh
-python -m src.basic_bot.debug.ps_bb_procs
+bb_ps
 ```
 """
 import psutil
 
-if __name__ == "__main__":
+
+def main():
     matching_processes = []
     for process in psutil.process_iter(["pid", "name", "cmdline"]):
         try:
@@ -26,10 +29,13 @@ if __name__ == "__main__":
             pass
 
     if matching_processes:
-        print("Found processes started by bb_start:")
         for process in matching_processes:
             print(
                 f"PID: {process.pid}, Name: {process.name()}, Command: {' '.join(process.cmdline())}"
             )
     else:
-        print("No processes found matching the regex.")
+        print("No processes found with 'via=bb_start'.")
+
+
+if __name__ == "__main__":
+    main()

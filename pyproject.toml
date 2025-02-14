@@ -21,13 +21,13 @@ dependencies = [
     "opencv-python>=4.11",
     "psutil",
     "pytest",
+    "pyyaml",
     "protobuf>=3.18.0,<4",
     # tflite-runtime is currently only supported on Linux
     "tflite-runtime; platform_system=='Linux'",
     # TODO: move to requirements.txt?  I think this is only used for
     #   the basic_bot integrations tests
     "websocket-client",
-    "pyyaml",
 ]
 # These are the dependencies of the installed basic_bot package
 #  for dev / build dependencies, use `pip install -r requirements.txt`
@@ -38,6 +38,8 @@ requires-python = ">=3.9"
 bb_create = "basic_bot.bb_create:main"
 bb_start = "basic_bot.bb_start:main"
 bb_stop = "basic_bot.bb_stop:main"
+bb_ps = "basic_bot.bb_ps:main"
+bb_killall = "basic_bot.bb_killall:main"
 
 
 [project.urls]
