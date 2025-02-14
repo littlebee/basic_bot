@@ -363,6 +363,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#debugging-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debugging issues
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#adding-your-own-ui-too" class="md-nav__link">
     <span class="md-ellipsis">
       Adding your own UI, too?
@@ -931,51 +940,7 @@
         
   
   <span class="md-ellipsis">
-    basic_bot.debug
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="Api%20Docs/debug/killall_bb_procs/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    killall_bb_procs
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="Api%20Docs/debug/ps_bb_procs/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    ps_bb_procs
+    basic_bot.debug package index
     
   </span>
   
@@ -1169,11 +1134,77 @@
   
   
     <li class="md-nav__item">
+      <a href="Api%20Docs/scripts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    basic_bot scripts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="Api%20Docs/scripts/bb_create/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
     bb_create
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Api%20Docs/scripts/bb_killall/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    bb_killall
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Api%20Docs/scripts/bb_ps/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    bb_ps
     
   </span>
   
@@ -1271,6 +1302,28 @@
             Services
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="Api%20Docs/services/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    basic_bot services
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1965,6 +2018,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#debugging-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debugging issues
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#adding-your-own-ui-too" class="md-nav__link">
     <span class="md-ellipsis">
       Adding your own UI, too?
@@ -2125,7 +2187,7 @@ a good idea to get the latest <code>pip</code>
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
 </span></code></pre></div></p>
 <h3 id="install-basic_bot-onboard">Install basic_bot onboard</h3>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/littlebee/basic_bot.git@main
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/littlebee/basic_bot.git@main
 </span></code></pre></div>
 <h3 id="add-bb_env-export">Add BB_ENV export</h3>
 <p>The onboard computer of the robot is considered the "production" environment.
@@ -2137,6 +2199,7 @@ on the onboard system.</p>
 <p>The following command will add <code>BB_ENV=production</code> to the environment variables
 for your OS user when running a bash shell:
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;export BB_ENV=production&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">source</span><span class="w"> </span>~/.bashrc
 </span></code></pre></div></p>
 <p>You can also prefix env vars on the command line in most shells:
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">BB_ENV</span><span class="o">=</span>production<span class="w"> </span>bb_start
@@ -2152,7 +2215,18 @@ add the export below to rc.local before starting your robot.
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>bb_start
 </span></code></pre></div>
 will start all of the services in  <code>./basic_bot.yml</code> as individual processes running detached.  If your shell/terminal is closed, they will keep running.</p>
+<h2 id="debugging-issues">Debugging issues</h2>
 <p>You can debug issues with a service by looking at the ./logs/* files for each service.</p>
+<p>basic_bot also provides several scripts in the <code>basic_bot.debug</code> package that can be used to diagnose 3rd party software like opencv and Tensor Flow Lite.</p>
+<p>First stop all services:
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>bb_stop
+</span></code></pre></div></p>
+<p>To see if your opencv installation is working correctly with your robot's camera:
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>python<span class="w"> </span>-m<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>basic_bot.debug.test_opencv_capture
+</span></code></pre></div></p>
+<p>The above may fail because opencv capture doesn't work with libcamera (Pi4 and Pi5) yet.  Try this on Raspbery:
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>python<span class="w"> </span>-m<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>basic_bot.debug.test_picam2_opencv_capture
+</span></code></pre></div></p>
 <h2 id="adding-your-own-ui-too">Adding your own UI, too?</h2>
 <p>Ya sure, you betcha!  The created <code>my_new_robot_project/webapp</code> is just an example of how to interact with central_hub.  You can add your own content or completely replace it with say Next.js if that is your thing.</p>
 <p>The created ./webapp is currently a Vite app, created with <code>yarn create vite</code>.   The <code>-m basic_bot.services.web_server</code> service currently is hard coded (TODO: fix) to look in ./webapp/dist for index.html and the rest is up to the app.</p>
