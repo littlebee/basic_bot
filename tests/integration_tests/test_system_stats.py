@@ -33,15 +33,22 @@ class TestSystemStats:
 
         # after the first iseeu message all messages should be state updates
         last_cpu_util = 0
+        last_host_name = None
         for _i in range(5):
             message = hub.recv(ws)
             assert message["type"] == "stateUpdate"
-            cpu_util = message["data"]["system_stats"]["cpu_util"]
 
+            cpu_util = message["data"]["system_stats"]["cpu_util"]
             assert cpu_util >= 0
             assert cpu_util <= 100
             assert cpu_util != last_cpu_util
             last_cpu_util = cpu_util
+
+            host_name = message["data"]["system_stats"]["hostname"]
+            assert host_name
+            if last_host_name:
+                assert host_name == last_host_name, "host name should not change"
+            last_host_name = host_name
 
             # as long as the service sleeps the same amount of time that
             # the test sleeps we should get a new system stats message each time
