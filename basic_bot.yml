@@ -17,6 +17,9 @@ services:
   - name: "web_server"
     run: "python -m basic_bot.services.web_server"
 
+  - name: "system_stats"
+    run: "python -m basic_bot.services.system_stats"
+
   - name: "vision"
     run: "python -m basic_bot.services.vision"
     production_env:

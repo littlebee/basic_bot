@@ -1,6 +1,6 @@
 import os
 
-from typing import Tuple
+from typing import Tuple, Mapping
 
 from basic_bot import bb_start, bb_stop
 
@@ -11,7 +11,7 @@ def get_files_for_service(service_name: str) -> Tuple[str, str]:
     return log_file, pid_file
 
 
-def start_service(service_name: str, run_cmd: str) -> None:
+def start_service(service_name: str, run_cmd: str, env: Mapping[str, str] = {}) -> None:
     """
     Starts requested service using bb_start command.  This is useful
     for integration and e2e tests.
@@ -28,9 +28,11 @@ def start_service(service_name: str, run_cmd: str) -> None:
 
         run_cmd = the command to start the service.
     """
-    env = {"BB_ENV": "test"}
+    updated_env: Mapping[str, str] = {**env, "BB_ENV": "test"}
     log_file, pid_file = get_files_for_service(service_name)
-    bb_start.start_service(f"test_{service_name}", run_cmd, log_file, pid_file, env)
+    bb_start.start_service(
+        f"test_{service_name}", run_cmd, log_file, pid_file, updated_env
+    )
 
 
 def stop_service(service_name) -> None:

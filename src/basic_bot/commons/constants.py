@@ -84,6 +84,15 @@ BB_RIGHT_MOTOR_CHANNEL = env.env_int("BB_RIGHT_MOTOR_CHANNEL", 2)
     default: 2
 """
 
+# =============== System Stats Service Constants
+BB_SYSTEM_STATS_SAMPLE_INTERVAL = env.env_float("BB_SYSTEM_STATS_SAMPLE_INTERVAL", 0.5)
+"""
+    In seconds, the interval at which the system stats service samples the system
+    and publishes system stats to the central hub.
+
+    default: 0.5 (~2Hz)
+"""
+
 
 # =============== Vision service constants
 default_camera_module = (

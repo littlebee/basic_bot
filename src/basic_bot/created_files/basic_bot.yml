@@ -35,6 +35,10 @@ services:
   # - name: "vision"
   #   run: "python -m basic_bot.services.vision"
 
+  # optional system_stats service
+  # - name: "system_stats"
+  #   run: "python -m basic_bot.services.system_stats"
+
   - name: "MyService"
     run: "python src/my_service.py"
 
