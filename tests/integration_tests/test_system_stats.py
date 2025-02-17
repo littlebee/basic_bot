@@ -33,7 +33,7 @@ class TestSystemStats:
             assert response["type"] == "iseeu"
 
             # after the first iseeu message all messages should be state updates
-            last_cpu_util = 0
+
             last_host_name = None
             for _i in range(5):
                 message = hub.recv(ws)
@@ -42,8 +42,12 @@ class TestSystemStats:
                 cpu_util = message["data"]["system_stats"]["cpu_util"]
                 assert cpu_util >= 0
                 assert cpu_util <= 100
-                assert cpu_util != last_cpu_util
-                last_cpu_util = cpu_util
+
+                # Doing this test on the CI/CD runner is not reliable
+                #   because the running environment is reporting the
+                #   CPU utilization of the runner itself, not the service.
+                # assert cpu_util != last_cpu_util
+                # last_cpu_util = cpu_util
 
                 host_name = message["data"]["system_stats"]["hostname"]
                 assert host_name
