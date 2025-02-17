@@ -5,11 +5,10 @@ capture a 10sec video from a camera and save it to a file. Using cv2 to save the
 
 usage:
 ```sh
-python -m src.basic_bot.debug.test_picamera2_capture [video_channel]
+python -m basic_bot.debug.test_picam2_opencv_capture
 ```
 """
 import os
-import sys
 import time
 
 from picamera2 import Picamera2  # type: ignore
@@ -18,9 +17,6 @@ import cv2
 
 DURATION = 10
 
-video_channel = 0
-if len(sys.argv) > 1:
-    video_channel = int(sys.argv[1])
 
 size = (640, 480)
 video_file = os.path.join(os.getcwd(), "picamera2_capture_test_output.mp4")

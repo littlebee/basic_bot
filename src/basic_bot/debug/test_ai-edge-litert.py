@@ -15,7 +15,7 @@ Linux and Raspberry Pi (arm64).
 
 Usage:
 ```sh
-python -m src.basic_bot.debug.test_ai-edge-litert
+python -m basic_bot.debug.test_ai-edge-litert
 ```
 """
 

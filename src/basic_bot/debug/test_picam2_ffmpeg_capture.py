@@ -1,10 +1,15 @@
 #!/usr/bin/python3
 """
-    This diagnostic script will test the installation of picamera2, and its ability to
-    capture a 10sec video from a camera and save it to a file. Using ffmpeg to save the video.
+This diagnostic script will test the installation of picamera2, and its ability to
+capture a 10sec video from a camera and save it to a file. Using ffmpeg to save the video.
 
-    Sourced from:
-    https://github.com/raspberrypi/picamera2/blob/main/examples/mp4_capture.py
+usage:
+```sh
+python -m basic_bot.debug.test_picam2_ffmpeg_capture 0
+```
+
+Sourced from:
+https://github.com/raspberrypi/picamera2/blob/main/examples/mp4_capture.py
 """
 import os
 import time

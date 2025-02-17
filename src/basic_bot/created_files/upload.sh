@@ -43,4 +43,10 @@ rsync --progress --partial \
 --exclude=.git \
 --exclude=*-test-output.* \
 
+# this will remove any old files that are no
+# longer in the project, but it is dangerous.
+# Uncomment with caution and only if you are
+# NOT doing remote editing of files.
+# --delete \
+
 -avz . $target_host:$target_dir

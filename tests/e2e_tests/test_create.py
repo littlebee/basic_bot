@@ -54,7 +54,9 @@ def test_create_project(temp_dir):
     assert os.path.exists(os.path.join(webapp_dir, "package.json"))
 
     # check if the webapp was built
-    assert os.path.exists(os.path.join(webapp_dir, "node_modules"))
+    assert os.path.exists(
+        os.path.join(webapp_dir, "node_modules")
+    ), "This will fail if node/npm is not installed locally."
     assert os.path.exists(os.path.join(webapp_dir, "dist", "index.html"))
 
     # ensure there are no stranded pid files, by checking that the pids

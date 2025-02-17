@@ -5,8 +5,9 @@ capture a 10sec video from a camera and save it to a file.
 
 usage:
 ```sh
-   python -m src.basic_bot.debug.test_opencv_capture [video_channel]
+   python -m basic_bot.debug.test_opencv_capture 0
 ```
+where 0 (default; optional) is the video channel to use.
 
 from https://www.geeksforgeeks.org/saving-a-video-using-opencv/
 """

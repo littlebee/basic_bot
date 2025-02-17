@@ -7,7 +7,10 @@ A Python centric, basic robotics platform providing
 - support for vision and in frame object detection
 - a simple `bb_create` script for creating new projects
 
-See official [API Docs](https://littlebee.github.io/basic_bot/)
+📖 [Official API Docs](https://littlebee.github.io/basic_bot/)
+📚 [Github Repository](https://github.com/littlebee/basic_bot)
+🎯 [Comments and suggestions welcomed](https://github.com/littlebee/basic_bot/issues)
+
 
 ## Status
 *** This is still a work in progress ***
