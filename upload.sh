@@ -45,4 +45,5 @@ rsync --progress --partial \
 --exclude=.vscode \
 --exclude=.mypy_cache \
 --exclude="*_test_output.*" \
+--delete \
 -avz . $target_host:$target_dir

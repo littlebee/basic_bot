@@ -3,12 +3,12 @@ Tests that the TensorFlow Lite runtime is installed and working.
 
 Usage:
 ```sh
-python -m src.basic_bot.debug.test_tflite_runtime
+python -m basic_bot.debug.test_tflite_runtime
 ```
 
-Must have TensorFlow Lite installed:
+Must have TensorFlow Lite installed.  From your Python virtual environment:
 ```sh
-pip install tflite-runtime
+python -m pip install tflite-runtime
 ```
 The above may fail on mac (apple silicon) and windows.  It should work on Ubuntu Linux and Raspberry Pi.
 

@@ -7,7 +7,7 @@ text to the image, and the ability to save an image to a file.
 
 usage:
 ```sh
-python -m src.basic_bot.debug.test_opencv_img
+python -m basic_bot.debug.test_opencv_img
 ```
 
 """
