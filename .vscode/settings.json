@@ -3,6 +3,7 @@
         "cachetools",
         "daphbot",
         "fourcc",
+        "gethostname",
         "inlinehilite",
         "killall",
         "linenums",
