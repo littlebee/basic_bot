@@ -62,11 +62,11 @@ from typing import Generator
 # mock camera which provides random images that should
 # be half with pet in image and half without pet in image
 if c.BB_ENV == "test":
-    log.info("Running in test mode, using camera_mock")
     camera_lib = "basic_bot.test_helpers.camera_mock"
 else:
     camera_lib = c.BB_CAMERA_MODULE
 
+log.info(f"loading camera module: {camera_lib}")
 camera_module = importlib.import_module(camera_lib)
 camera = camera_module.Camera()  # type: ignore
 

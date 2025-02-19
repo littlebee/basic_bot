@@ -23,14 +23,20 @@ config_file_schema = {
         #
         # Environment variables that are set for all services started unless
         # overridden by the service `env' property.
-        "env": {"type": "object"},
+        "env": {"type": "object", "additionalProperties": {"type": "string"}},
         #
         # Environment variables that are set for all services started unless
         # overridden by the service `env' property. These are merged with the
         # `env` property
-        "test_env": {"type": "object"},
-        "production_env": {"type": "object"},
-        "development_env": {"type": "object"},
+        "test_env": {"type": "object", "additionalProperties": {"type": "string"}},
+        "production_env": {
+            "type": "object",
+            "additionalProperties": {"type": "string"},
+        },
+        "development_env": {
+            "type": "object",
+            "additionalProperties": {"type": "string"},
+        },
         #
         # List of services to start.  Each service is started in the background
         # as a detached process.
@@ -62,15 +68,27 @@ config_file_schema = {
                     # Environment variables that are set for this service. These
                     # are merged with the `env` properties for the overall
                     # configuration above.  These are the penultimate environmen.
-                    "env": {"type": "object"},
+                    "env": {
+                        "type": "object",
+                        "additionalProperties": {"type": "string"},
+                    },
                     #
                     # Environment variables that are set for this service in the
                     # test, production and development  environments.
                     # These are merged with the `env`s above and are the
                     # ultimate environment variables.
-                    "test_env": {"type": "object"},
-                    "production_env": {"type": "object"},
-                    "development_env": {"type": "object"},
+                    "test_env": {
+                        "type": "object",
+                        "additionalProperties": {"type": "string"},
+                    },
+                    "production_env": {
+                        "type": "object",
+                        "additionalProperties": {"type": "string"},
+                    },
+                    "development_env": {
+                        "type": "object",
+                        "additionalProperties": {"type": "string"},
+                    },
                 },
             },
         },
