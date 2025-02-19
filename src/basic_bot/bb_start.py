@@ -31,7 +31,7 @@ import yaml
 from jsonschema import validate, ValidationError
 
 
-from typing import Optional, Mapping
+from typing import Optional, Dict
 
 
 from basic_bot.commons.script_helpers.pid_files import is_pid_file_valid
@@ -77,7 +77,7 @@ def start_service(
     run_cmd: str,
     log_file: Optional[str] = None,
     pid_file: Optional[str] = None,
-    service_env: Mapping[str, str] = {},
+    service_env: Dict[str, str] = {},
 ) -> None:
     log_file = log_file or f"./logs/{service_name}.log"
     pid_file = pid_file or f"./pids/{service_name}.pid"
@@ -107,7 +107,8 @@ def start_service(
     # `ps aux | grep via=bb_start``
     args.append("via=bb_start")
     # must include full environment if env arg to Popen is used
-    env = os.environ.copy().update(service_env)
+    env = {**os.environ, **service_env}
+    # print(f" Combined env: {env}")
 
     with open(log_file, "w") as log:
         process = subprocess.Popen(args, stdout=log, stderr=log, env=env)
@@ -159,7 +160,7 @@ def main() -> None:
     except yaml.YAMLError:
         print(f"Error: Invalid YAML syntax: {args.file}")
     except ValidationError as e:
-        print(f"Config file validation error: {e.message}")
+        print(f"Config file validation error: {e}")
 
 
 if __name__ == "__main__":
