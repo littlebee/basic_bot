@@ -31,7 +31,7 @@ import yaml
 from jsonschema import validate, ValidationError
 
 
-from typing import Optional, Mapping
+from typing import Optional, Dict
 
 
 from basic_bot.commons.script_helpers.pid_files import is_pid_file_valid
@@ -77,7 +77,7 @@ def start_service(
     run_cmd: str,
     log_file: Optional[str] = None,
     pid_file: Optional[str] = None,
-    service_env: Mapping[str, str] = {},
+    service_env: Dict[str, str] = {},
 ) -> None:
     log_file = log_file or f"./logs/{service_name}.log"
     pid_file = pid_file or f"./pids/{service_name}.pid"
