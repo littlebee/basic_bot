@@ -152,7 +152,13 @@ async def send_message(websocket: WebSocketServerProtocol, message: str) -> None
     if websocket and websocket != "all":
         await websocket.send(message)
     elif connected_sockets:  # asyncio.wait doesn't accept an empty list
-        await asyncio.wait([websocket.send(message) for websocket in connected_sockets])
+        # The type ignore is to suppress the mypy error below when running on linux:
+        #    Value of type variable "_FT" of "wait" cannot be "Coroutine[Any, Any, None]"  [type-var]
+        #
+        # mypy on the mac doesn't have this issue.  Looking at the type definition for asyncio.wait,
+        # it looks like mypy on the linux (Python 3.11.2) doesn't realize that there is an overload
+        # that takes an iterable of coroutines: `fs: Iterable[Awaitable[_T]]`
+        await asyncio.wait([websocket.send(message) for websocket in connected_sockets])  # type: ignore
 
 
 async def send_state_update_to_subscribers(message_data: Dict[str, Any]) -> None:

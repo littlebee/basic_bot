@@ -58,7 +58,7 @@ def stop_service(
 
     print(f"Stopping service: {service_name}")
 
-    with open(log_file, "w") as log:
+    with open(log_file, "a") as log:
         log.write(f"{get_log_time()}: Stopping service: {service_name}\n")
 
     with open(pid_file, "r") as f:
