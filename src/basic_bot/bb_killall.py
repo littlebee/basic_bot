@@ -39,7 +39,7 @@ def main():
             print(
                 f"Killing PID: {process.pid}, Name: {process.name()}, Command: {' '.join(process.cmdline())}"
             )
-            process.send_signal(signal.SIGTERM)
+            process.send_signal(signal.SIGKILL)
 
     else:
         print("No processes found matching the regex.")
