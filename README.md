@@ -166,7 +166,7 @@ export BB_ENV=production
 
 ## Start the onboard services
 
-Then **`cd` the the directory** you uploaded to:
+Then **`cd` to the directory** you uploaded to:
 ```sh
 bb_start
 ```

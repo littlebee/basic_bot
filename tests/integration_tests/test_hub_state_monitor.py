@@ -20,8 +20,8 @@ def teardown_module():
 # On the Mac, CI/CD runner, and Raspberry Pi5, the latency
 # is under 1ms.  But on the Raspberry Pi4, bullseye it is around
 # 4 - 5ms.
-EXPECTED_UPDATE_LATENCY = 0.01  # 50 ms
-EXPECTED_HANDSHAKE_LATENCY = 0.1  # 100 ms
+EXPECTED_UPDATE_LATENCY = 0.01  # 1 ms
+EXPECTED_HANDSHAKE_LATENCY = 0.1  # 10 ms
 
 # This is also much faster on everything but the Raspberry Pi4. :/
 # On the Rasberry Pi4, bullseye, it is around 500 messages per second,
@@ -78,10 +78,10 @@ class TestHubStateMonitor:
 
         finally:
             # must do this at the end to stop the monitor
+            print("stopping monitor")
             monitor.stop()
 
     def test_on_connect(self):
-
         on_connect = Mock()
         monitor = HubStateMonitor(
             hub_state=HubState({"foo": 0}),
@@ -95,6 +95,7 @@ class TestHubStateMonitor:
             time.sleep(EXPECTED_HANDSHAKE_LATENCY)
             on_connect.assert_called_once_with(monitor.connected_socket)
         finally:
+            print("stopping monitor")
             monitor.stop()
 
     def test_round_trip_latency(self):

@@ -12,6 +12,10 @@ from basic_bot.commons import constants as c, messages, log
 from basic_bot.commons.hub_state import HubState
 
 
+# TODO: This class should maybe be a singleton.
+should_exit = False
+
+
 class HubStateMonitor:
     """
     This class updates the process local copy of the hub state as subscribed keys
@@ -73,7 +77,6 @@ class HubStateMonitor:
         self.subscribed_keys = subscribed_keys
         self.on_state_update = on_state_update
         self.on_connect = on_connect
-        self.running = False
 
         # background thread connects to central_hub and listens for state updates
         self.thread = threading.Thread(target=self._thread)
@@ -82,13 +85,17 @@ class HubStateMonitor:
         self.connected_socket: Optional[WebSocketClientProtocol] = None
 
     def start(self) -> None:
+        global should_exit
         """Starts the background thread that listens for state updates and updates HubState"""
-        self.running = True
         self.thread.start()
+        should_exit = False
 
     def stop(self) -> None:
+        global should_exit
         """Stops the background thread that listens for state updates and updates HubState"""
-        self.running = False
+        log.info("Stopping hub_state_monitor thread.")
+        should_exit = True
+        self.connected_socket and self.connected_socket.close()
 
     @asynccontextmanager
     async def connect_to_hub(
@@ -107,9 +114,9 @@ class HubStateMonitor:
     async def parse_next_message(
         self, websocket: WebSocketClientProtocol
     ) -> AsyncGenerator[tuple[str, dict], None]:
-        log.info("parse_next_message")
+        global should_exit
         async for message in websocket:
-            if not self.running:
+            if should_exit:
                 return
 
             msg = json.loads(message)
@@ -120,13 +127,14 @@ class HubStateMonitor:
 
             yield msg_type, msg_data
 
-            if not self.running:
+            if should_exit:
                 return
 
     async def monitor_state(self) -> None:
-        while self.running:
+        global should_exit
+        while not should_exit:
             try:
-                if not self.running:
+                if should_exit:
                     return  # we want to just exit if we are not running
                 async with self.connect_to_hub() as websocket:
 
@@ -145,8 +153,9 @@ class HubStateMonitor:
 
                             self.hub_state.update_state_from_message_data(msg_data)
 
-                    if not self.running:
+                    if should_exit:
                         return
+
                     await asyncio.sleep(0)
 
             except Exception as e:
@@ -154,7 +163,7 @@ class HubStateMonitor:
                     traceback.print_exc()
 
             self.connected_socket = None
-            log.info("central_hub socket disconnected.  Reconnecting in 5 sec...")
+            log.info("central_hub socket disconnected. Reconnecting in 5 sec...")
             await asyncio.sleep(5)
 
     def _thread(self) -> None:
