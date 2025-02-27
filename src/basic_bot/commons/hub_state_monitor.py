@@ -85,8 +85,10 @@ class HubStateMonitor:
         self.connected_socket: Optional[WebSocketClientProtocol] = None
 
     def start(self) -> None:
+        global should_exit
         """Starts the background thread that listens for state updates and updates HubState"""
         self.thread.start()
+        should_exit = False
 
     def stop(self) -> None:
         global should_exit
@@ -112,6 +114,7 @@ class HubStateMonitor:
     async def parse_next_message(
         self, websocket: WebSocketClientProtocol
     ) -> AsyncGenerator[tuple[str, dict], None]:
+        global should_exit
         async for message in websocket:
             if should_exit:
                 return
@@ -128,6 +131,7 @@ class HubStateMonitor:
                 return
 
     async def monitor_state(self) -> None:
+        global should_exit
         while not should_exit:
             try:
                 if should_exit:
@@ -151,6 +155,7 @@ class HubStateMonitor:
 
                     if should_exit:
                         return
+
                     await asyncio.sleep(0)
 
             except Exception as e:
