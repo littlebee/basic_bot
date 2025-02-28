@@ -31,7 +31,7 @@ import yaml
 from jsonschema import validate, ValidationError
 
 
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 
 
 from basic_bot.commons.script_helpers.pid_files import is_pid_file_valid
@@ -46,6 +46,12 @@ arg_parser.add_argument(
     "--file",
     help="configuration file from which to read services and configuration",
     default="./basic_bot.yml",
+)
+arg_parser.add_argument(
+    "-s",
+    "--services",
+    help="comma separated list of services to start",
+    default=None,
 )
 
 
@@ -125,14 +131,13 @@ def start_service(
             )
 
 
-def start_services(config):
+def start_services(config: dict, services_filter: Optional[List[str]] = None):
     env_vars = config.get("env", {})
     env_vars.update(config.get(f"{c.BB_ENV}_env", {}))
 
-    services = config["services"]
-    print(f"starting {len(services)} services")
-
-    for service in services:
+    for service in config["services"]:
+        if services_filter and service["name"] not in services_filter:
+            continue
         service_env = env_vars.copy()
         service_env.update(service.get("env", {}))
         service_env.update(service.get(f"{c.BB_ENV}_env", {}))
@@ -153,7 +158,13 @@ def main() -> None:
             config = yaml.safe_load(f)
         validate(config, config_file_schema)
         validate_unique_names(config)
-        start_services(config)
+
+        services_filter = None
+        if args.services:
+            services_filter = args.services.split(",")
+
+        start_services(config, services_filter)
+
     except FileNotFoundError as e:
         print(f"Error: File not found. {e}")
         traceback.print_exc()

@@ -18,7 +18,7 @@ import signal
 import yaml
 from jsonschema import validate, ValidationError
 
-from typing import Optional
+from typing import Optional, List
 
 
 from basic_bot.commons.script_helpers.pid_files import is_pid_file_valid
@@ -32,6 +32,12 @@ arg_parser.add_argument(
     "--file",
     help="configuration file from which to read services and configuration",
     default="./basic_bot.yml",
+)
+arg_parser.add_argument(
+    "-s",
+    "--services",
+    help="comma separated list of services to start",
+    default=None,
 )
 
 
@@ -69,11 +75,11 @@ def stop_service(
     os.remove(pid_file)
 
 
-def stop_services(config):
-    services = config["services"]
-    print(f"stopping {len(services)} services")
+def stop_services(config: dict, services_filter: Optional[List[str]] = None) -> None:
+    for service in config["services"]:
+        if services_filter and service["name"] not in services_filter:
+            continue
 
-    for service in services:
         stop_service(
             service["name"],
             service.get("log_file"),
@@ -88,7 +94,13 @@ def main() -> None:
         with open(args.file, "r") as f:
             config = yaml.safe_load(f)
         validate(config, config_file_schema)
-        stop_services(config)
+
+        services_filter = None
+        if args.services:
+            services_filter = args.services.split(",")
+
+        stop_services(config, services_filter)
+
     except FileNotFoundError:
         print(f"Error: File not found: {args.file}")
     except yaml.YAMLError:
