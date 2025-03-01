@@ -95,6 +95,7 @@ class RecognitionProvider:
 
     @classmethod
     async def provide_state(cls) -> None:
+        previous_objects: List[dict] = []
         while True:
             try:
                 log.info(
@@ -110,9 +111,6 @@ class RecognitionProvider:
 
                         frame = cls.camera.get_frame()
 
-                        # TODO: test this, it may be unnecessary and slow
-                        # rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
                         t1 = time.time()
                         new_objects = detector.get_prediction(frame)
                         cls.last_frame_duration = time.time() - t1
@@ -125,12 +123,14 @@ class RecognitionProvider:
                         cls.next_objects_event.set()  # send signal to clients
                         cls.total_objects_detected += num_objects
 
-                        await messages.send_update_state(
-                            websocket,
-                            {
-                                "recognition": new_objects,
-                            },
-                        )
+                        if new_objects != previous_objects:
+                            previous_objects = new_objects
+                            await messages.send_update_state(
+                                websocket,
+                                {
+                                    "recognition": new_objects,
+                                },
+                            )
 
                         await asyncio.sleep(0)
 
