@@ -50,7 +50,7 @@ I'm seeing some impressive stats!  Recognition is running at nearly 100% of the 
     "recognition": {
         "last_objects_seen": [
             {
-                "boundingBox": [
+                "bounding_box": [
                     16,
                     8,
                     624,

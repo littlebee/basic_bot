@@ -96,7 +96,7 @@ class TestVisionCV2:
         {'capture': {'totalFramesRead': 218, 'totalTime': 3.8893659114837646,
             'overallFps': 56.05026756580859, 'fpsStartedAt': 1739037182.7373936, 'floatingFps': 0.0},
         'recognition': {
-            'last_objects_seen': [{'boundingBox': [36.80461883544922, 16.702866554260254, 635.1525497436523, 481.2730407714844], 'classification': 'person', 'confidence': 0.69140625}],
+            'last_objects_seen': [{'bounding_box': [36.80461883544922, 16.702866554260254, 635.1525497436523, 481.2730407714844], 'classification': 'person', 'confidence': 0.69140625}],
             'fps': {
                 'totalFramesRead': 119, 'totalTime': 3.8534364700317383,
                 'overallFps': 30.88152637923725, 'fpsStartedAt': 1739037182.773333, 'floatingFps': 0.0}, 'total_objects_detected': 181, 'last_frame_duration': 0.030310392379760742}}
