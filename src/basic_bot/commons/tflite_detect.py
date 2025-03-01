@@ -59,7 +59,7 @@ class TFLiteDetect:
 
         Each detected object is a dictionary with the following:
 
-        - boundingBox: [x1, y1, x2, y2]
+        - bounding_box: [x1, y1, x2, y2]
         - classification: string
         - confidence: float (0-1)
 
@@ -93,7 +93,7 @@ class TFLiteDetect:
                 class_name = labels[classId]
                 results.append(
                     {
-                        "boundingBox": box,
+                        "bounding_box": box,
                         "classification": class_name,
                         "confidence": score,
                     }
