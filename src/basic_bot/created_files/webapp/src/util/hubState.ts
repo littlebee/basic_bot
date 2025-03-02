@@ -66,7 +66,6 @@ const __hub_port: number = DEFAULT_BB_HUB_PORT;
 const onUpdateCallbacks: Array<(state: IHubState) => void> = [];
 let hubStatePromises: Array<(state: IHubState) => void> = [];
 let lastHubUpdate = Date.now();
-// @ts-expect-error hubMonitor is a number or a NodeJS timeout if running in test
 let hubMonitor: NodeJS.Timeout | number | null = null;
 
 export let webSocket: WebSocket | null = null;
