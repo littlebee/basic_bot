@@ -64,6 +64,11 @@ class Servo:
     This class controls a single servo motor using the Adafruit PCA9685 servo controller.
     It uses a background thread to move the motor to a destination angle at a give
     fraction of the motor's range and thereby control the speed.
+
+    It requires the following Adafruit CircuitPython libraries to be installed:
+    ```sh
+    python -m pip install adafruit-blinka adafruit-circuitpython-pca9685 adafruit-circuitpython-motorkit
+    ```
     """
 
     def __init__(
