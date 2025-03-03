@@ -39,10 +39,14 @@ class TFLiteDetect:
         if model.startswith("./"):
             model = os.path.join(os.path.dirname(__file__), model[2:])
 
-        log.info(f"TFliteDetect using model={model}, use_coral_tpu={use_coral_tpu}")
+        log.info(
+            f"TFliteDetect using model={model}, use_coral_tpu={use_coral_tpu}, num_threads={c.BB_TFLITE_THREADS}"
+        )
 
         # Load TFLite model and allocate tensors.
-        self.interpreter = tflite.Interpreter(model_path=model, num_threads=4)
+        self.interpreter = tflite.Interpreter(
+            model_path=model, num_threads=c.BB_TFLITE_THREADS
+        )
         self.interpreter.allocate_tensors()
 
         self.input_details = self.interpreter.get_input_details()

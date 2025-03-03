@@ -6,7 +6,8 @@ FPS_WINDOW = 60
 
 class FpsStats:
     """
-    FpsStats - A class to track overall and floating frames per seconds
+    FpsStats - A class to track overall and floating frames per seconds.  Floating fps is
+    calculated over the last 60 seconds.
 
     Instantiate the class to start tracking the stats. Call increment() for each frame read.
     Call stats() to get the stats.
