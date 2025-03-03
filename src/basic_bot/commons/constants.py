@@ -192,11 +192,18 @@ BB_TFLITE_MODEL_CORAL = env.env_string(
 """
 
 # number of threads to use for tflite detection
-BB_TFLITE_THREADS = env.env_int("BB_TFLITE_THREADS", 2)
+BB_TFLITE_THREADS = env.env_int("BB_TFLITE_THREADS", 3)
 """
-    default: 2
+    default: 3
 
-    Number of threads to use for tflite detection.
+    Number of threads to use for tflite detection.  Testing object detection
+    on a Rasberry PI 5, without any other CPU or memory pressure, 4 tflite threads
+    was only 1 fps faster (29.5fps) than 3 threads (28.6fps).  2 threads was 22fps.
+
+    Warning: Setting this too high can actually reduce the object detection  frame rate.
+    In the case of daphbot_due, which has a [pygame based onboard UI service](https://github.com/littlebee/daphbot-due/blob/main/src/onboard_ui_service.py)
+    that has a configurable render frame rate, the tflite detection running on 4 threads
+    was reduced to about 12 fps when the render frame rate was set to 30fps.
 """
 
 # http port used by the vision service for video streaming
