@@ -133,5 +133,8 @@ class TestServoControl:
         hub.send_get_state(ws, ["servo_actual_angles"])
         after_state = hub.recv(ws)
         print(f"{after_state=}")
-        assert initial_state == after_state
+        assert (
+            initial_state["data"]["servo_actual_angles"]
+            == after_state["data"]["servo_actual_angles"]
+        )
         ws.close()

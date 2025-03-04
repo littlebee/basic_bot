@@ -1,13 +1,9 @@
 """
-This module contains the schema for the configuration file that bb_start reads.
+This module contains the schema for the configuration file that the
+servo services read.
 
 It can be used with jsonvalidate to validate the configuration file.
 """
-
-#
-#  Development Note:  If you change the name of this file, or
-#   it's relative path, you will need to update the /build_docs.py script
-#
 
 servo_config_file_schema = {
     "type": "object",
