@@ -25,9 +25,7 @@ EXPECTED_SERVO_CONFIG = {
 
 def setup_module():
     sst.start_service("central_hub", "python -m basic_bot.services.central_hub")
-    sst.start_service(
-        "servo_control", "python -m basic_bot.services.servo_control_pca9685"
-    )
+    sst.start_service("servo_control", "python -m basic_bot.services.servo_control")
 
 
 def teardown_module():
