@@ -594,11 +594,55 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commons/servo/" class="md-nav__link">
+      <a href="../../commons/servo_config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    servo
+    servo_config
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commons/servo_config_file_schema/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    servo_config_file_schema
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commons/servo_pca9685/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    servo_pca9685
     
   </span>
   
@@ -1127,6 +1171,28 @@
   
   <span class="md-ellipsis">
     motor_control_2w
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../services/servo_control/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    servo_control
     
   </span>
   
@@ -1782,7 +1848,7 @@
 <h4 id="start_service">start_service</h4>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">start_service</span><span class="p">(</span><span class="n">service_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                  <span class="n">run_cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                  <span class="n">env</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                  <span class="n">env</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p>Starts requested service using bb_start command.  This is useful
 for integration and e2e tests.</p>

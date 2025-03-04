@@ -518,6 +518,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bb_servo_config_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      BB_SERVO_CONFIG_FILE
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bb_system_stats_sample_interval" class="md-nav__link">
     <span class="md-ellipsis">
       BB_SYSTEM_STATS_SAMPLE_INTERVAL
@@ -844,11 +853,55 @@
   
   
     <li class="md-nav__item">
-      <a href="../servo/" class="md-nav__link">
+      <a href="../servo_config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    servo
+    servo_config
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../servo_config_file_schema/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    servo_config_file_schema
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../servo_pca9685/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    servo_pca9685
     
   </span>
   
@@ -1377,6 +1430,28 @@
   
   <span class="md-ellipsis">
     motor_control_2w
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../services/servo_control/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    servo_control
     
   </span>
   
@@ -2004,6 +2079,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bb_servo_config_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      BB_SERVO_CONFIG_FILE
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bb_system_stats_sample_interval" class="md-nav__link">
     <span class="md-ellipsis">
       BB_SYSTEM_STATS_SAMPLE_INTERVAL
@@ -2195,6 +2279,9 @@ i2c motor controller.</p>
 <p><a id="basic_bot.commons.constants.BB_RIGHT_MOTOR_CHANNEL"></a></p>
 <h4 id="bb_right_motor_channel">BB_RIGHT_MOTOR_CHANNEL</h4>
 <p>default: 2</p>
+<p><a id="basic_bot.commons.constants.BB_SERVO_CONFIG_FILE"></a></p>
+<h4 id="bb_servo_config_file">BB_SERVO_CONFIG_FILE</h4>
+<p>See api docs for servo control services</p>
 <p><a id="basic_bot.commons.constants.BB_SYSTEM_STATS_SAMPLE_INTERVAL"></a></p>
 <h4 id="bb_system_stats_sample_interval">BB_SYSTEM_STATS_SAMPLE_INTERVAL</h4>
 <p>In seconds, the interval at which the system stats service samples the system
@@ -2251,8 +2338,14 @@ from the tensorflow hub</p>
 <p>Which model to use for object detection when BB_ENABLE_CORAL_TPU is true.</p>
 <p><a id="basic_bot.commons.constants.BB_TFLITE_THREADS"></a></p>
 <h4 id="bb_tflite_threads">BB_TFLITE_THREADS</h4>
-<p>default: 2</p>
-<p>Number of threads to use for tflite detection.</p>
+<p>default: 3</p>
+<p>Number of threads to use for tflite detection.  Testing object detection
+on a Rasberry PI 5, without any other CPU or memory pressure, 4 tflite threads
+was only 1 fps faster (29.5fps) than 3 threads (28.6fps).  2 threads was 22fps.</p>
+<p>Warning: Setting this too high can actually reduce the object detection  frame rate.
+In the case of daphbot_due, which has a <a href="https://github.com/littlebee/daphbot-due/blob/main/src/onboard_ui_service.py">pygame based onboard UI service</a>
+that has a configurable render frame rate, the tflite detection running on 4 threads
+was reduced to about 12 fps when the render frame rate was set to 30fps.</p>
 <p><a id="basic_bot.commons.constants.BB_VISION_PORT"></a></p>
 <h4 id="bb_vision_port">BB_VISION_PORT</h4>
 <p>default: 5802 when BB_ENV=test; 5801 otherwise</p>
