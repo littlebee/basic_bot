@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-import os
 import sys
 import time
 import threading
 import traceback
 from typing import Optional
 
-from basic_bot.commons import log, constants as c
+from basic_bot.commons import log, env, constants as c
+from basic_bot.commons.servo_config import ServoOptions, ServoOptionsDefaults
 
 if c.BB_ENV == "production":
     from board import SCL, SDA  # type: ignore
@@ -38,7 +38,7 @@ else:
 
 
 # env var to turn on console debug output
-DEBUG_MOTORS = os.getenv("DEBUG_MOTORS") or False
+DEBUG_MOTORS = env.env_bool("DEBUG_MOTORS", False)
 
 # how many deg to turn per step (abs)
 STEP_DEGREES = 1
@@ -73,10 +73,7 @@ class Servo:
 
     def __init__(
         self,
-        motor_channel: int,
-        motor_range: int = 180,
-        min_angle: int = 0,
-        max_angle: int = 180,
+        servo_options: ServoOptions,
     ) -> None:
         """Constructor"""
         # background thread that steps motor to destination
@@ -87,20 +84,38 @@ class Servo:
         self.force_stop = False
         self._step_delay = DEFAULT_STEP_DELAY
 
-        self.motor_channel = motor_channel
-        self.motor_range = motor_range
-        self.min_angle = min_angle
-        self.max_angle = min(max_angle, self.motor_range)
-        self.mid_angle = self.min_angle + ((self.max_angle - self.min_angle) / 2)
+        self.name: str = servo_options["name"]
+        self.channel: int = servo_options["channel"]
+        self.motor_range: int = (
+            servo_options.get("motor_range") or ServoOptionsDefaults.motor_range
+        )
+        self.min_pulse: int = (
+            servo_options.get("min_pulse") or ServoOptionsDefaults.min_pulse
+        )
+        self.max_pulse: int = (
+            servo_options.get("max_pulse") or ServoOptionsDefaults.max_pulse
+        )
+        self.min_angle: int = (
+            servo_options.get("min_angle") or ServoOptionsDefaults.min_angle
+        )
+        self.max_angle: int = (
+            servo_options.get("max_angle") or ServoOptionsDefaults.max_angle
+        )
+        self.mid_angle: float = (
+            float(self.min_angle) + float(self.max_angle - self.min_angle) / 2
+        )
+
         self.destination_angle = self.mid_angle
 
         self.servo = servo_af.Servo(
-            pca.channels[motor_channel], min_pulse=500, max_pulse=2500
+            pca.channels[self.channel],
+            min_pulse=self.min_pulse,
+            max_pulse=self.max_pulse,
         )
         # we need to initialize the servo to the middle of the range
         # to know where it actually is
         log.info(
-            f"initializing servo {self.motor_channel} to mid range {self.mid_angle} deg of {self.motor_range} deg motor range"
+            f"initializing servo {self.channel} to mid range {self.mid_angle} deg of {self.motor_range} deg motor range"
         )
         self.servo.fraction = self.destination_angle / self.motor_range
 
@@ -134,7 +149,7 @@ class Servo:
         new_angle = limit_angle(angle, self.min_angle, self.max_angle)
         if DEBUG_MOTORS:
             log.info(
-                f"move_to {self.motor_channel}, {self.current_angle}, {angle}, {self.destination_angle}, {self.min_angle}, {self.max_angle}"
+                f"move_to {self.channel}, {self.current_angle}, {angle}, {self.destination_angle}, {self.min_angle}, {self.max_angle}"
             )
 
         if abs(self.destination_angle - new_angle) < SERVO_PRECISION:
@@ -166,10 +181,10 @@ class Servo:
     def wait_for_motor_stopped(self) -> None:
         """Wait for the motor to stop moving"""
         if DEBUG_MOTORS:
-            log.info(f"waiting on stopped event on channel {self.motor_channel}")
+            log.info(f"waiting on stopped event on channel {self.channel}")
         self.stopped_event.wait()
         if DEBUG_MOTORS:
-            log.info(f"after wait: {self.motor_channel} {self.stopped_event.is_set()}")
+            log.info(f"after wait: {self.channel} {self.stopped_event.is_set()}")
 
     def _thread(self) -> None:
         log.info(f"Starting servo movement thread. {self.current_angle}")
@@ -177,7 +192,7 @@ class Servo:
 
         if DEBUG_MOTORS:
             log.info(
-                f"initializing motor {self.motor_channel} to {self.destination_angle}deg"
+                f"initializing motor {self.channel} to {self.destination_angle}deg"
             )
         self.servo.fraction = self.destination_angle / self.motor_range
         time.sleep(0.5)
@@ -193,15 +208,15 @@ class Servo:
 
             if DEBUG_MOTORS:
                 log.info(
-                    f"servo.py thread loop: channel={self.motor_channel} direction={direction} {self.current_angle} {self.destination_angle} "
+                    f"servo.py thread loop: channel={self.channel} direction={direction} {self.current_angle} {self.destination_angle} "
                 )
             if not self._step_move(direction):
                 if DEBUG_MOTORS:
-                    log.info(f"setting stopped event on channel={self.motor_channel}")
+                    log.info(f"setting stopped event on channel={self.channel}")
                 self.stopped_event.set()
                 self.pause_event.clear()
 
-        log.info("servo thread exit on channel={self.motor_channel}")
+        log.info("servo thread exit on channel={self.channel}")
 
     def _step_move(self, direction: int) -> bool:
         """direction = -1 = left; 1 = right.  returns true if did move"""
@@ -209,7 +224,7 @@ class Servo:
             would_overshoot = self._step_would_overshoot_dest(direction)
             if DEBUG_MOTORS:
                 log.info(
-                    f"stepping channel={self.motor_channel}, {direction}, {self.current_angle}, {self.destination_angle}, {would_overshoot}"
+                    f"stepping channel={self.channel}, {direction}, {self.current_angle}, {self.destination_angle}, {would_overshoot}"
                 )
 
             if self.current_angle == self.destination_angle:
@@ -229,7 +244,7 @@ class Servo:
             return True
         except Exception:
             log.error(
-                f"Exception caught in _step_move for channel={self.motor_channel}: {traceback.format_exc()}"
+                f"Exception caught in _step_move for channel={self.channel}: {traceback.format_exc()}"
             )
             return False
 
@@ -246,19 +261,29 @@ if __name__ == "__main__":
         print("usage:  servo.py <channel> (<angle>)")
         exit(1)
 
-    motor_channel = int(sys.argv[1])
+    channel = int(sys.argv[1])
     log.info("Ctrl+c to quit")
     test_angles = [
         0,
         180,
     ]
-    log.info(f"initializing servo class on motor channel {motor_channel}")
-    servo = Servo(motor_channel)
+    log.info(f"initializing servo class on motor channel {channel}")
+    servo = Servo(
+        {
+            "name": "test_servo",
+            "channel": channel,
+            "motor_range": ServoOptionsDefaults.motor_range,
+            "min_angle": ServoOptionsDefaults.min_angle,
+            "max_angle": ServoOptionsDefaults.max_angle,
+            "min_pulse": ServoOptionsDefaults.min_pulse,
+            "max_pulse": ServoOptionsDefaults.max_pulse,
+        }
+    )
 
     try:
         if len(sys.argv) > 2:
             new_angle = int(sys.argv[2])
-            log.info(f"channel {motor_channel} to {new_angle}deg")
+            log.info(f"channel {channel} to {new_angle}deg")
             servo.move_to(new_angle)
             log.info("waiting for motor stopped event")
             servo.wait_for_motor_stopped()
@@ -269,7 +294,7 @@ if __name__ == "__main__":
         else:
             while True:
                 for angle in test_angles:
-                    log.info(f"channel {motor_channel} to {angle}deg")
+                    log.info(f"channel {channel} to {angle}deg")
                     servo.move_to(angle)
                     log.info("waiting for motor stopped event")
                     servo.wait_for_motor_stopped()

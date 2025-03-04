@@ -12,3 +12,5 @@ These are the services that come with basic_bot.  Many are hardware dependent.  
 
 [motor_control_2w](https://littlebee.github.io/basic_bot/Api%20Docs/services/motor_control_2w/) provides motor control of a 2 wheel or track drive mobile robot.
 
+[servo_control](https://littlebee.github.io/basic_bot/Api%20Docs/services/servo_control/) provides control of up to 16 servos.
+

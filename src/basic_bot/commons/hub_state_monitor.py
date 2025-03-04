@@ -163,8 +163,9 @@ class HubStateMonitor:
                     traceback.print_exc()
 
             self.connected_socket = None
-            log.info("central_hub socket disconnected. Reconnecting in 5 sec...")
-            await asyncio.sleep(5)
+            delay = 1 if c.BB_ENV == "test" else 5
+            log.info(f"central_hub socket disconnected. Reconnecting in {delay} sec...")
+            await asyncio.sleep(delay)
 
     def _thread(self) -> None:
         log.info("Starting hub_state_monitor thread.")
