@@ -1,0 +1,18 @@
+# THIS FILE NOT USED IN PRODUCTION
+#
+# This file is used by the servo control service integration test to configure
+# the servo controller service.
+#
+# See also the servo_config.yml file in the src/created_files directory.
+servos:
+  - name: servo_0
+    channel: 0
+    motor_range: 180
+  - name: servo_1
+    channel: 1
+    motor_range: 270
+  - name: servo_2
+    channel: 2
+    min_angle: 20
+    max_angle: 160
+
