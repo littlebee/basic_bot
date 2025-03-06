@@ -84,6 +84,12 @@ BB_RIGHT_MOTOR_CHANNEL = env.env_int("BB_RIGHT_MOTOR_CHANNEL", 2)
     default: 2
 """
 
+# =============== Servo Service Constants
+BB_SERVO_CONFIG_FILE = env.env_string("BB_SERVO_CONFIG_FILE", "./servo_config.yml")
+"""
+    See api docs for servo control services
+"""
+
 # =============== System Stats Service Constants
 BB_SYSTEM_STATS_SAMPLE_INTERVAL = env.env_float("BB_SYSTEM_STATS_SAMPLE_INTERVAL", 0.5)
 """
