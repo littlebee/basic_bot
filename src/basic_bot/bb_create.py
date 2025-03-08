@@ -36,6 +36,9 @@ def create_project(target_project_dir: str) -> None:
         os.path.join(target_project_dir, "___.gitignore"),
         os.path.join(target_project_dir, ".gitignore"),
     )
+    os.unlink(os.path.join(target_project_dir, "webapp", "package-lock.json"))
+    shutil.rmtree(os.path.join(target_project_dir, "webapp", "node_modules"))
+    shutil.rmtree(os.path.join(target_project_dir, "webapp", "dist"))
 
 
 def build_and_test(target_project_dir: str) -> None:
