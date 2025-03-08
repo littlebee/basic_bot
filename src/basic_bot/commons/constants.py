@@ -15,7 +15,6 @@ See the [bb_start documentation](https://littlebee.github.io/basic_bot/Api%20Doc
 #
 
 
-import os
 import basic_bot.commons.env as env
 
 BB_ENV = env.env_string("BB_ENV", "development")
