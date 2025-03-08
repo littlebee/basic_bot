@@ -28,36 +28,22 @@ Set this to "production" on the onboard computer to run the bot in production
 mode.
 """
 
-if BB_ENV == "test":
-    # This is the port that the test central hub listens on
-    hub_port = 5150
-    log_all = True
-else:
-    hub_port = env.env_int("BB_HUB_PORT", 5100)
-    log_all = env.env_bool("BB_LOG_ALL_MESSAGES", False)
-
-BB_LOG_ALL_MESSAGES = log_all
+BB_LOG_ALL_MESSAGES = env.env_bool("BB_LOG_ALL_MESSAGES", False)
 """
-    Default: True when BB_ENV=test; false otherwise
+    Default: False
 
     Set this to True to log all messages sent and received by services to
     each of their respective log files.
 """
 
 
-BB_HUB_PORT = hub_port
+BB_HUB_PORT = hub_port = env.env_int("BB_HUB_PORT", 5100)
 """
-    Default: 5150 when BB_ENV=test; 5100 otherwise
+    Default: 5100
 
-    This is the port that the central hub listens on.
+    This is the websocket port that the central hub listens on.
 """
 
-BB_LOG_ALL_MESSAGES = log_all
-"""
-    Default: True when BB_ENV=test; false otherwise
-
-    Set this to True to log all messages sent and received by services.
-"""
 
 # Connect to central hub websocket
 BB_HUB_URI = f"ws://127.0.0.1:{BB_HUB_PORT}/ws"
@@ -230,8 +216,8 @@ BB_DISABLE_RECOGNITION_PROVIDER = env.env_bool("BB_DISABLE_RECOGNITION_PROVIDER"
 """
 
 
-# Logging all the env variables in test for debugging
-if BB_ENV == "test":
-    print("Environment variables:")
-    for name, value in os.environ.items():
-        print("{0}: {1}".format(name, value))
+# # Logging all the env variables in test for debugging
+# if BB_ENV == "test":
+#     print("Environment variables:")
+#     for name, value in os.environ.items():
+#         print("{0}: {1}".format(name, value))

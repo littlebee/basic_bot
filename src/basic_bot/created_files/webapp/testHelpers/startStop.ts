@@ -1,16 +1,17 @@
-// @ts-nocheck
 import { promisify } from "node:util";
 import child_process from "node:child_process";
 const execAsync = promisify(child_process.exec);
 
 export async function startServices() {
     const threadId = process.env.VITEST_POOL_ID;
+    const hubPort = 5150 + parseInt(threadId || "0");
+    const envVars = [`BB_ENV=test`, `BB_HUB_PORT=${hubPort}`];
 
     // @ts-expect-error globalThis is a global object injected by vitest
-    globalThis.hubPort = 5150;
+    globalThis.hubPort = hubPort;
 
     // start all of the services used by the bot
-    const cmd = `cd .. && BB_ENV=test bb_start`;
+    const cmd = `cd .. && ${envVars.join(" ")} bb_start`;
     console.log(
         `startStop.ts: starting services with command '${cmd}.  threadId: ${threadId}`
     );

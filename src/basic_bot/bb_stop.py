@@ -46,8 +46,12 @@ def stop_service(
     log_file: Optional[str],
     pid_file: Optional[str],
 ) -> None:
-    log_file = log_file or f"./logs/{service_name}.log"
-    pid_file = pid_file or f"./pids/{service_name}.pid"
+    prefix = "test_" if os.getenv("BB_ENV") == "test" else ""
+    appendage = os.getenv("BB_FILE_APPEND") or ""
+    base_file_name = f"{prefix}{service_name}{appendage}"
+
+    log_file = log_file or f"./logs/{base_file_name}.log"
+    pid_file = pid_file or f"./pids/{base_file_name}.pid"
 
     # if the pid file already exists, it may be currently
     # running, and we should not start another instance

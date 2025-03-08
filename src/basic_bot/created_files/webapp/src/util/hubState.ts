@@ -61,7 +61,7 @@ export const DEFAULT_HUB_STATE: IHubState = {
 };
 
 const __hub_state: IHubState = { ...DEFAULT_HUB_STATE };
-const __hub_port: number = DEFAULT_BB_HUB_PORT;
+let __hub_port: number = DEFAULT_BB_HUB_PORT;
 
 const onUpdateCallbacks: Array<(state: IHubState) => void> = [];
 let hubStatePromises: Array<(state: IHubState) => void> = [];
@@ -86,7 +86,7 @@ export function connectToHub({
         const hubUrl = `ws://${hubHost}:${port}/ws`;
         console.log(`connecting to central-hub at ${hubUrl}`);
         webSocket = new WebSocket(hubUrl);
-
+        __hub_port = port;
         webSocket.addEventListener("open", function () {
             lastHubUpdate = Date.now();
 
