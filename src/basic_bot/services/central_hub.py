@@ -125,8 +125,11 @@ hub_state = HubState(
 connected_sockets: set[WebSocketServerProtocol] = set()
 
 # a dictionary of sets containing sockets by top level
-# dictionary key in hub_state
+# dictionary key in hub_state to which they are subscribed
 subscribers: Dict[str, set[WebSocketServerProtocol]] = dict()
+
+# a set of websockets that subscribed to all keys using "*"
+star_subscribers: set[WebSocketServerProtocol] = set()
 
 # a dictionary of websocket to subsystem name; see handle_identity
 identities: Dict[WebSocketServerProtocol, str] = dict()
@@ -164,15 +167,20 @@ async def send_message(websocket: WebSocketServerProtocol, message: str) -> None
 async def send_state_update_to_subscribers(message_data: Dict[str, Any]) -> None:
     subscribed_sockets: set[WebSocketServerProtocol] = set()
     for key in message_data:
-        if key in subscribers:
-            # really need to keep this tight as possible,  don't log here
-            # unless needed to debug
-            # log.info(f"subscribed sockets for {key}: {subscribers[key]}")
+        # really need to keep this tight as possible,  don't log here
+        # unless needed to debug
+        # log.info(f"subscribed sockets for {key}: {subscribers[key]}")
+        for sub_socket in subscribers.get(key) or []:
+            subscribed_sockets.add(sub_socket)
 
-            for sub_socket in subscribers[key]:
-                subscribed_sockets.add(sub_socket)
-        else:
-            log.info(f"send_state_update_to_subscribers: no subscribers for {key}")
+        for sub_socket in star_subscribers:
+            subscribed_sockets.add(sub_socket)
+
+    if len(subscribed_sockets) == 0:
+        log.info(
+            f"send_state_update_to_subscribers: no subscribers for {message_data.keys()}"
+        )
+        return
 
     relay_message = json.dumps(
         {
@@ -195,7 +203,6 @@ async def send_state_update_to_subscribers(message_data: Dict[str, Any]) -> None
             # log an error in that case.
             sockets_to_close.add(socket)
         except Exception as e:
-
             log.info(
                 f"error sending message to subscriber {socket.remote_address[1]}: {e}"
             )
@@ -274,14 +281,15 @@ async def handle_state_update(message_data: Dict[str, Any]) -> None:
 
 
 async def handle_state_subscribe(
-    websocket: WebSocketServerProtocol, data: List[str]
+    websocket: WebSocketServerProtocol, subscription_keys: List[str]
 ) -> None:
     global subscribers
-    subscription_keys: List[str] = []
-    if data == "*":
-        subscription_keys = list(hub_state.state.keys())
-    else:
-        subscription_keys = data
+    global star_subscribers
+
+    if subscription_keys == "*":
+        log.debug(f"adding {websocket.remote_address[1]} to star subscribers")
+        star_subscribers.add(websocket)
+        return
 
     for key in subscription_keys:
         socket_set: Optional[set[WebSocketServerProtocol]] = None

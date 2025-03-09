@@ -78,5 +78,10 @@ def has_received_data(ws: websocket.WebSocket) -> Optional[Dict[str, Any]]:
 
 
 def has_received_state_update(ws: websocket.WebSocket, key: str, value: Any) -> bool:
-    stateUpdate = recv(ws)
-    return stateUpdate["type"] == "stateUpdate" and stateUpdate["data"][key] == value
+    while True:
+        message = recv(ws)
+        if message["type"] == "stateUpdate" and key in message["data"]:
+            break
+
+    stateUpdateData = message["data"]
+    return stateUpdateData.get(key) == value

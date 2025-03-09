@@ -101,3 +101,24 @@ class TestCentralHub:
 
         ws1.close()
         ws2.close()
+
+    def test_subscribe_all(self):
+        ws1 = hub.connect("test_client_1")
+        hub.send_subscribe(ws1, "*")
+
+        ws2 = hub.connect("test_client_2")
+
+        # second client sends a known key (`set_angles`) update
+        hub.send_update_state(ws2, {"set_angles": TEST_ANGLES_1})
+
+        # first client should receive the set_angles update
+        assert hub.has_received_state_update(ws1, "set_angles", TEST_ANGLES_1)
+
+        # second client sends a completely new key (`foo`) update
+        hub.send_update_state(ws2, {"foo": "bar"})
+
+        # first client should receive the previously unknown key update
+        assert hub.has_received_state_update(ws1, "foo", "bar")
+
+        ws1.close()
+        ws2.close()
