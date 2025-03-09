@@ -85,13 +85,22 @@ def start_service(
     pid_file: Optional[str] = None,
     service_env: Dict[str, str] = {},
 ) -> None:
-    log_file = log_file or f"./logs/{service_name}.log"
-    pid_file = pid_file or f"./pids/{service_name}.pid"
+
+    # must include full environment if env arg to Popen is used
+    env = {**os.environ, **service_env}
+    # print(f" Combined env: {env}")
+
+    prefix = "test_" if env.get("BB_ENV") == "test" else ""
+    appendage = env.get("BB_FILE_APPEND") or ""
+    base_file_name = f"{prefix}{service_name}{appendage}"
+
+    log_file = log_file or f"./logs/{base_file_name}.log"
+    pid_file = pid_file or f"./pids/{base_file_name}.pid"
 
     os.makedirs("./logs", exist_ok=True)
     os.makedirs("./pids", exist_ok=True)
 
-    if os.getenv("BB_ENV") == "test":
+    if env.get("BB_ENV") == "test":
         print(f"running {service_name} in test mode")
 
     # if the pid file already exists, it may be currently
@@ -112,11 +121,9 @@ def start_service(
     # this can be used to identify processes started by bb_start like:
     # `ps aux | grep via=bb_start``
     args.append("via=bb_start")
-    # must include full environment if env arg to Popen is used
-    env = {**os.environ, **service_env}
-    # print(f" Combined env: {env}")
 
     with open(log_file, "w") as log:
+        # must use full env with Popen env arg
         process = subprocess.Popen(args, stdout=log, stderr=log, env=env)
         log_ts = get_log_time()
         time.sleep(0.5)

@@ -1,5 +1,4 @@
 import os
-
 from typing import Tuple, Dict
 
 from basic_bot import bb_start, bb_stop
@@ -28,7 +27,12 @@ def start_service(service_name: str, run_cmd: str, env: Dict[str, str] = {}) -> 
 
         run_cmd = the command to start the service.
     """
-    updated_env: Dict[str, str] = {**env, "BB_ENV": "test"}
+    updated_env: Dict[str, str] = {
+        **env,
+        "BB_ENV": "test",
+        "BB_LOG_ALL_MESSAGES": "True",
+    }
+
     log_file, pid_file = get_files_for_service(service_name)
     bb_start.start_service(
         f"test_{service_name}", run_cmd, log_file, pid_file, updated_env

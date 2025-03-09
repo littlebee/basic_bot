@@ -33,6 +33,11 @@ export interface IHubState {
     throttles?: I2WMotorSpeeds;
     // provided by the basic_bot.services.motor_control_2w module
     motors?: I2WMotorSpeeds;
+    // consumed by the basic_bot.services.servo_control module
+    servo_config?: IServoConfig;
+    servo_angles?: Record<string, number>;
+    // published by the basic_bot.services.servo_control module
+    servo_actual_angles?: Record<string, number>;
 }
 
 export interface IRecognizedObject {
@@ -53,6 +58,20 @@ export interface I2WMotorSpeeds {
     right: number;
 }
 
+export interface IServo {
+    name: string;
+    channel: number;
+    motor_range: number;
+    min_angle: number;
+    max_angle: number;
+    min_pulse: number;
+    max_pulse: number;
+}
+
+export interface IServoConfig {
+    servos: IServo[];
+}
+
 export const DEFAULT_HUB_STATE: IHubState = {
     hubConnStatus: "offline",
 
@@ -61,7 +80,7 @@ export const DEFAULT_HUB_STATE: IHubState = {
 };
 
 const __hub_state: IHubState = { ...DEFAULT_HUB_STATE };
-const __hub_port: number = DEFAULT_BB_HUB_PORT;
+let __hub_port: number = DEFAULT_BB_HUB_PORT;
 
 const onUpdateCallbacks: Array<(state: IHubState) => void> = [];
 let hubStatePromises: Array<(state: IHubState) => void> = [];
@@ -86,7 +105,7 @@ export function connectToHub({
         const hubUrl = `ws://${hubHost}:${port}/ws`;
         console.log(`connecting to central-hub at ${hubUrl}`);
         webSocket = new WebSocket(hubUrl);
-
+        __hub_port = port;
         webSocket.addEventListener("open", function () {
             lastHubUpdate = Date.now();
 

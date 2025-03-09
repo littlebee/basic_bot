@@ -15,6 +15,7 @@ Description:
 import os
 import sys
 import shutil
+from pathlib import Path
 
 
 if len(sys.argv) != 2:
@@ -36,6 +37,8 @@ def create_project(target_project_dir: str) -> None:
         os.path.join(target_project_dir, "___.gitignore"),
         os.path.join(target_project_dir, ".gitignore"),
     )
+    rmdir(["webapp", "node_modules"])
+    rmdir(["webapp", "dist"])
 
 
 def build_and_test(target_project_dir: str) -> None:
@@ -46,6 +49,12 @@ def build_and_test(target_project_dir: str) -> None:
 
     print("testing project via {target_project_dir}/test.sh ...")
     os.system("./test.sh")
+
+
+def rmdir(dirs: list[str]) -> None:
+    dir = Path(os.path.join(target_project_dir, *dirs))
+    if dir.exists():
+        shutil.rmtree(dir)
 
 
 # Note: # main itself can't take arguments.  see, https://setuptools.pypa.io/en/latest/userguide/entry_point.html

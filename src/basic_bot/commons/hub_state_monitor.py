@@ -95,7 +95,6 @@ class HubStateMonitor:
         """Stops the background thread that listens for state updates and updates HubState"""
         log.info("Stopping hub_state_monitor thread.")
         should_exit = True
-        self.connected_socket and self.connected_socket.close()
 
     @asynccontextmanager
     async def connect_to_hub(
