@@ -254,6 +254,8 @@ async def unregister(websocket: WebSocketServerProtocol) -> None:
     )
     try:
         connected_sockets.remove(websocket)
+        star_subscribers.remove(websocket)
+
         for key in subscribers:
             subscribers[key].remove(websocket)
         subsystem_name = identities.pop(websocket, None)
