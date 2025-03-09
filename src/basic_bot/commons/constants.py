@@ -76,12 +76,12 @@ BB_SERVO_CONFIG_FILE = env.env_string("BB_SERVO_CONFIG_FILE", "./servo_config.ym
 """
 
 # =============== System Stats Service Constants
-BB_SYSTEM_STATS_SAMPLE_INTERVAL = env.env_float("BB_SYSTEM_STATS_SAMPLE_INTERVAL", 0.5)
+BB_SYSTEM_STATS_SAMPLE_INTERVAL = env.env_float("BB_SYSTEM_STATS_SAMPLE_INTERVAL", 1)
 """
     In seconds, the interval at which the system stats service samples the system
     and publishes system stats to the central hub.
 
-    default: 0.5 (~2Hz)
+    default: 1
 """
 
 
