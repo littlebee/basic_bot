@@ -37,11 +37,15 @@ from basic_bot.commons import constants as c, messages
 
 
 def get_update_message():
-    cpu_temp = -1
+    cpu_temp = 0
     try:
-        # This only works on linux
+        # This only works on linux according to the psutil docs
+        # https://psutil.readthedocs.io/en/latest/index.html#psutil.sensors_temperatures
         temps = psutil.sensors_temperatures()
-        cpu_temp = temps["coretemp"][0].current
+        # On a Raspberry Pi5, the cpu temp is under the "cpu_thermal" key although the
+        # key may be different on other linux systems. The psutil docs suggest that it
+        # may be under the "coretemp" key on some systems.
+        cpu_temp = temps["cpu_thermal"][0].current
     except:
         pass
 
@@ -52,7 +56,7 @@ def get_update_message():
                 "system_stats": {
                     "cpu_util": psutil.cpu_percent(),
                     "cpu_temp": cpu_temp,
-                    "ram_util": psutil.virtual_memory()[2],
+                    "ram_util": psutil.virtual_memory().percent,
                     "hostname": socket.gethostname(),
                 },
             },
