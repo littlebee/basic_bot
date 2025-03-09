@@ -38,10 +38,10 @@ export class CentralHubTestClient {
     }
 
     async startTestHub() {
-        // start all of the services used by the bot
+        // start actual central_hub service
         const cmd = `cd .. && ${this.getEnvVars()} bb_start -s central_hub`;
         console.log(
-            `startTestHub: starting central with command '${cmd}.  threadId: ${process.env.VITEST_POOL_ID}`
+            `startTestHub: starting central with command '${cmd}.  test thread: ${process.env.VITEST_POOL_ID}`
         );
         const { stdout, stderr } = await execAsync(cmd);
         console.log(`startTestHub: stdout: ${stdout}`);
@@ -85,12 +85,7 @@ export class CentralHubTestClient {
                     "central_hub test client timed out waiting for next message"
                 );
             }, 5000);
-            console.log("centralHub test client setting nextMessageWaiter");
             this.nextMessageWaiter = (nextMessage) => {
-                console.log(
-                    "centralHub test client got next message",
-                    nextMessage
-                );
                 clearTimeout(interval);
                 resolve(nextMessage);
             };
@@ -110,11 +105,7 @@ export class CentralHubTestClient {
             return;
         }
 
-        console.log(
-            "centralHub test client got message",
-            parsedMessage,
-            Object.keys(parsedMessage)
-        );
+        console.log("centralHub test client got message: ", parsedMessage);
         // ignore state updates that are subsystem_stats
         if (
             !parsedMessage ||
@@ -163,10 +154,7 @@ export class CentralHubTestClient {
                     );
                 });
                 ws.addEventListener("close", (event) => {
-                    console.error(
-                        "centralHub test client socket closed",
-                        event
-                    );
+                    console.log("centralHub test client socket closed", event);
                 });
                 ws.addEventListener("message", this.handleHubMessage);
             } catch (error) {
