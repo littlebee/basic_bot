@@ -29,7 +29,7 @@ describe("App", () => {
     let hubClient: CentralHubTestClient;
 
     beforeAll(async () => {
-        hubClient = new CentralHubTestClient("App.test.tsx");
+        hubClient = new CentralHubTestClient("app-test");
         await hubClient.startTestHub();
     });
 

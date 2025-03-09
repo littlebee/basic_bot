@@ -1,6 +1,6 @@
 # our stuff
-/logs/
-/pids/
+logs/
+pids/
 
 node_modules/
 package-lock.json
