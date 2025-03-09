@@ -33,6 +33,11 @@ export interface IHubState {
     throttles?: I2WMotorSpeeds;
     // provided by the basic_bot.services.motor_control_2w module
     motors?: I2WMotorSpeeds;
+    // consumed by the basic_bot.services.servo_control module
+    servo_config?: IServoConfig;
+    servo_angles?: Record<string, number>;
+    // published by the basic_bot.services.servo_control module
+    servo_actual_angles?: Record<string, number>;
 }
 
 export interface IRecognizedObject {
@@ -51,6 +56,20 @@ export interface ISystemStats {
 export interface I2WMotorSpeeds {
     left: number;
     right: number;
+}
+
+export interface IServo {
+    name: string;
+    channel: number;
+    motor_range: number;
+    min_angle: number;
+    max_angle: number;
+    min_pulse: number;
+    max_pulse: number;
+}
+
+export interface IServoConfig {
+    servos: IServo[];
 }
 
 export const DEFAULT_HUB_STATE: IHubState = {
