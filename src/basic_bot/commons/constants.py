@@ -216,9 +216,9 @@ BB_DISABLE_RECOGNITION_PROVIDER = env.env_bool("BB_DISABLE_RECOGNITION_PROVIDER"
 
 BB_VIDEO_PATH = env.env_string("BB_VIDEO_PATH", "./recorded_video")
 """
-    default: "/dev/video0"
+    default: "./recorded_video"
 
-    The path to the video device used by the camera.
+    The path where the vision service saves recorded video.
 """
 
 

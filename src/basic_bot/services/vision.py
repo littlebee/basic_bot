@@ -41,13 +41,18 @@ the numeric values of the bounding box in the image.
 ## Video Recording
 
 The video feed can be recorded using the `record_video` REST API.
-The video is recorded in the `recorded_video` subdirectory of
-project root directory.
+The video is recorded in the BB_VIDEO_PATH directory. Example:
 
-TODO: example rest API call to record video
+```sh
+curl http://localhost:5801/record_video
+```
+where
+- `localhost` is replaced by the IP address of the host running the vision service.
+- `5801` is the port the vision service is running on (default).  See `BB_VISION_PORT`
+in the configuration docs.
 
-Filename is the current date and time in the format `YYYYMMDD-HHMMSS.mp4`.
-The video is recorded in mp4 format.
+Filename of the saved file is the current date and time in the format
+`YYYYMMDD-HHMMSS.mp4`.
 
 ## Origin
 
