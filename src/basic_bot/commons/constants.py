@@ -214,6 +214,13 @@ BB_DISABLE_RECOGNITION_PROVIDER = env.env_bool("BB_DISABLE_RECOGNITION_PROVIDER"
     Set this to True to disable the recognition provider.
 """
 
+BB_VIDEO_PATH = env.env_string("BB_VIDEO_PATH", "./recorded_video")
+"""
+    default: "./recorded_video"
+
+    The path where the vision service saves recorded video.
+"""
+
 
 # # Logging all the env variables in test for debugging
 # if BB_ENV == "test":
