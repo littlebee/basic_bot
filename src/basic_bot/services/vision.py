@@ -182,7 +182,7 @@ def record_video() -> Response:
         cv2_utils.record_video(camera, 10)
     except Exception as e:
         log.error(f"error recording video: {e}")
-        return web_utils.respond_not_ok(app, 500, f"error recording video")
+        return web_utils.respond_not_ok(app, 500, "error recording video")
     finally:
         is_recording = False
         asyncio.run(
