@@ -36,6 +36,7 @@ rsync --progress --partial \
 --exclude=node_modules \
 --exclude=persisted_state.json \
 --exclude=logs/ \
+--exclude=recorded_video/ \
 --exclude=dist/ \
 --exclude=basic_bot.egg-info \
 --exclude=*.pid \

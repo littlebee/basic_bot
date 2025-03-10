@@ -1,6 +1,7 @@
 # our stuff
 logs/
 pids/
+recorded_video/
 
 node_modules/
 package-lock.json

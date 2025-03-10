@@ -2,6 +2,7 @@
 import basic_bot.test_helpers.skip_unless_tflite_runtime  # noqa: F401
 
 import requests
+from pathlib import Path
 
 import basic_bot.test_helpers.central_hub as hub
 import basic_bot.test_helpers.start_stop as sst
@@ -105,3 +106,13 @@ class TestVisionCV2:
         detection is running at ~30fps!  That's kinda outstanding. Scatbot
         needed the Coral TPU to get to 28fps inference on the pi 4.
         """
+
+    def test_record_video(self):
+        file_count_before = len(list(Path(c.BB_VIDEO_PATH).glob("*.mp4")))
+        url = f"http://localhost:{c.BB_VISION_PORT}/record_video"
+        response = requests.get(url)
+
+        assert response.status_code == 200
+        assert response.json()["status"] == "ok"
+        file_count_after = len(list(Path(c.BB_VIDEO_PATH).glob("*.mp4")))
+        assert file_count_after == file_count_before + 1

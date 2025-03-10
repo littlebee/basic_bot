@@ -71,7 +71,12 @@ class HubStateMonitor:
             ]
         ] = None,
     ) -> None:
-        """Instantiate a HubStateMonitor object."""
+        """
+        Instantiate a HubStateMonitor object.
+
+        Note that subscribed_keys may be an empty list if you just want to
+        publish state updates to the central hub and not receive any state updates.
+        """
         self.hub_state = hub_state
         self.identity = identity
         self.subscribed_keys = subscribed_keys
@@ -106,8 +111,9 @@ class HubStateMonitor:
             state_keys = self.subscribed_keys if self.subscribed_keys != "*" else None
             self.connected_socket = websocket
             await messages.send_identity(websocket, self.identity)
-            await messages.send_subscribe(websocket, self.subscribed_keys)
-            await messages.send_get_state(websocket, state_keys)
+            if len(self.subscribed_keys) > 0:
+                await messages.send_subscribe(websocket, self.subscribed_keys)
+                await messages.send_get_state(websocket, state_keys)
             yield websocket
 
     async def parse_next_message(
