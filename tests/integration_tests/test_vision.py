@@ -108,11 +108,21 @@ class TestVisionCV2:
         """
 
     def test_record_video(self):
-        file_count_before = len(list(Path(c.BB_VIDEO_PATH).glob("*.mp4")))
+        vidfile_count_before = len(list(Path(c.BB_VIDEO_PATH).glob("*.mp4")))
+        imgfile_count_before = len(list(Path(c.BB_VIDEO_PATH).glob("*.jpg")))
+
         url = f"http://localhost:{c.BB_VISION_PORT}/record_video"
         response = requests.get(url)
 
         assert response.status_code == 200
         assert response.json()["status"] == "ok"
-        file_count_after = len(list(Path(c.BB_VIDEO_PATH).glob("*.mp4")))
-        assert file_count_after == file_count_before + 1
+
+        vidfile_count_after = len(list(Path(c.BB_VIDEO_PATH).glob("*.mp4")))
+        assert (
+            vidfile_count_after == vidfile_count_before + 1
+        ), "should have created exactly one video file"
+
+        imgfile_count_after = len(list(Path(c.BB_VIDEO_PATH).glob("*.jpg")))
+        assert (
+            imgfile_count_after == imgfile_count_before + 1
+        ), "should have created exactly one image file"
