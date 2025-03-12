@@ -126,3 +126,31 @@ class TestVisionCV2:
         assert (
             imgfile_count_after == imgfile_count_before + 1
         ), "should have created exactly one image file"
+
+        # tests video list retrieval
+        url = f"http://localhost:{c.BB_VISION_PORT}/recorded_video"
+        response = requests.get(url)
+
+        assert response.status_code == 200
+        jsonResp = response.json()
+        assert_is_array_of_strings(jsonResp)
+        assert len(jsonResp) == vidfile_count_after
+
+        # test individual video retrieval
+        url = f"http://localhost:{c.BB_VISION_PORT}/recorded_video/{jsonResp[0]}.mp4"
+        response = requests.get(url)
+        assert response.status_code == 200
+        assert response.headers["Content-Type"] == "video/mp4"
+
+        # test thumbnail retrieval
+        url = f"http://localhost:{c.BB_VISION_PORT}/recorded_video/{jsonResp[0]}.jpg"
+        response = requests.get(url)
+        assert response.status_code == 200
+        assert response.headers["Content-Type"] == "image/jpeg"
+
+
+def assert_is_array_of_strings(obj):
+    assert isinstance(obj, list), "Input is not a list"
+    assert all(
+        isinstance(item, str) for item in obj
+    ), "Not all elements in the list are strings"
