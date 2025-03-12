@@ -42,6 +42,9 @@ jobs:
           echo 'Install deps npm path:'
           which npm
 
+          # needed for vision service record video tests
+          sudo apt install -y ffmpeg libx264-dev
+
         # this also runs build.sh which in turn runs mypy
       - name: Run build and install
         run: ./install-dev.sh

@@ -40,6 +40,13 @@ the numeric values of the bounding box in the image.
 
 ## Video Recording
 
+To use the video recording feature, you must have the `ffmpeg` command
+and the libx264-dev library installed on the host machine:
+
+```
+sudo apt install -y ffmpeg libx264-dev
+```
+
 The video feed can be recorded using the `record_video` REST API.
 The video is recorded in the BB_VIDEO_PATH directory. Example:
 
@@ -66,15 +73,16 @@ Thank you, @adeept and @miguelgrinberg!
 """
 import asyncio
 import importlib
+import os
 import threading
 
 
-from flask import Flask, Response, abort
+from flask import Flask, Response, abort, send_from_directory
 from flask_cors import CORS
 
 import cv2
 
-from basic_bot.commons import constants as c, web_utils, log, messages, cv2_utils
+from basic_bot.commons import constants as c, web_utils, log, messages, vid_utils
 
 from basic_bot.commons.hub_state import HubState
 from basic_bot.commons.hub_state_monitor import HubStateMonitor
@@ -179,7 +187,7 @@ def record_video() -> Response:
                 hub.connected_socket, {"vision": {"recording": True}}
             )
         )
-        cv2_utils.record_video(camera, 10)
+        vid_utils.record_video(camera, 10)
     except Exception as e:
         log.error(f"error recording video: {e}")
         return web_utils.respond_not_ok(app, 500, "error recording video")
@@ -192,6 +200,28 @@ def record_video() -> Response:
         )
 
     return web_utils.respond_ok(app)
+
+
+@app.route("/recorded_video")
+def recorded_video() -> Response:
+    """
+    Returns json array of string filenames (without extension) of all
+    recorded video files.   The filenames can be used to download the
+    using a url like `http://<ip>:<port>/recorded_video/<filename>.mp4`
+    or `http://<ip>:<port>/recorded_video/<filename>.jpg` for the
+    thumbnail image.
+    """
+    return web_utils.json_response(app, vid_utils.get_recorded_videos())
+
+
+@app.route("/recorded_video/<filename>")
+def send_static_js(filename: str) -> Response:
+    """
+    Sends a recorded video file.
+    """
+    video_path = os.path.realpath(c.BB_VIDEO_PATH)
+    log.info(f"sending recorded video file: {filename} from {video_path}")
+    return send_from_directory(video_path, filename)
 
 
 @app.route("/ping")
