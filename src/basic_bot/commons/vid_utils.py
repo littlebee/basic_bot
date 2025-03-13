@@ -12,7 +12,7 @@ from basic_bot.commons import constants as c, log
 from basic_bot.commons.camera_opencv import Camera
 
 
-def record_video(camera: Camera, seconds: float) -> str:
+def record_video(camera: Camera, duration: float) -> str:
     """
     Record a video to BB_VIDEO_PATH for a specified number of seconds.
 
@@ -39,9 +39,9 @@ def record_video(camera: Camera, seconds: float) -> str:
     first_frame = None
 
     tstart = time.time()
-    log.info(f"Recording 10 seconds of video to {video_filename}")
+    log.info(f"Recording {duration} seconds of video to {video_filename}")
     while True:
-        if time.time() - tstart > seconds:
+        if time.time() - tstart > duration:
             break
         frame = camera.get_frame()
         writer.write(frame)  # type: ignore

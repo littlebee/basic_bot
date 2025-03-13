@@ -77,7 +77,7 @@ import os
 import threading
 
 
-from flask import Flask, Response, abort, send_from_directory
+from flask import Flask, Response, abort, send_from_directory, request
 from flask_cors import CORS
 
 import cv2
@@ -179,15 +179,16 @@ def record_video() -> Response:
 
     if is_recording:
         return web_utils.respond_not_ok(app, 304, "already recording")
-
     is_recording = True
+
+    duration = float(request.args.get("duration", "10"))
     try:
         asyncio.run(
             messages.send_update_state(
                 hub.connected_socket, {"vision": {"recording": True}}
             )
         )
-        vid_utils.record_video(camera, 10)
+        vid_utils.record_video(camera, duration)
     except Exception as e:
         log.error(f"error recording video: {e}")
         return web_utils.respond_not_ok(app, 500, "error recording video")
