@@ -9,6 +9,9 @@ import basic_bot.test_helpers.central_hub as hub
 import basic_bot.test_helpers.start_stop as sst
 import basic_bot.commons.constants as c
 
+# this also test all of the commons.vision_client.py functions
+import basic_bot.commons.vision_client as vision_client
+
 
 def setup_module():
     sst.start_service("central_hub", "python -m basic_bot.services.central_hub")
@@ -115,10 +118,7 @@ class TestVisionCV2:
         imgfile_count_before = len(list(Path(c.BB_VIDEO_PATH).glob("*.jpg")))
 
         # test that video can be recorded
-        url = (
-            f"http://localhost:{c.BB_VISION_PORT}/record_video?duration={TEST_DURATION}"
-        )
-        response = requests.get(url)
+        response = vision_client.send_record_video_request(TEST_DURATION)
         assert response.status_code == 200
         assert response.json()["status"] == "ok"
 
@@ -133,24 +133,24 @@ class TestVisionCV2:
         ), "should have created exactly one image file"
 
         # tests video list retrieval
-        url = f"http://localhost:{c.BB_VISION_PORT}/recorded_video"
-        response = requests.get(url)
-
+        response = vision_client.fetch_recorded_videos()
         assert response.status_code == 200
         jsonResp = response.json()
         assert_is_array_of_strings(jsonResp)
         assert len(jsonResp) == vidfile_count_after
 
         # test individual video retrieval
-        url = f"http://localhost:{c.BB_VISION_PORT}/recorded_video/{jsonResp[0]}.mp4"
-        response = requests.get(url)
+        vid_file_name = jsonResp[0] + ".mp4"
+        response = vision_client.fetch_recorded_video(vid_file_name)
         assert response.status_code == 200
         assert response.headers["Content-Type"] == "video/mp4"
+
+        url = f"{c.BB_VISION_URI}/recorded_video/{vid_file_name}"
         assert_video_duration(url, TEST_DURATION)
 
         # test thumbnail retrieval
-        url = f"http://localhost:{c.BB_VISION_PORT}/recorded_video/{jsonResp[0]}.jpg"
-        response = requests.get(url)
+        img_file_name = jsonResp[0] + ".jpg"
+        response = vision_client.fetch_recorded_video(img_file_name)
         assert response.status_code == 200
         assert response.headers["Content-Type"] == "image/jpeg"
 
