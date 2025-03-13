@@ -5,7 +5,7 @@ import time
 
 from typing import Generator
 
-from basic_bot.commons import log
+from basic_bot.commons import log, constants as c
 from basic_bot.commons.base_camera import BaseCamera
 
 log.info("Loaded basic_bot.test_helpers.camera_mock. loading images...")
@@ -52,6 +52,7 @@ class Camera(BaseCamera):
         """
         frame_count = 0
         while True:
+            tstart = time.time()
             frame_count += 1
             # for testing, half of the frames are pet images and half are not pet images
             if frame_count % 2 == 0:
@@ -62,4 +63,6 @@ class Camera(BaseCamera):
                 img = not_pet_images[index]
 
             yield img  # type: ignore
-            time.sleep(1 / 60)  # Limit supply to ~60 FPS
+            time.sleep(
+                1 / c.BB_CAMERA_FPS - (time.time() - tstart)
+            )  # Limit supply to camera FPS

@@ -1,6 +1,7 @@
 # skip this test if tflite_runtime is not installed
 import basic_bot.test_helpers.skip_unless_tflite_runtime  # noqa: F401
 
+import cv2
 import requests
 from pathlib import Path
 
@@ -57,7 +58,7 @@ class TestVisionCV2:
         # to be the case on CD/CD runner.  Its possible that because
         # the camera_mock is pushing out 60fps, the ratio is dependent
         # on the stride of tflite_detect.py which is running at 25-30fps
-        assert 0.40 < pet_ratio < 0.60
+        assert 0.47 < pet_ratio < 0.53
 
         ws.close()
 
@@ -108,12 +109,16 @@ class TestVisionCV2:
         """
 
     def test_record_video(self):
+        TEST_DURATION = 3.5
+
         vidfile_count_before = len(list(Path(c.BB_VIDEO_PATH).glob("*.mp4")))
         imgfile_count_before = len(list(Path(c.BB_VIDEO_PATH).glob("*.jpg")))
 
-        url = f"http://localhost:{c.BB_VISION_PORT}/record_video"
+        # test that video can be recorded
+        url = (
+            f"http://localhost:{c.BB_VISION_PORT}/record_video?duration={TEST_DURATION}"
+        )
         response = requests.get(url)
-
         assert response.status_code == 200
         assert response.json()["status"] == "ok"
 
@@ -141,6 +146,7 @@ class TestVisionCV2:
         response = requests.get(url)
         assert response.status_code == 200
         assert response.headers["Content-Type"] == "video/mp4"
+        assert_video_duration(url, TEST_DURATION)
 
         # test thumbnail retrieval
         url = f"http://localhost:{c.BB_VISION_PORT}/recorded_video/{jsonResp[0]}.jpg"
@@ -154,3 +160,14 @@ def assert_is_array_of_strings(obj):
     assert all(
         isinstance(item, str) for item in obj
     ), "Not all elements in the list are strings"
+
+
+def assert_video_duration(url, expected_duration):
+    TOLERANCE = 0.1  # seconds of tolerance for video duration test
+
+    data = cv2.VideoCapture(url)
+    frames = data.get(cv2.CAP_PROP_FRAME_COUNT)
+    fps = data.get(cv2.CAP_PROP_FPS)
+    duration = frames / fps
+    data.release()
+    assert expected_duration - TOLERANCE < duration < expected_duration + TOLERANCE
