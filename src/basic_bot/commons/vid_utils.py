@@ -11,6 +11,9 @@ import time
 from basic_bot.commons import constants as c, log
 from basic_bot.commons.camera_opencv import Camera
 
+THUMBNAIL_WIDTH = 80
+THUMBNAIL_HEIGHT = 60
+
 
 def record_video(camera: Camera, duration: float) -> str:
     """
@@ -27,7 +30,7 @@ def record_video(camera: Camera, duration: float) -> str:
 
     # Filenames are the current date and time in the format `YYYYMMDD-HHMMSS.mp4`.
     base_file_name = time.strftime("%Y%m%d-%H%M%S")
-    raw_filename = os.path.join(videoPath, "latest_raw.mp4")
+    raw_filename = os.path.join(videoPath, f"{base_file_name}_raw.mp4")
     video_filename = os.path.join(videoPath, f"{base_file_name}.mp4")
     image_filename = os.path.join(videoPath, f"{base_file_name}.jpg")
 
@@ -53,7 +56,7 @@ def record_video(camera: Camera, duration: float) -> str:
     convert_video_to_h264(raw_filename, video_filename)
 
     log.info(f"Saving thumbnail image to {image_filename}")
-    cv2.resize(first_frame, (int(c.BB_VISION_WIDTH / 3), int(c.BB_VISION_HEIGHT / 3)))  # type: ignore
+    cv2.resize(first_frame, (THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))  # type: ignore
     cv2.imwrite(image_filename, first_frame)  # type: ignore
 
     return base_file_name
