@@ -123,6 +123,11 @@ class TestVisionCV2:
         assert response.status_code == 200
         assert response.json()["status"] == "ok"
 
+        # Test that the service will only record one video at a time and return
+        # not ok if a second request is made while the first is still recording
+        response = vision_client.send_record_video_request(TEST_DURATION)
+        assert response.json()["status"] == 304
+
         # The video recording is started async. Recording, reencoding the video,
         # and generating the thumbnail (mostly reencoding) takes a few seconds
         time.sleep(TEST_DURATION * 2)
