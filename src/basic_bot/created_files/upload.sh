@@ -36,6 +36,7 @@ rsync --progress --partial \
 --exclude=node_modules \
 --exclude=persisted_state.json \
 --exclude=data/ \
+--exclude=recorded_video/ \
 --exclude=logs/ \
 --exclude=*.pid \
 --exclude=__pycache__ \
