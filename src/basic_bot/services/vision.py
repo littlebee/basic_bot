@@ -75,6 +75,7 @@ import asyncio
 import importlib
 import os
 import threading
+import time
 
 
 from flask import Flask, Response, abort, send_from_directory, request
@@ -169,19 +170,27 @@ def resume_recognition() -> Response:
     return web_utils.respond_ok(app)
 
 
-is_recording = False
+last_recording_started_at = time.time()
+last_record_duration: float = 0
 
 
 @app.route("/record_video")
 def record_video() -> Response:
     """Record the video feed to a file."""
-    global is_recording
+    global last_recording_started_at, last_record_duration
 
-    if is_recording:
+    if time.time() - last_recording_started_at < last_record_duration:
         return web_utils.respond_not_ok(app, 304, "already recording")
-    is_recording = True
 
     duration = float(request.args.get("duration", "10"))
+    last_recording_started_at = time.time()
+    last_record_duration = duration
+    threading.Thread(target=record_video_thread, args=(duration,)).start()
+
+    return web_utils.respond_ok(app)
+
+
+def record_video_thread(duration: float) -> None:
     try:
         asyncio.run(
             messages.send_update_state(
@@ -191,16 +200,12 @@ def record_video() -> Response:
         vid_utils.record_video(camera, duration)
     except Exception as e:
         log.error(f"error recording video: {e}")
-        return web_utils.respond_not_ok(app, 500, "error recording video")
     finally:
-        is_recording = False
         asyncio.run(
             messages.send_update_state(
                 hub.connected_socket, {"vision": {"recording": False}}
             )
         )
-
-    return web_utils.respond_ok(app)
 
 
 @app.route("/recorded_video")

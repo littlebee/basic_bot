@@ -3,6 +3,7 @@ import basic_bot.test_helpers.skip_unless_tflite_runtime  # noqa: F401
 
 import cv2
 import requests
+import time
 from pathlib import Path
 
 import basic_bot.test_helpers.central_hub as hub
@@ -121,6 +122,10 @@ class TestVisionCV2:
         response = vision_client.send_record_video_request(TEST_DURATION)
         assert response.status_code == 200
         assert response.json()["status"] == "ok"
+
+        # The video recording is started async. Recording, reencoding the video,
+        # and generating the thumbnail (mostly reencoding) takes a few seconds
+        time.sleep(TEST_DURATION * 2)
 
         vidfile_count_after = len(list(Path(c.BB_VIDEO_PATH).glob("*.mp4")))
         assert (
