@@ -139,8 +139,8 @@ class TestVisionCV2:
 
         imgfile_count_after = len(list(Path(c.BB_VIDEO_PATH).glob("*.jpg")))
         assert (
-            imgfile_count_after == imgfile_count_before + 1
-        ), "should have created exactly one image file"
+            imgfile_count_after == imgfile_count_before + 2
+        ), "should have created exactly two .jpg files"
 
         # tests video list retrieval
         response = vision_client.fetch_recorded_videos()
