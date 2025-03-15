@@ -13,6 +13,8 @@ from basic_bot.commons.camera_opencv import Camera
 
 THUMBNAIL_WIDTH = 80
 THUMBNAIL_HEIGHT = 60
+LG_THUMBNAIL_WIDTH = 320
+LG_THUMBNAIL_HEIGHT = 240
 
 
 def record_video(camera: Camera, duration: float) -> str:
@@ -33,6 +35,7 @@ def record_video(camera: Camera, duration: float) -> str:
     raw_filename = os.path.join(videoPath, f"{base_file_name}_raw.mp4")
     video_filename = os.path.join(videoPath, f"{base_file_name}.mp4")
     image_filename = os.path.join(videoPath, f"{base_file_name}.jpg")
+    lg_image_filename = os.path.join(videoPath, f"{base_file_name}_lg.jpg")
 
     # fourcc = cv2.VideoWriter_fourcc(*"avc1")  # type: ignore
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")  # type: ignore
@@ -56,8 +59,12 @@ def record_video(camera: Camera, duration: float) -> str:
     convert_video_to_h264(raw_filename, video_filename)
 
     log.info(f"Saving thumbnail image to {image_filename}")
-    cv2.resize(first_frame, (THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))  # type: ignore
-    cv2.imwrite(image_filename, first_frame)  # type: ignore
+    resized_frame = cv2.resize(first_frame, (THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))  # type: ignore
+    cv2.imwrite(image_filename, resized_frame)
+
+    log.info(f"Saving thumbnail image to {lg_image_filename}")
+    resized_frame = cv2.resize(first_frame, (LG_THUMBNAIL_WIDTH, LG_THUMBNAIL_HEIGHT))  # type: ignore
+    cv2.imwrite(lg_image_filename, resized_frame)
 
     return base_file_name
 
