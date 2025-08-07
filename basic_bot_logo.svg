@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg840"
+   sodipodi:docname="basic_bot_logo.svg"
+   width="100"
+   height="100"
+   inkscape:version="1.1.1 (c3084ef, 2021-09-22)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs844" />
+  <sodipodi:namedview
+     id="namedview842"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     width="100px"
+     inkscape:zoom="2.1638295"
+     inkscape:cx="94.508368"
+     inkscape:cy="73.711906"
+     inkscape:window-width="1312"
+     inkscape:window-height="969"
+     inkscape:window-x="1408"
+     inkscape:window-y="1297"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg840" />
+  <!-- First b -->
+  <g
+     transform="translate(2.1042239,5.2114045)"
+     id="g830">
+    <path
+       d="M 10,0 V 60"
+       stroke="#333333"
+       stroke-width="8"
+       fill="none"
+       id="path824" />
+    <circle
+       cx="25"
+       cy="40"
+       r="15"
+       fill="none"
+       stroke="#333333"
+       stroke-width="8"
+       id="circle826" />
+    <path
+       d="M 25,15 V 5 H 35 V 15 M 45,40 H 35 M 25,65 V 55 M 5,40 h 10"
+       stroke="#333333"
+       stroke-width="4"
+       id="path828" />
+  </g>
+  <!-- Second b -->
+  <g
+     transform="translate(49.754171,29.705015)"
+     id="g838">
+    <path
+       d="M 10,0 V 60"
+       stroke="#333333"
+       stroke-width="8"
+       fill="none"
+       id="path832" />
+    <circle
+       cx="25"
+       cy="40"
+       r="15"
+       fill="none"
+       stroke="#333333"
+       stroke-width="8"
+       id="circle834" />
+    <path
+       d="M 25,15 V 5 H 35 V 15 M 45,40 H 35 M 25,65 V 55 M 5,40 h 10"
+       stroke="#333333"
+       stroke-width="4"
+       id="path836" />
+  </g>
+</svg>

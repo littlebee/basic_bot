@@ -272,8 +272,6 @@ async def handle_state_request(
 
 
 async def handle_state_update(message_data: Dict[str, Any]) -> None:
-    global subscribers
-
     log.debug(f"handle_state_update: {message_data}")
 
     hub_state.update_state_from_message_data(message_data)
@@ -285,8 +283,6 @@ async def handle_state_update(message_data: Dict[str, Any]) -> None:
 async def handle_state_subscribe(
     websocket: WebSocketServerProtocol, subscription_keys: List[str]
 ) -> None:
-    global subscribers
-    global star_subscribers
 
     if subscription_keys == "*":
         log.debug(f"adding {websocket.remote_address[1]} to star subscribers")
@@ -310,7 +306,6 @@ async def handle_state_subscribe(
 async def handle_state_unsubscribe(
     websocket: WebSocketServerProtocol, data: List[str]
 ) -> None:
-    global subscribers
     subscription_keys: List[str] = []
     if data == "*":
         subscription_keys = list(subscribers.keys())
