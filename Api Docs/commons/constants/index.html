@@ -464,6 +464,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bb_log_debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      BB_LOG_DEBUG
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bb_hub_host" class="md-nav__link">
+    <span class="md-ellipsis">
+      BB_HUB_HOST
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bb_hub_port" class="md-nav__link">
     <span class="md-ellipsis">
       BB_HUB_PORT
@@ -635,9 +653,27 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bb_vision_host" class="md-nav__link">
+    <span class="md-ellipsis">
+      BB_VISION_HOST
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bb_vision_port" class="md-nav__link">
     <span class="md-ellipsis">
       BB_VISION_PORT
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bb_vision_uri" class="md-nav__link">
+    <span class="md-ellipsis">
+      BB_VISION_URI
     </span>
   </a>
   
@@ -946,6 +982,28 @@
   
   <span class="md-ellipsis">
     vid_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vision_client/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    vision_client
     
   </span>
   
@@ -2047,6 +2105,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bb_log_debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      BB_LOG_DEBUG
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bb_hub_host" class="md-nav__link">
+    <span class="md-ellipsis">
+      BB_HUB_HOST
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bb_hub_port" class="md-nav__link">
     <span class="md-ellipsis">
       BB_HUB_PORT
@@ -2218,9 +2294,27 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bb_vision_host" class="md-nav__link">
+    <span class="md-ellipsis">
+      BB_VISION_HOST
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bb_vision_port" class="md-nav__link">
     <span class="md-ellipsis">
       BB_VISION_PORT
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bb_vision_uri" class="md-nav__link">
+    <span class="md-ellipsis">
+      BB_VISION_URI
     </span>
   </a>
   
@@ -2270,27 +2364,31 @@ BB_ environment variables in the basic_bot.yml file.
 See the <a href="https://littlebee.github.io/basic_bot/Api%20Docs/scripts/bb_start/">bb_start documentation</a></p>
 <p><a id="basic_bot.commons.constants.BB_ENV"></a></p>
 <h4 id="bb_env">BB_ENV</h4>
-<p>Default: "development"</p>
-<p>Test runner should set this to "test".</p>
+<p>Test runner will set this to "test".</p>
 <p>Set this to "production" on the onboard computer to run the bot in production
-mode.</p>
+mode.  See <a href="https://littlebee.github.io/basic_bot/add-bb_env-export">Getting Started Guide</a>
+for more information.</p>
 <p><a id="basic_bot.commons.constants.BB_LOG_ALL_MESSAGES"></a></p>
 <h4 id="bb_log_all_messages">BB_LOG_ALL_MESSAGES</h4>
-<p>Default: False</p>
 <p>Set this to True to log all messages sent and received by services to
 each of their respective log files.</p>
+<p><a id="basic_bot.commons.constants.BB_LOG_DEBUG"></a></p>
+<h4 id="bb_log_debug">BB_LOG_DEBUG</h4>
+<p>Set this to True to write all <code>log.debug</code> to the log file.  Note that <code>log.debug</code> calls
+are also written to the log file when BB_ENV is "development" or "test".</p>
+<p><a id="basic_bot.commons.constants.BB_HUB_HOST"></a></p>
+<h4 id="bb_hub_host">BB_HUB_HOST</h4>
+<p>The websocket host that the central hub is running.</p>
 <p><a id="basic_bot.commons.constants.BB_HUB_PORT"></a></p>
 <h4 id="bb_hub_port">BB_HUB_PORT</h4>
-<p>Default: 5100</p>
-<p>This is the websocket port that the central hub listens on.</p>
+<p>The websocket port that the central_hub service listens on.</p>
 <p><a id="basic_bot.commons.constants.BB_HUB_URI"></a></p>
 <h4 id="bb_hub_uri">BB_HUB_URI</h4>
-<p>Default: <code>f"ws://127.0.0.1:{BB_HUB_PORT}/ws"</code></p>
+<p>This is the full URI to connect to the central_hub service websocket.</p>
 <p><a id="basic_bot.commons.constants.BB_MOTOR_I2C_ADDRESS"></a></p>
 <h4 id="bb_motor_i2c_address">BB_MOTOR_I2C_ADDRESS</h4>
-<p>default: 0x60</p>
-<p>Used by basic_bot.services.motor_control_2w to connect to the
-i2c motor controller.</p>
+<p>Used by basic_bot.services.motor_control_2w to connect to the i2c
+motor controller.</p>
 <p><a id="basic_bot.commons.constants.BB_LEFT_MOTOR_CHANNEL"></a></p>
 <h4 id="bb_left_motor_channel">BB_LEFT_MOTOR_CHANNEL</h4>
 <p>default: 1</p>
@@ -2304,59 +2402,47 @@ i2c motor controller.</p>
 <h4 id="bb_system_stats_sample_interval">BB_SYSTEM_STATS_SAMPLE_INTERVAL</h4>
 <p>In seconds, the interval at which the system stats service samples the system
 and publishes system stats to the central hub.</p>
-<p>default: 1</p>
 <p><a id="basic_bot.commons.constants.BB_CAMERA_MODULE"></a></p>
 <h4 id="bb_camera_module">BB_CAMERA_MODULE</h4>
 <p>default: "basic_bot.commons.camera_opencv" or
-    "basic_bot.test_helpers.camera_mock" when BB_ENV=test</p>
+"basic_bot.test_helpers.camera_mock" when BB_ENV=test</p>
 <p>When using a ribbon cable camera on a Raspberry Pi 4/5, set this to
 "basic_bot.commons.camera_picamera".</p>
 <p><a id="basic_bot.commons.constants.BB_CAMERA_CHANNEL"></a></p>
 <h4 id="bb_camera_channel">BB_CAMERA_CHANNEL</h4>
-<p>default: 0</p>
-<p>This is the camera channel to use. 0 is the default camera.</p>
+<p>The camera channel to use. 0 is the default camera.</p>
 <p><a id="basic_bot.commons.constants.BB_CAMERA_ROTATION"></a></p>
 <h4 id="bb_camera_rotation">BB_CAMERA_ROTATION</h4>
-<p>default: 0</p>
-<p>This is the camera rotation in degrees. 0 is the default rotation.</p>
+<p>The camera rotation in degrees. 0 is the default rotation.</p>
 <p><a id="basic_bot.commons.constants.BB_CAMERA_FPS"></a></p>
 <h4 id="bb_camera_fps">BB_CAMERA_FPS</h4>
-<p>default: 30</p>
-<p>This is the camera setting frames per second.</p>
+<p>The camera setting frames per second.</p>
 <p><a id="basic_bot.commons.constants.BB_VISION_WIDTH"></a></p>
 <h4 id="bb_vision_width">BB_VISION_WIDTH</h4>
-<p>default: 640</p>
 <p>In pixels, this is the width of the camera frame to capture.</p>
 <p><a id="basic_bot.commons.constants.BB_VISION_HEIGHT"></a></p>
 <h4 id="bb_vision_height">BB_VISION_HEIGHT</h4>
-<p>default: 480</p>
 <p>In pixels, this is the height of the camera frame to capture.</p>
 <p><a id="basic_bot.commons.constants.BB_VISION_FOV"></a></p>
 <h4 id="bb_vision_fov">BB_VISION_FOV</h4>
-<p>default: 62</p>
-<p>This is the field of view of the camera in degrees.
-Depends on camera; RPi v2 cam is 62deg.</p>
+<p>The field of view of the camera in degrees.  Depends on camera;
+RPi v2 cam is 62 deg.</p>
 <p><a id="basic_bot.commons.constants.BB_OBJECT_DETECTION_THRESHOLD"></a></p>
 <h4 id="bb_object_detection_threshold">BB_OBJECT_DETECTION_THRESHOLD</h4>
-<p>default: 0.5</p>
-<p>This is the object detection threshold percentage 0 - 1; higher = greater confidence.</p>
+<p>The object detection threshold percentage 0 - 1; higher = greater confidence.</p>
 <p><a id="basic_bot.commons.constants.BB_ENABLE_CORAL_TPU"></a></p>
 <h4 id="bb_enable_coral_tpu">BB_ENABLE_CORAL_TPU</h4>
-<p>default: False</p>
 <p>Set this to True to enable the Coral USB TPU for object detection.</p>
 <p><a id="basic_bot.commons.constants.BB_TFLITE_MODEL"></a></p>
 <h4 id="bb_tflite_model">BB_TFLITE_MODEL</h4>
-<p>default: "./models/tflite/ssd_mobilenet_v1_coco_quant_postprocess.tflite"</p>
 <p>Which model to use for object detection when BB_ENABLE_CORAL_TPU is false.
 Default is the model from the coral site which is faster than the model
 from the tensorflow hub</p>
 <p><a id="basic_bot.commons.constants.BB_TFLITE_MODEL_CORAL"></a></p>
 <h4 id="bb_tflite_model_coral">BB_TFLITE_MODEL_CORAL</h4>
-<p>default: "./models/tflite/ssd_mobilenet_v1_coco_quant_postprocess_edgetpu.tflite"</p>
 <p>Which model to use for object detection when BB_ENABLE_CORAL_TPU is true.</p>
 <p><a id="basic_bot.commons.constants.BB_TFLITE_THREADS"></a></p>
 <h4 id="bb_tflite_threads">BB_TFLITE_THREADS</h4>
-<p>default: 3</p>
 <p>Number of threads to use for tflite detection.  Testing object detection
 on a Rasberry PI 5, without any other CPU or memory pressure, 4 tflite threads
 was only 1 fps faster (29.5fps) than 3 threads (28.6fps).  2 threads was 22fps.</p>
@@ -2364,18 +2450,20 @@ was only 1 fps faster (29.5fps) than 3 threads (28.6fps).  2 threads was 22fps.<
 In the case of daphbot_due, which has a <a href="https://github.com/littlebee/daphbot-due/blob/main/src/onboard_ui_service.py">pygame based onboard UI service</a>
 that has a configurable render frame rate, the tflite detection running on 4 threads
 was reduced to about 12 fps when the render frame rate was set to 30fps.</p>
+<p><a id="basic_bot.commons.constants.BB_VISION_HOST"></a></p>
+<h4 id="bb_vision_host">BB_VISION_HOST</h4>
+<p>The IP address that the vision service is running on for REST api and video streaming.</p>
 <p><a id="basic_bot.commons.constants.BB_VISION_PORT"></a></p>
 <h4 id="bb_vision_port">BB_VISION_PORT</h4>
-<p>default: 5802 when BB_ENV=test; 5801 otherwise</p>
-<p>This is the HTTP port that the vision service listens  on for video
-streaming and REST api.</p>
+<p>The HTTP port that the vision service listens on for video streaming and REST api.</p>
+<p><a id="basic_bot.commons.constants.BB_VISION_URI"></a></p>
+<h4 id="bb_vision_uri">BB_VISION_URI</h4>
+<p>The full URI to connect to the vision service REST and video streaming.</p>
 <p><a id="basic_bot.commons.constants.BB_DISABLE_RECOGNITION_PROVIDER"></a></p>
 <h4 id="bb_disable_recognition_provider">BB_DISABLE_RECOGNITION_PROVIDER</h4>
-<p>default: False</p>
 <p>Set this to True to disable the recognition provider.</p>
 <p><a id="basic_bot.commons.constants.BB_VIDEO_PATH"></a></p>
 <h4 id="bb_video_path">BB_VIDEO_PATH</h4>
-<p>default: "./recorded_video"</p>
 <p>The path where the vision service saves recorded video.</p>
 
 
