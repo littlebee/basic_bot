@@ -16,7 +16,9 @@ import basic_bot.commons.constants as c
 
 
 def debug(message: str) -> None:
-    """Flush DEBUG: message to console only in development and test environments"""
+    """
+    Flush DEBUG message to console in development and test environments or if BB_LOG_DEBUG is True.
+    """
     if c.BB_ENV in ["development", "test"] or c.BB_LOG_DEBUG:
         print(f"{datetime.datetime.now():%Y%m%d-%H%M%S} DEBUG: {message}")
         sys.stdout.flush()
