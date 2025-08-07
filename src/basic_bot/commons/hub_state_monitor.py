@@ -119,7 +119,6 @@ class HubStateMonitor:
     async def parse_next_message(
         self, websocket: WebSocketClientProtocol
     ) -> AsyncGenerator[tuple[str, dict], None]:
-        global should_exit
         async for message in websocket:
             if should_exit:
                 return
@@ -136,7 +135,6 @@ class HubStateMonitor:
                 return
 
     async def monitor_state(self) -> None:
-        global should_exit
         while not should_exit:
             try:
                 if should_exit:
