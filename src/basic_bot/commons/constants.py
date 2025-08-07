@@ -32,6 +32,13 @@ Set this to True to log all messages sent and received by services to
 each of their respective log files.
 """
 
+BB_LOG_DEBUG = env.env_bool("BB_LOG_DEBUG", False)
+"""
+Set this to True to write all `log.debug` to the log file.  Note that `log.debug` calls
+are also written to the log file when BB_ENV is "development" or "test".
+"""
+
+
 BB_HUB_HOST = env.env_string("BB_HUB_HOST", "127.0.0.1")
 """
 The websocket host that the central hub is running.
