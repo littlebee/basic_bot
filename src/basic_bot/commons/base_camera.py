@@ -11,7 +11,7 @@ Thank you, @adeept and @miguelgrinberg!
 import time
 import threading
 import logging
-from typing import Generator, Optional, List
+from typing import Generator, Optional, Any
 
 from basic_bot.commons.fps_stats import FpsStats
 
@@ -33,8 +33,8 @@ class CameraEvent(object):
     """
 
     def __init__(self) -> None:
-        # TODO : figure out the type error below
-        self.events: dict[int, List[threading.Event, float]] = {}  # type: ignore
+        # Dictionary mapping thread IDs to [event, timestamp] tuples
+        self.events: dict[int, list[Any]] = {}
 
     def wait(self) -> bool:
         """Invoked from each client's thread to wait for the next frame."""
