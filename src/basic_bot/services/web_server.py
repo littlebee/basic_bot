@@ -14,7 +14,7 @@ import psutil
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 
-from basic_bot.commons import web_utils, log
+from basic_bot.commons import web_utils, log, constants as c
 from basic_bot.commons.hub_state import HubState
 from basic_bot.commons.hub_state_monitor import HubStateMonitor
 
@@ -26,7 +26,7 @@ CORS(app, supports_credentials=True)
 monitor = HubStateMonitor(hub_state, "webserver", "*")
 monitor.start()
 
-dir_path = os.path.join(os.getcwd(), "webapp/dist")
+dir_path = os.path.join(os.getcwd(), c.BB_WEB_PUBLIC)
 log.info(f"serving from dir_path: {dir_path}")
 
 

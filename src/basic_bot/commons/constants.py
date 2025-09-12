@@ -204,3 +204,10 @@ BB_VIDEO_PATH = env.env_string("BB_VIDEO_PATH", "./recorded_video")
 """
 The path where the vision service saves recorded video.
 """
+
+# =============== Web Server Constants
+BB_WEB_PUBLIC = env.env_string("BB_WEB_PUBLIC", "./webapp/dist")
+"""
+The path to the directory containing the web application's static files.
+The web server will serve files from this directory.
+"""
