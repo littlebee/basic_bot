@@ -37,7 +37,7 @@ def record_video(camera: Camera, duration: float) -> str:
     image_filename = os.path.join(videoPath, f"{base_file_name}.jpg")
     lg_image_filename = os.path.join(videoPath, f"{base_file_name}_lg.jpg")
 
-    # fourcc = cv2.VideoWriter_fourcc(*"avc1")  # type: ignore
+    # fourcc = cv2.VideoWriter_fourcc(*"avc1")
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")  # type: ignore
     writer = cv2.VideoWriter(
         raw_filename, fourcc, c.BB_CAMERA_FPS, (c.BB_VISION_WIDTH, c.BB_VISION_HEIGHT)
@@ -50,7 +50,7 @@ def record_video(camera: Camera, duration: float) -> str:
         if time.time() - tstart > duration:
             break
         frame = camera.get_frame()
-        writer.write(frame)  # type: ignore
+        writer.write(frame)
         if first_frame is None:
             first_frame = frame
 
@@ -59,11 +59,11 @@ def record_video(camera: Camera, duration: float) -> str:
     convert_video_to_h264(raw_filename, video_filename)
 
     log.info(f"Saving thumbnail image to {image_filename}")
-    resized_frame = cv2.resize(first_frame, (THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))  # type: ignore
+    resized_frame = cv2.resize(first_frame, (THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))
     cv2.imwrite(image_filename, resized_frame)
 
     log.info(f"Saving thumbnail image to {lg_image_filename}")
-    resized_frame = cv2.resize(first_frame, (LG_THUMBNAIL_WIDTH, LG_THUMBNAIL_HEIGHT))  # type: ignore
+    resized_frame = cv2.resize(first_frame, (LG_THUMBNAIL_WIDTH, LG_THUMBNAIL_HEIGHT))
     cv2.imwrite(lg_image_filename, resized_frame)
 
     return base_file_name
