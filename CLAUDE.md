@@ -67,7 +67,7 @@ bb_killall  # Kill all basic_bot processes
 The platform uses a microservices architecture where all services communicate through the `central_hub` via websockets:
 
 - **central_hub**: Ultra-lightweight pub/sub service (<5ms latency) that maintains shared state in memory
-- **web_server**: Serves the web interface (looks in `./webapp/dist` for static files)  
+- **web_server**: Serves the web interface (looks in `./webapp/dist` for static files)
 - **vision**: Computer vision service using OpenCV and TensorFlow Lite for object detection and video feed
 - **system_stats**: System monitoring and statistics collection
 - **motor_control_2w**: Two-wheel motor control service
@@ -97,13 +97,13 @@ All websocket communication uses JSON format:
 
 **Core Message Types:**
 - `getState`: Request current state (specific keys or all state)
-- `updateState`: Merge new state data (requires full data for each key)  
+- `updateState`: Merge new state data (requires full data for each key)
 - `subscribeState`: Subscribe to state key changes (use "*" for all keys)
 - `identity`: Register subsystem name and receive client IP info
 - `ping/pong`: Keepalive mechanism
 
 **Automatic State Keys:**
-- `hub_stats`: Tracks state update counts  
+- `hub_stats`: Tracks state update counts
 - `subsystem_stats`: Online status of connected subsystems
 
 ### Environment Variables
@@ -116,7 +116,7 @@ All websocket communication uses JSON format:
 ### Project Creation Flow
 The `bb_create` command creates a complete robotics project with:
 - Web application template (Vite-based React app with LCARS-styled UI)
-- Example service with counter functionality  
+- Example service with counter functionality
 - Shell scripts for build, test, start, stop, upload (via rsync/ssh)
 - Integration test examples
 - Example `basic_bot.yml` configuration file
@@ -168,3 +168,7 @@ Available via `basic_bot.debug` package:
 - **Type Checking**: MyPy with ignore_missing_imports enabled
 - **Python Version**: Requires Python ≥3.9
 - **Dependencies**: Managed in `pyproject.toml`, development deps in `requirements.txt`
+
+### Code guidelines (like suggestions)
+
+- when importing constants.py use `from commons import constants as c`. reason: I'm not a big fan of making person or AI type out `constants.` everywhere they need a constant.  I also don't see the value in forcing each individual const to be imported like `from common.constants import BB_WHATEVER`.  Import once as `c` and then just `c.BB_WHATEVER`.  This guidence may only apply to heavily used imports like constants.py
