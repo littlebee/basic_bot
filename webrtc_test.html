@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Basic Bot WebRTC Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        video { border: 1px solid #ccc; margin: 10px; }
+        button { padding: 10px; margin: 5px; }
+        .status { padding: 10px; background: #f0f0f0; margin: 10px 0; }
+        .error { background: #ffe6e6; color: #cc0000; }
+        .success { background: #e6ffe6; color: #006600; }
+    </style>
+</head>
+<body>
+    <h1>Basic Bot WebRTC Test</h1>
+    
+    <div>
+        <button onclick="checkWebRTCStatus()">Check WebRTC Status</button>
+        <button onclick="startWebRTC()">Start WebRTC Stream</button>
+        <button onclick="stopWebRTC()">Stop Stream</button>
+    </div>
+    
+    <div id="status" class="status">Ready to test WebRTC</div>
+    
+    <div>
+        <h3>WebRTC Video Stream:</h3>
+        <video id="webrtcVideo" width="640" height="480" autoplay controls></video>
+    </div>
+    
+    <div>
+        <h3>Traditional Video Feed (for comparison):</h3>
+        <img id="traditionalVideo" src="http://localhost:5801/video_feed" width="640" height="480" />
+    </div>
+    
+    <script>
+        let pc = null;
+        let status = document.getElementById('status');
+        
+        function updateStatus(message, isError = false) {
+            status.textContent = message;
+            status.className = isError ? 'status error' : 'status success';
+            console.log(message);
+        }
+        
+        async function checkWebRTCStatus() {
+            try {
+                const response = await fetch('http://localhost:5801/webrtc/status');
+                const data = await response.json();
+                
+                updateStatus(`WebRTC Available: ${data.webrtc_available}, Audio: ${data.audio_enabled}, Port: ${data.webrtc_port}`);
+                
+                if (data.webrtc_available) {
+                    console.log('WebRTC URL:', data.webrtc_url);
+                }
+            } catch (error) {
+                updateStatus(`Error checking status: ${error.message}`, true);
+            }
+        }
+        
+        async function startWebRTC() {
+            try {
+                updateStatus('Starting WebRTC connection...');
+                
+                // Create peer connection
+                pc = new RTCPeerConnection({
+                    iceServers: [
+                        { urls: 'stun:stun.l.google.com:19302' },
+                        { urls: 'stun:stun1.l.google.com:19302' }
+                    ]
+                });
+                
+                // Handle incoming stream
+                pc.ontrack = (event) => {
+                    console.log('Received track:', event.track.kind);
+                    const video = document.getElementById('webrtcVideo');
+                    video.srcObject = event.streams[0];
+                    updateStatus('WebRTC stream received and playing');
+                };
+                
+                // Handle connection state changes
+                pc.onconnectionstatechange = () => {
+                    console.log('Connection state:', pc.connectionState);
+                    updateStatus(`Connection state: ${pc.connectionState}`);
+                };
+                
+                // Handle ICE connection state changes
+                pc.oniceconnectionstatechange = () => {
+                    console.log('ICE connection state:', pc.iceConnectionState);
+                };
+                
+                // Create offer
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+                
+                // Send offer to server
+                const response = await fetch('http://localhost:5803/webrtc/offer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sdp: offer.sdp,
+                        type: offer.type
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const answer = await response.json();
+                
+                // Set remote description
+                await pc.setRemoteDescription(new RTCSessionDescription({
+                    sdp: answer.sdp,
+                    type: answer.type
+                }));
+                
+                updateStatus('WebRTC offer/answer exchange completed');
+                
+            } catch (error) {
+                updateStatus(`WebRTC error: ${error.message}`, true);
+                console.error('WebRTC error:', error);
+            }
+        }
+        
+        async function stopWebRTC() {
+            if (pc) {
+                pc.close();
+                pc = null;
+                
+                const video = document.getElementById('webrtcVideo');
+                video.srcObject = null;
+                
+                updateStatus('WebRTC connection stopped');
+            }
+        }
+        
+        // Auto-check status on load
+        window.onload = () => {
+            checkWebRTCStatus();
+        };
+    </script>
+</body>
+</html>

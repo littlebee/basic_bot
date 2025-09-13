@@ -96,6 +96,15 @@ default_camera_module = (
 # see other supported camera modules in basic_bot.commons.camera_*
 # for example, `BB_CAMERA_MODULE=basic_bot.commons.camera_picamera`
 BB_CAMERA_MODULE = env.env_string("BB_CAMERA_MODULE", default_camera_module)
+
+# =============== Audio service constants
+default_audio_module = (
+    "basic_bot.test_helpers.audio_mock"
+    if BB_ENV == "test"
+    else "basic_bot.commons.audio_pyaudio"
+)
+# see other supported audio modules in basic_bot.commons.audio_*
+BB_AUDIO_MODULE = env.env_string("BB_AUDIO_MODULE", default_audio_module)
 """
 default: "basic_bot.commons.camera_opencv" or
 "basic_bot.test_helpers.camera_mock" when BB_ENV=test
@@ -203,6 +212,16 @@ Set this to True to disable the recognition provider.
 BB_VIDEO_PATH = env.env_string("BB_VIDEO_PATH", "./recorded_video")
 """
 The path where the vision service saves recorded video.
+"""
+
+BB_WEBRTC_PORT = env.env_int("BB_WEBRTC_PORT", 5803 if BB_ENV == "test" else 5803)
+"""
+The port for WebRTC signaling server.
+"""
+
+BB_DISABLE_AUDIO_CAPTURE = env.env_bool("BB_DISABLE_AUDIO_CAPTURE", False)
+"""
+Set this to True to disable audio capture for WebRTC streaming.
 """
 
 # =============== Web Server Constants

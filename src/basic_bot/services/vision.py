@@ -77,7 +77,6 @@ import os
 import threading
 import time
 
-
 from flask import Flask, Response, abort, send_from_directory, request
 from flask_cors import CORS
 
@@ -88,8 +87,9 @@ from basic_bot.commons import constants as c, web_utils, log, messages, vid_util
 from basic_bot.commons.hub_state import HubState
 from basic_bot.commons.hub_state_monitor import HubStateMonitor
 from basic_bot.commons.base_camera import BaseCamera
+from basic_bot.commons.base_audio import BaseAudio
 from basic_bot.commons.recognition_provider import RecognitionProvider
-from typing import Generator
+from typing import Generator, Optional
 
 # TODO : maybe using HubStateMonitor as just a means of publishing
 # state updates (without any actual monitoring) should be composed
@@ -109,13 +109,23 @@ log.info(f"loading camera module: {camera_lib}")
 camera_module = importlib.import_module(camera_lib)
 camera = camera_module.Camera()  # type: ignore
 
+# Load audio capture module if not disabled
+audio_capture: Optional[BaseAudio] = None
+if not c.BB_DISABLE_AUDIO_CAPTURE:
+    try:
+        audio_lib = c.BB_AUDIO_MODULE
+        log.info(f"loading audio module: {audio_lib}")
+        audio_module = importlib.import_module(audio_lib)
+        audio_capture = audio_module.AudioCapture()  # type: ignore
+    except Exception as e:
+        log.error(f"Failed to load audio module: {e}")
+        log.info("Audio capture disabled due to initialization error")
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
-
 if not c.BB_DISABLE_RECOGNITION_PROVIDER:
     recognition = RecognitionProvider(camera)
-
 
 def gen_rgb_video(camera: BaseCamera) -> Generator[bytes, None, None]:
     """Video streaming generator function."""
@@ -125,14 +135,12 @@ def gen_rgb_video(camera: BaseCamera) -> Generator[bytes, None, None]:
         jpeg = cv2.imencode(".jpg", frame)[1].tobytes()  # type: ignore
         yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n")
 
-
 @app.route("/video_feed")
 def video_feed() -> Response:
     """Video streaming route. Put this in the src attribute of an img tag."""
     return Response(
         gen_rgb_video(camera), mimetype="multipart/x-mixed-replace; boundary=frame"
     )
-
 
 @app.route("/stats")
 def send_stats() -> Response:
@@ -149,7 +157,6 @@ def send_stats() -> Response:
         },
     )
 
-
 @app.route("/pause_recognition")
 def pause_recognition() -> Response:
     """Use a GET request to pause the recognition provider."""
@@ -158,7 +165,6 @@ def pause_recognition() -> Response:
 
     recognition.pause()
     return web_utils.respond_ok(app)
-
 
 @app.route("/resume_recognition")
 def resume_recognition() -> Response:
@@ -169,10 +175,8 @@ def resume_recognition() -> Response:
     recognition.resume()
     return web_utils.respond_ok(app)
 
-
 last_recording_started_at = time.time()
 last_record_duration: float = 0
-
 
 @app.route("/record_video")
 def record_video() -> Response:
@@ -189,7 +193,6 @@ def record_video() -> Response:
 
     return web_utils.respond_ok(app)
 
-
 def record_video_thread(duration: float) -> None:
     try:
         asyncio.run(
@@ -197,7 +200,15 @@ def record_video_thread(duration: float) -> None:
                 hub.connected_socket, {"vision": {"recording": True}}
             )
         )
-        vid_utils.record_video(camera, duration)
+
+        # Use audio/video recording if audio capture is available
+        if audio_capture is not None:
+            log.info("Recording video with audio")
+            vid_utils.record_video_with_audio(camera, audio_capture, duration)
+        else:
+            log.info("Recording video only (no audio)")
+            vid_utils.record_video(camera, duration)
+
     except Exception as e:
         log.error(f"error recording video: {e}")
     finally:
@@ -206,7 +217,6 @@ def record_video_thread(duration: float) -> None:
                 hub.connected_socket, {"vision": {"recording": False}}
             )
         )
-
 
 @app.route("/recorded_video")
 def recorded_video() -> Response:
@@ -219,7 +229,6 @@ def recorded_video() -> Response:
     """
     return web_utils.json_response(app, vid_utils.get_recorded_videos())
 
-
 @app.route("/recorded_video/<filename>")
 def send_static_js(filename: str) -> Response:
     """
@@ -229,11 +238,33 @@ def send_static_js(filename: str) -> Response:
     log.info(f"sending recorded video file: {filename} from {video_path}")
     return send_from_directory(video_path, filename)
 
-
 @app.route("/ping")
 def ping() -> Response:
     return web_utils.respond_ok(app, "pong")
 
+@app.route("/webrtc/status")
+def webrtc_status() -> Response:
+    """Return WebRTC capability status."""
+    try:
+        # Check if WebRTC dependencies are available
+        from basic_bot.commons.webrtc_signaling import AIORTC_AVAILABLE
+
+        status = {
+            "webrtc_available": AIORTC_AVAILABLE,
+            "audio_enabled": audio_capture is not None,
+            "webrtc_port": c.BB_WEBRTC_PORT
+        }
+
+        if AIORTC_AVAILABLE:
+            status["webrtc_url"] = f"http://{c.BB_VISION_HOST}:{c.BB_WEBRTC_PORT}"
+
+        return web_utils.json_response(app, status)
+
+    except ImportError:
+        return web_utils.json_response(app, {
+            "webrtc_available": False,
+            "error": "WebRTC dependencies not available"
+        })
 
 class webapp:
     def thread(self) -> None:
@@ -246,11 +277,63 @@ class webapp:
         thread.setDaemon(False)
         thread.start()
 
-
 def main() -> None:
     flask_app = webapp()
     flask_app.start_thread()
 
+    # Start WebRTC signaling server if available
+    try:
+        from basic_bot.commons.webrtc_signaling import create_signaling_app, cleanup_app, AIORTC_AVAILABLE
+        from aiohttp import web as aio_web
+
+        if AIORTC_AVAILABLE:
+            log.info("Starting WebRTC signaling server")
+
+            # Create WebRTC signaling app
+            webrtc_app = create_signaling_app(camera, audio_capture)
+
+            def start_webrtc_server():
+                """Start the WebRTC signaling server in a separate thread."""
+                import asyncio
+
+                async def run_server():
+                    runner = aio_web.AppRunner(webrtc_app)
+                    await runner.setup()
+
+                    site = aio_web.TCPSite(runner, host="0.0.0.0", port=c.BB_WEBRTC_PORT)
+                    await site.start()
+
+                    log.info(f"WebRTC signaling server started on port {c.BB_WEBRTC_PORT}")
+
+                    # Keep the server running
+                    try:
+                        while True:
+                            await asyncio.sleep(1)
+                    except KeyboardInterrupt:
+                        log.info("Shutting down WebRTC signaling server")
+                    finally:
+                        await cleanup_app(webrtc_app)
+                        await runner.cleanup()
+
+                # Create new event loop for this thread
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+
+                try:
+                    loop.run_until_complete(run_server())
+                finally:
+                    loop.close()
+
+            # Start WebRTC server in background thread
+            webrtc_thread = threading.Thread(target=start_webrtc_server)
+            webrtc_thread.daemon = True
+            webrtc_thread.start()
+
+        else:
+            log.warning("WebRTC dependencies not available. WebRTC streaming disabled.")
+
+    except ImportError as e:
+        log.warning(f"WebRTC not available: {e}")
 
 if __name__ == "__main__":
     main()
