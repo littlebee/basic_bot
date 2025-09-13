@@ -95,4 +95,6 @@ class Camera(BaseCamera):
                     Camera.img_is_none_messaged = True
                 continue
 
-            yield img
+            # Encode frame to JPEG bytes for compatibility with BaseCamera interface
+            _, jpeg = cv2.imencode('.jpg', img)
+            yield jpeg.tobytes()

@@ -51,22 +51,28 @@ def record_video(camera: Camera, duration: float) -> str:
     while True:
         if time.time() - tstart > duration:
             break
-        frame = camera.get_frame()
-        writer.write(frame)
-        if first_frame is None:
-            first_frame = frame
+        frame_bytes = camera.get_frame()
+        if frame_bytes is not None:
+            # Decode JPEG bytes to numpy array for VideoWriter
+            np_array = np.frombuffer(frame_bytes, np.uint8)
+            frame = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+            if frame is not None:
+                writer.write(frame)
+                if first_frame is None:
+                    first_frame = frame
 
     writer.release()
 
     convert_video_to_h264(raw_filename, video_filename)
 
-    log.info(f"Saving thumbnail image to {image_filename}")
-    resized_frame = cv2.resize(first_frame, (THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))
-    cv2.imwrite(image_filename, resized_frame)
+    if first_frame is not None:
+        log.info(f"Saving thumbnail image to {image_filename}")
+        resized_frame = cv2.resize(first_frame, (THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))
+        cv2.imwrite(image_filename, resized_frame)
 
-    log.info(f"Saving thumbnail image to {lg_image_filename}")
-    resized_frame = cv2.resize(first_frame, (LG_THUMBNAIL_WIDTH, LG_THUMBNAIL_HEIGHT))
-    cv2.imwrite(lg_image_filename, resized_frame)
+        log.info(f"Saving thumbnail image to {lg_image_filename}")
+        resized_frame = cv2.resize(first_frame, (LG_THUMBNAIL_WIDTH, LG_THUMBNAIL_HEIGHT))
+        cv2.imwrite(lg_image_filename, resized_frame)
 
     return base_file_name
 

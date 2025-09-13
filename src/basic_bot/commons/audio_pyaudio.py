@@ -68,7 +68,7 @@ class AudioCapture(BaseAudio):
                 rate=sample_rate,
                 input=True,
                 frames_per_buffer=chunk_size,
-                input_device_index=default_device['index'] if default_device else None
+                input_device_index=int(default_device['index']) if default_device else None
             )
 
             logger.info("Audio stream opened successfully")

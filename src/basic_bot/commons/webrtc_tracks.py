@@ -69,17 +69,20 @@ class CameraVideoStreamTrack(VideoStreamTrack):
             else:
                 # Convert JPEG bytes to numpy array
                 np_array = np.frombuffer(frame_data, np.uint8)
-                frame = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+                decoded_frame = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
 
-                if frame is None:
+                if decoded_frame is None:
                     logger.error("Failed to decode camera frame")
                     frame = np.zeros((480, 640, 3), dtype=np.uint8)
+                else:
+                    # Ensure proper dtype for WebRTC
+                    frame = decoded_frame.astype(np.uint8)
 
             # Convert BGR (OpenCV) to RGB (WebRTC standard)
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-            # Create VideoFrame for aiortc
-            av_frame = VideoFrame.from_ndarray(frame_rgb, format="rgb24")
+            # Create VideoFrame for aiortc - ensure proper dtype
+            av_frame = VideoFrame.from_ndarray(frame_rgb.astype(np.uint8), format="rgb24")
 
             # Set timing information
             av_frame.pts = self.frame_count
