@@ -214,14 +214,25 @@ def create_signaling_app(camera: BaseCamera, audio_capture: Optional[BaseAudio] 
 
     app = web.Application()
 
-    # Add CORS headers
-    async def add_cors_headers(request, response):
+    # Add CORS middleware
+    @web.middleware
+    async def cors_handler(request, handler):
+        if request.method == "OPTIONS":
+            # Handle preflight request
+            response = web.Response()
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
+            response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+            return response
+
+        # Handle actual request
+        response = await handler(request)
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
         response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
         return response
 
-    app.middlewares.append(add_cors_headers)
+    app.middlewares.append(cors_handler)
 
     # WebRTC signaling routes
     app.router.add_post("/webrtc/offer", signaling_server.handle_offer)
