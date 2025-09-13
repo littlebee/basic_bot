@@ -9,46 +9,49 @@
         .status { padding: 10px; background: #f0f0f0; margin: 10px 0; }
         .error { background: #ffe6e6; color: #cc0000; }
         .success { background: #e6ffe6; color: #006600; }
+    </head>
     </style>
-</head>
 <body>
     <h1>Basic Bot WebRTC Test</h1>
-    
+
     <div>
         <button onclick="checkWebRTCStatus()">Check WebRTC Status</button>
         <button onclick="startWebRTC()">Start WebRTC Stream</button>
         <button onclick="stopWebRTC()">Stop Stream</button>
     </div>
-    
+
     <div id="status" class="status">Ready to test WebRTC</div>
-    
+
     <div>
         <h3>WebRTC Video Stream:</h3>
         <video id="webrtcVideo" width="640" height="480" autoplay controls></video>
     </div>
-    
+
     <div>
         <h3>Traditional Video Feed (for comparison):</h3>
-        <img id="traditionalVideo" src="http://localhost:5801/video_feed" width="640" height="480" />
+        <img id="traditionalVideo" width="640" height="480" />
+        <p><em>Note: Traditional feed uses MJPEG streaming for comparison with WebRTC latency</em></p>
     </div>
-    
+
     <script>
         let pc = null;
         let status = document.getElementById('status');
-        
+
+        let host = window.location.hostname
+
         function updateStatus(message, isError = false) {
             status.textContent = message;
             status.className = isError ? 'status error' : 'status success';
             console.log(message);
         }
-        
+
         async function checkWebRTCStatus() {
             try {
-                const response = await fetch('http://localhost:5801/webrtc/status');
+                const response = await fetch(`http://${host}:5801/webrtc/status`);
                 const data = await response.json();
-                
+
                 updateStatus(`WebRTC Available: ${data.webrtc_available}, Audio: ${data.audio_enabled}, Port: ${data.webrtc_port}`);
-                
+
                 if (data.webrtc_available) {
                     console.log('WebRTC URL:', data.webrtc_url);
                 }
@@ -56,11 +59,11 @@
                 updateStatus(`Error checking status: ${error.message}`, true);
             }
         }
-        
+
         async function startWebRTC() {
             try {
                 updateStatus('Starting WebRTC connection...');
-                
+
                 // Create peer connection
                 pc = new RTCPeerConnection({
                     iceServers: [
@@ -68,7 +71,7 @@
                         { urls: 'stun:stun1.l.google.com:19302' }
                     ]
                 });
-                
+
                 // Handle incoming stream
                 pc.ontrack = (event) => {
                     console.log('Received track:', event.track.kind);
@@ -76,24 +79,29 @@
                     video.srcObject = event.streams[0];
                     updateStatus('WebRTC stream received and playing');
                 };
-                
+
                 // Handle connection state changes
                 pc.onconnectionstatechange = () => {
                     console.log('Connection state:', pc.connectionState);
                     updateStatus(`Connection state: ${pc.connectionState}`);
                 };
-                
+
                 // Handle ICE connection state changes
                 pc.oniceconnectionstatechange = () => {
                     console.log('ICE connection state:', pc.iceConnectionState);
                 };
-                
+
+                // WORKAROUND FOR AIORTC BUG #1043:
+                // Add transceiver for video to avoid direction issues
+                pc.addTransceiver('video', { direction: 'recvonly' });
+                console.log('Added video transceiver with recvonly direction');
+
                 // Create offer
                 const offer = await pc.createOffer();
                 await pc.setLocalDescription(offer);
-                
+
                 // Send offer to server
-                const response = await fetch('http://localhost:5803/webrtc/offer', {
+                const response = await fetch(`http://${host}:5803/webrtc/offer`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -101,42 +109,68 @@
                         type: offer.type
                     })
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
-                
+
                 const answer = await response.json();
-                
+
                 // Set remote description
                 await pc.setRemoteDescription(new RTCSessionDescription({
                     sdp: answer.sdp,
                     type: answer.type
                 }));
-                
+
                 updateStatus('WebRTC offer/answer exchange completed');
-                
+
             } catch (error) {
                 updateStatus(`WebRTC error: ${error.message}`, true);
                 console.error('WebRTC error:', error);
             }
         }
-        
+
         async function stopWebRTC() {
             if (pc) {
+                // WORKAROUND FOR AIORTC BUG #1043:
+                // Clean up senders to avoid issues
+                pc.getSenders().forEach(function(sender) {
+                    if (sender.track) {
+                        sender.track.stop();
+                    }
+                });
+
                 pc.close();
                 pc = null;
-                
+
                 const video = document.getElementById('webrtcVideo');
                 video.srcObject = null;
-                
+
                 updateStatus('WebRTC connection stopped');
             }
         }
-        
+
+        // Load traditional video feed with CORS handling
+        function loadTraditionalVideo() {
+            const img = document.getElementById('traditionalVideo');
+            // Set crossOrigin attribute to handle CORS
+            img.crossOrigin = 'anonymous';
+            img.src = `http://${host}:5801/video_feed`;
+
+            img.onerror = (error) => {
+                console.log('Traditional video feed error:', error);
+                img.alt = 'Traditional video feed unavailable (CORS or connection issue)';
+            };
+
+            img.onload = () => {
+                console.log('Traditional video feed loaded successfully');
+            };
+        }
+
         // Auto-check status on load
         window.onload = () => {
             checkWebRTCStatus();
+            loadTraditionalVideo();
         };
     </script>
 </body>

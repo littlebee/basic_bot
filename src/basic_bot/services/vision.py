@@ -88,7 +88,10 @@ from basic_bot.commons.hub_state import HubState
 from basic_bot.commons.hub_state_monitor import HubStateMonitor
 from basic_bot.commons.base_camera import BaseCamera
 from basic_bot.commons.base_audio import BaseAudio
-from basic_bot.commons.recognition_provider import RecognitionProvider
+
+if not c.BB_DISABLE_RECOGNITION_PROVIDER:
+    from basic_bot.commons.recognition_provider import RecognitionProvider
+
 from typing import Generator, Optional, Any
 
 # TODO : maybe using HubStateMonitor as just a means of publishing
@@ -264,7 +267,7 @@ def webrtc_status() -> Response:
         status: dict[str, Any] = {
             "webrtc_available": AIORTC_AVAILABLE,
             "audio_enabled": audio_capture is not None,
-            "webrtc_port": c.BB_WEBRTC_PORT
+            "webrtc_port": c.BB_WEBRTC_PORT,
         }
 
         if AIORTC_AVAILABLE:
@@ -273,10 +276,10 @@ def webrtc_status() -> Response:
         return web_utils.json_response(app, status)
 
     except ImportError:
-        return web_utils.json_response(app, {
-            "webrtc_available": False,
-            "error": "WebRTC dependencies not available"
-        })
+        return web_utils.json_response(
+            app,
+            {"webrtc_available": False, "error": "WebRTC dependencies not available"},
+        )
 
 
 class webapp:
@@ -297,7 +300,11 @@ def main() -> None:
 
     # Start WebRTC signaling server if available
     try:
-        from basic_bot.commons.webrtc_signaling import create_signaling_app, cleanup_app, AIORTC_AVAILABLE
+        from basic_bot.commons.webrtc_signaling import (
+            create_signaling_app,
+            cleanup_app,
+            AIORTC_AVAILABLE,
+        )
         from aiohttp import web as aio_web
 
         if AIORTC_AVAILABLE:
@@ -314,10 +321,14 @@ def main() -> None:
                     runner = aio_web.AppRunner(webrtc_app)
                     await runner.setup()
 
-                    site = aio_web.TCPSite(runner, host="0.0.0.0", port=c.BB_WEBRTC_PORT)
+                    site = aio_web.TCPSite(
+                        runner, host="0.0.0.0", port=c.BB_WEBRTC_PORT
+                    )
                     await site.start()
 
-                    log.info(f"WebRTC signaling server started on port {c.BB_WEBRTC_PORT}")
+                    log.info(
+                        f"WebRTC signaling server started on port {c.BB_WEBRTC_PORT}"
+                    )
 
                     # Keep the server running
                     try:
