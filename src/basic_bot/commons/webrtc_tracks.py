@@ -17,17 +17,20 @@ from basic_bot.commons.base_audio import BaseAudio
 logger = logging.getLogger(__name__)
 
 try:
-    from aiortc import VideoStreamTrack, AudioStreamTrack
-    from av import VideoFrame, AudioFrame
+    from aiortc import VideoStreamTrack, AudioStreamTrack  # type: ignore
+    from av import VideoFrame, AudioFrame  # type: ignore
     AIORTC_AVAILABLE = True
 except ImportError:
     AIORTC_AVAILABLE = False
     logger.warning("aiortc not available. WebRTC streaming will not work.")
     # Create dummy classes to prevent import errors
-    class VideoStreamTrack:
+
+    class VideoStreamTrack:  # type: ignore
         pass
-    class AudioStreamTrack:
+
+    class AudioStreamTrack:  # type: ignore
         pass
+
 
 class CameraVideoStreamTrack(VideoStreamTrack):
     """
@@ -96,6 +99,7 @@ class CameraVideoStreamTrack(VideoStreamTrack):
             self.frame_count += 1
             return av_frame
 
+
 class AudioCaptureStreamTrack(AudioStreamTrack):
     """
     WebRTC audio track that streams audio from basic_bot audio capture system.
@@ -116,7 +120,7 @@ class AudioCaptureStreamTrack(AudioStreamTrack):
         self.chunk_size = audio_capture.get_chunk_size()
 
         logger.info(f"AudioCaptureStreamTrack initialized: {self.sample_rate}Hz, "
-                   f"{self.channels} channel(s), chunk size {self.chunk_size}")
+                    f"{self.channels} channel(s), chunk size {self.chunk_size}")
 
     async def recv(self) -> AudioFrame:
         """

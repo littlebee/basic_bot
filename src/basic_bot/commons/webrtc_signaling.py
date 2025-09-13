@@ -31,6 +31,7 @@ except ImportError:
     AIORTC_AVAILABLE = False
     logger.error("aiortc not available. WebRTC signaling will not work.")
 
+
 class WebRTCSignalingServer:
     """
     WebRTC signaling server that handles peer connection establishment.
@@ -109,7 +110,7 @@ class WebRTCSignalingServer:
 
             # Add audio track if available and not disabled
             if (self.audio_capture is not None and
-                not c.BB_DISABLE_AUDIO_CAPTURE):
+                    not c.BB_DISABLE_AUDIO_CAPTURE):
                 audio_track = AudioCaptureStreamTrack(self.audio_capture)
                 pc.addTrack(audio_track)
                 logger.info("Added audio track to peer connection")
@@ -194,6 +195,7 @@ class WebRTCSignalingServer:
         self.websockets.clear()
         logger.info("All WebRTC connections cleaned up")
 
+
 def create_signaling_app(camera: BaseCamera, audio_capture: Optional[BaseAudio] = None) -> web.Application:
     """
     Create the aiohttp application for WebRTC signaling.
@@ -235,6 +237,7 @@ def create_signaling_app(camera: BaseCamera, audio_capture: Optional[BaseAudio] 
     app['signaling_server'] = signaling_server
 
     return app
+
 
 async def cleanup_app(app: web.Application) -> None:
     """Clean up application resources."""

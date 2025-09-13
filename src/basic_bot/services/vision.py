@@ -89,7 +89,7 @@ from basic_bot.commons.hub_state_monitor import HubStateMonitor
 from basic_bot.commons.base_camera import BaseCamera
 from basic_bot.commons.base_audio import BaseAudio
 from basic_bot.commons.recognition_provider import RecognitionProvider
-from typing import Generator, Optional
+from typing import Generator, Optional, Any
 
 # TODO : maybe using HubStateMonitor as just a means of publishing
 # state updates (without any actual monitoring) should be composed
@@ -127,6 +127,7 @@ CORS(app, supports_credentials=True)
 if not c.BB_DISABLE_RECOGNITION_PROVIDER:
     recognition = RecognitionProvider(camera)
 
+
 def gen_rgb_video(camera: BaseCamera) -> Generator[bytes, None, None]:
     """Video streaming generator function."""
     while True:
@@ -135,12 +136,14 @@ def gen_rgb_video(camera: BaseCamera) -> Generator[bytes, None, None]:
         jpeg = cv2.imencode(".jpg", frame)[1].tobytes()  # type: ignore
         yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n")
 
+
 @app.route("/video_feed")
 def video_feed() -> Response:
     """Video streaming route. Put this in the src attribute of an img tag."""
     return Response(
         gen_rgb_video(camera), mimetype="multipart/x-mixed-replace; boundary=frame"
     )
+
 
 @app.route("/stats")
 def send_stats() -> Response:
@@ -157,6 +160,7 @@ def send_stats() -> Response:
         },
     )
 
+
 @app.route("/pause_recognition")
 def pause_recognition() -> Response:
     """Use a GET request to pause the recognition provider."""
@@ -165,6 +169,7 @@ def pause_recognition() -> Response:
 
     recognition.pause()
     return web_utils.respond_ok(app)
+
 
 @app.route("/resume_recognition")
 def resume_recognition() -> Response:
@@ -175,8 +180,10 @@ def resume_recognition() -> Response:
     recognition.resume()
     return web_utils.respond_ok(app)
 
+
 last_recording_started_at = time.time()
 last_record_duration: float = 0
+
 
 @app.route("/record_video")
 def record_video() -> Response:
@@ -192,6 +199,7 @@ def record_video() -> Response:
     threading.Thread(target=record_video_thread, args=(duration,)).start()
 
     return web_utils.respond_ok(app)
+
 
 def record_video_thread(duration: float) -> None:
     try:
@@ -218,6 +226,7 @@ def record_video_thread(duration: float) -> None:
             )
         )
 
+
 @app.route("/recorded_video")
 def recorded_video() -> Response:
     """
@@ -229,6 +238,7 @@ def recorded_video() -> Response:
     """
     return web_utils.json_response(app, vid_utils.get_recorded_videos())
 
+
 @app.route("/recorded_video/<filename>")
 def send_static_js(filename: str) -> Response:
     """
@@ -238,9 +248,11 @@ def send_static_js(filename: str) -> Response:
     log.info(f"sending recorded video file: {filename} from {video_path}")
     return send_from_directory(video_path, filename)
 
+
 @app.route("/ping")
 def ping() -> Response:
     return web_utils.respond_ok(app, "pong")
+
 
 @app.route("/webrtc/status")
 def webrtc_status() -> Response:
@@ -249,7 +261,7 @@ def webrtc_status() -> Response:
         # Check if WebRTC dependencies are available
         from basic_bot.commons.webrtc_signaling import AIORTC_AVAILABLE
 
-        status = {
+        status: dict[str, Any] = {
             "webrtc_available": AIORTC_AVAILABLE,
             "audio_enabled": audio_capture is not None,
             "webrtc_port": c.BB_WEBRTC_PORT
@@ -266,6 +278,7 @@ def webrtc_status() -> Response:
             "error": "WebRTC dependencies not available"
         })
 
+
 class webapp:
     def thread(self) -> None:
         log.info(f"starting vision webhost on {c.BB_VISION_PORT}")
@@ -276,6 +289,7 @@ class webapp:
         thread = threading.Thread(target=self.thread)
         thread.setDaemon(False)
         thread.start()
+
 
 def main() -> None:
     flask_app = webapp()
@@ -330,10 +344,11 @@ def main() -> None:
             webrtc_thread.start()
 
         else:
-            log.warning("WebRTC dependencies not available. WebRTC streaming disabled.")
+            log.info("WebRTC dependencies not available. WebRTC streaming disabled.")
 
     except ImportError as e:
-        log.warning(f"WebRTC not available: {e}")
+        log.info(f"WebRTC not available: {e}")
+
 
 if __name__ == "__main__":
     main()

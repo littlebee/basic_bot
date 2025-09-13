@@ -14,6 +14,7 @@ from basic_bot.commons.base_audio import BaseAudio
 
 logger = logging.getLogger(__name__)
 
+
 class AudioCapture(BaseAudio):
     """Mock implementation of audio capture that generates test audio signals."""
 
@@ -83,6 +84,7 @@ class AudioCapture(BaseAudio):
                 break
 
         logger.info("Mock audio capture stopped")
+
 
 # Alias for consistency with camera module pattern
 Audio = AudioCapture

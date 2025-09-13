@@ -20,6 +20,7 @@ except ImportError:
     PYAUDIO_AVAILABLE = False
     logger.warning("PyAudio not available. Audio capture will not work.")
 
+
 class AudioCapture(BaseAudio):
     """PyAudio implementation of audio capture."""
 
@@ -111,6 +112,7 @@ class AudioCapture(BaseAudio):
                     logger.info("PyAudio terminated")
                 except Exception as e:
                     logger.error(f"Error terminating PyAudio: {e}")
+
 
 # Alias for consistency with camera module pattern
 Audio = AudioCapture

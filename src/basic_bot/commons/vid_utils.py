@@ -18,6 +18,7 @@ THUMBNAIL_HEIGHT = 60
 LG_THUMBNAIL_WIDTH = 320
 LG_THUMBNAIL_HEIGHT = 240
 
+
 def record_video(camera: Camera, duration: float) -> str:
     """
     Record a video to BB_VIDEO_PATH for a specified number of seconds.
@@ -69,6 +70,7 @@ def record_video(camera: Camera, duration: float) -> str:
 
     return base_file_name
 
+
 def convert_video_to_h264(video_file_in: str, video_file_out: str) -> None:
     """
     Sse system installed ffmpeg to convert video to h264.  This was needed to make the
@@ -97,6 +99,7 @@ def convert_video_to_h264(video_file_in: str, video_file_out: str) -> None:
         os.remove(video_file_in)
     except subprocess.CalledProcessError as e:
         log.error(f"Error converting video: {e.stderr}")
+
 
 def record_video_with_audio(camera: BaseCamera, audio_capture: BaseAudio, duration: float) -> str:
     """
@@ -228,6 +231,7 @@ def record_video_with_audio(camera: BaseCamera, audio_capture: BaseAudio, durati
         if process.poll() is None:  # Process still running
             process.terminate()
         raise
+
 
 def get_recorded_videos() -> list[str]:
     """

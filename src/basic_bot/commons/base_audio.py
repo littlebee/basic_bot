@@ -23,6 +23,7 @@ except ImportError:
     except ImportError:
         from _thread import get_ident
 
+
 class AudioEvent(object):
     """
     An Event-like class that signals all active clients when a new audio frame is
@@ -66,6 +67,7 @@ class AudioEvent(object):
     def clear(self) -> None:
         """Invoked from each client's thread after a frame was processed."""
         self.events[get_ident()][0].clear()
+
 
 class BaseAudio(object):
     """
