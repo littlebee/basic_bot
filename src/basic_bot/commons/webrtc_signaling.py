@@ -100,30 +100,82 @@ class WebRTCSignalingServer:
 
             logger.info("Received WebRTC offer from client")
 
+            # Validate camera object before proceeding
+            if self.camera is None:
+                logger.error("Camera object is None - cannot create video track")
+                return web.json_response(
+                    {"error": "Camera not available"},
+                    status=500
+                )
+
             # Create peer connection
             pc = await self.create_peer_connection()
+            if pc is None:
+                logger.error("Failed to create peer connection")
+                return web.json_response(
+                    {"error": "Failed to create peer connection"},
+                    status=500
+                )
 
-            # Add video track
-            video_track = CameraVideoStreamTrack(self.camera)
-            pc.addTrack(video_track)
-            logger.info("Added video track to peer connection")
+            # Add video track with error handling
+            try:
+                logger.debug(f"Creating video track with camera: {type(self.camera)}")
+                video_track = CameraVideoStreamTrack(self.camera)
+                if video_track is None:
+                    raise ValueError("CameraVideoStreamTrack returned None")
+
+                pc.addTrack(video_track)
+                logger.info("Added video track to peer connection")
+            except Exception as video_error:
+                logger.error(f"Failed to create/add video track: {video_error}")
+                await self.cleanup_peer_connection(pc)
+                return web.json_response(
+                    {"error": f"Video track creation failed: {str(video_error)}"},
+                    status=500
+                )
 
             # Add audio track if available and not disabled
             if (self.audio_capture is not None and
                     not c.BB_DISABLE_AUDIO_CAPTURE):
-                audio_track = AudioCaptureStreamTrack(self.audio_capture)
-                pc.addTrack(audio_track)
-                logger.info("Added audio track to peer connection")
+                try:
+                    logger.debug(f"Creating audio track with audio_capture: {type(self.audio_capture)}")
+                    audio_track = AudioCaptureStreamTrack(self.audio_capture)
+                    if audio_track is None:
+                        raise ValueError("AudioCaptureStreamTrack returned None")
+
+                    pc.addTrack(audio_track)
+                    logger.info("Added audio track to peer connection")
+                except Exception as audio_error:
+                    logger.warning(f"Failed to create/add audio track (continuing without audio): {audio_error}")
+                    # Continue without audio track - don't fail the whole connection
 
             # Set remote description (client's offer)
-            offer = RTCSessionDescription(offer_sdp, offer_type)
-            await pc.setRemoteDescription(offer)
+            try:
+                offer = RTCSessionDescription(offer_sdp, offer_type)
+                await pc.setRemoteDescription(offer)
+                logger.debug("Set remote description successfully")
+            except Exception as remote_desc_error:
+                logger.error(f"Failed to set remote description: {remote_desc_error}")
+                await self.cleanup_peer_connection(pc)
+                return web.json_response(
+                    {"error": f"Failed to set remote description: {str(remote_desc_error)}"},
+                    status=500
+                )
 
             # Create answer
-            answer = await pc.createAnswer()
-            await pc.setLocalDescription(answer)
+            try:
+                answer = await pc.createAnswer()
+                await pc.setLocalDescription(answer)
+                logger.debug("Created and set local description successfully")
+            except Exception as answer_error:
+                logger.error(f"Failed to create answer: {answer_error}")
+                await self.cleanup_peer_connection(pc)
+                return web.json_response(
+                    {"error": f"Failed to create answer: {str(answer_error)}"},
+                    status=500
+                )
 
-            logger.info("Created WebRTC answer")
+            logger.info("Created WebRTC answer successfully")
 
             return web.json_response({
                 "sdp": pc.localDescription.sdp,
@@ -131,7 +183,10 @@ class WebRTCSignalingServer:
             })
 
         except Exception as e:
+            import traceback
+            error_traceback = traceback.format_exc()
             logger.error(f"Error handling WebRTC offer: {e}")
+            logger.error(f"Full traceback: {error_traceback}")
             return web.json_response(
                 {"error": str(e)},
                 status=500
