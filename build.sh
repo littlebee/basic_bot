@@ -17,7 +17,8 @@ echo "Linting..."
 python -m flake8 src/basic_bot
 
 echo "Running mypy (typechecker): $(python -m mypy --version)"
-python -m mypy src/basic_bot
+echo "Using strict type checking configuration (.mypy.ini)"
+python -m mypy --no-incremental --show-error-codes src/basic_bot
 
 echo "Building pip package"
 python -m build
