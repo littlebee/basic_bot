@@ -73,8 +73,10 @@ Thank you, @adeept and @miguelgrinberg!
 """
 import asyncio
 import importlib
+import logging
 import os
 import threading
+import sys
 import time
 
 
@@ -88,8 +90,20 @@ from basic_bot.commons import constants as c, web_utils, log, messages, vid_util
 from basic_bot.commons.hub_state import HubState
 from basic_bot.commons.hub_state_monitor import HubStateMonitor
 from basic_bot.commons.base_camera import BaseCamera
-from basic_bot.commons.recognition_provider import RecognitionProvider
+
+if not c.BB_DISABLE_RECOGNITION_PROVIDER:
+    from basic_bot.commons.recognition_provider import RecognitionProvider
+
 from typing import Generator
+
+# TODO : at least remove log level debug here.  this is mainly for debugging
+#  WebRTC and aiortc
+logging.basicConfig(
+    # level=logging.DEBUG,  # Set the level to DEBUG for maximum verbosity
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
+
 
 # TODO : maybe using HubStateMonitor as just a means of publishing
 # state updates (without any actual monitoring) should be composed
