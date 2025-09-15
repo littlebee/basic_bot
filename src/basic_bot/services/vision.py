@@ -80,8 +80,7 @@ import threading
 import sys
 import time
 
-from aiohttp import web
-
+from aiohttp import web, MultipartWriter, client_exceptions
 import cv2
 
 from basic_bot.commons import constants as c, log, messages, vid_utils
@@ -94,7 +93,8 @@ from basic_bot.commons.webrtc_offer import WebrtcPeers
 if not c.BB_DISABLE_RECOGNITION_PROVIDER:
     from basic_bot.commons.recognition_provider import RecognitionProvider
 
-from typing import Generator
+# used to shutdown MJPEG streamers
+is_stopping = False
 
 # this is mainly for debugging WebRTC and aiortc
 logging.basicConfig(
@@ -132,13 +132,32 @@ if not c.BB_DISABLE_RECOGNITION_PROVIDER:
     recognition = RecognitionProvider(camera)
 
 
-def gen_rgb_video(camera: BaseCamera) -> Generator[bytes, None, None]:
-    """Video streaming generator function."""
-    while True:
+#  see https://docs.aiohttp.org/en/stable/multipart.html
+async def stream_mjpeg_video(request, camera: BaseCamera):
+    """MJPEG video streaming function."""
+    boundary_marker = "--frame"
+    response = web.StreamResponse(
+        status=200,
+        reason="OK",
+        headers={
+            "Content-Type": f"multipart/x-mixed-replace;boundary={boundary_marker}"
+        },
+    )
+    await response.prepare(request)
+    while not is_stopping:
         frame = camera.get_frame()
-
         jpeg = cv2.imencode(".jpg", frame)[1].tobytes()  # type: ignore
-        yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n")
+        with MultipartWriter("image/jpeg", boundary=boundary_marker) as mpwriter:
+            mpwriter.append(jpeg, {"Content-Type": "image/jpeg"})
+            try:
+                await mpwriter.write(response, close_boundary=False)
+            except client_exceptions.ClientConnectionResetError:
+                await mpwriter.close()
+                break
+        await response.drain()
+        await asyncio.sleep(1 / 30)
+
+    return response
 
 
 # TODO : maybe move these to aiortc web utils file (modeled after commons/web_utils)
@@ -168,11 +187,10 @@ def respond_file(path, filename, content_type=None):
 
 
 # @app.route("/video_feed")
-# def video_feed() -> Response:
-#     """Video streaming route. Put this in the src attribute of an img tag."""
-#     return web.Response(
-#         gen_rgb_video(camera), mimetype="multipart/x-mixed-replace; boundary=frame"
-#     )
+async def video_feed(request):
+    """Video streaming route. Put this in the src attribute of an img tag."""
+    # asyncio.create_task(stream_mjpeg_video(request, camera))
+    return await stream_mjpeg_video(request, camera)
 
 
 # @app.route("/stats")
@@ -287,6 +305,8 @@ def get_webrtc_test_client(_request):
 
 
 async def on_shutdown(_app):
+    global is_stopping
+    is_stopping = True  # stop all MJPEG streams
     await webrtc_peers.close_all_connections()
     camera.stop()
     hub.stop()
@@ -304,6 +324,8 @@ def main() -> None:
     app.router.add_get("/recorded_video", recorded_video)
     app.router.add_get("/recorded_video/{filename}", get_recorded_video_file)
     app.router.add_post("/offer", webrtc_peers.respond_to_offer)
+    # this is the older and deprecated MJPEG video feed
+    app.router.add_get("/video_feed", video_feed)
 
     # for testing only
     app.router.add_get("/", get_webrtc_test_page)

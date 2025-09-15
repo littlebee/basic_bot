@@ -17,8 +17,8 @@ class CameraStreamTrack(MediaStreamTrack):
     async def recv(self):
         # Generate a simple gray frame
         # frame_data = np.full((480, 640, 3), 128, dtype=np.uint8)
-        frame_data = self.camera.frame
 
+        frame_data = self.camera.frame
         video_frame = VideoFrame.from_ndarray(frame_data, format="bgr24")
 
         # Set PTS and time_base for the frame
