@@ -3,20 +3,23 @@ from aiortc.mediastreams import MediaStreamTrack
 from av import VideoFrame
 from fractions import Fraction
 
-import numpy as np
+from basic_bot.commons.base_camera import BaseCamera
 
 
 class CameraStreamTrack(MediaStreamTrack):
     kind = "video"
 
-    def __init__(self):
+    def __init__(self, camera: BaseCamera):
         super().__init__()
         self.frame_count = 0
+        self.camera = camera
 
     async def recv(self):
-        # Generate a simple black frame
-        frame_data = np.full((480, 640, 3), 128, dtype=np.uint8)
-        video_frame = VideoFrame.from_ndarray(frame_data, format="rgb24")
+        # Generate a simple gray frame
+        # frame_data = np.full((480, 640, 3), 128, dtype=np.uint8)
+        frame_data = self.camera.frame
+
+        video_frame = VideoFrame.from_ndarray(frame_data, format="bgr24")
 
         # Set PTS and time_base for the frame
         self.frame_count += 1

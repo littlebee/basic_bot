@@ -89,7 +89,7 @@ from basic_bot.commons import constants as c, log, messages, vid_utils
 from basic_bot.commons.hub_state import HubState
 from basic_bot.commons.hub_state_monitor import HubStateMonitor
 from basic_bot.commons.base_camera import BaseCamera
-from basic_bot.commons.webrtc_offer import respond_to_offer, close_all_rtc_peers
+from basic_bot.commons.webrtc_offer import WebrtcPeers
 
 if not c.BB_DISABLE_RECOGNITION_PROVIDER:
     from basic_bot.commons.recognition_provider import RecognitionProvider
@@ -123,6 +123,10 @@ else:
 log.info(f"loading camera module: {camera_lib}")
 camera_module = importlib.import_module(camera_lib)
 camera = camera_module.Camera()  # type: ignore
+
+log.info("Initializing webrtc offers server")
+webrtc_peers = WebrtcPeers(camera)
+
 
 if not c.BB_DISABLE_RECOGNITION_PROVIDER:
     recognition = RecognitionProvider(camera)
@@ -283,10 +287,9 @@ def get_webrtc_test_client(_request):
 
 
 async def on_shutdown(_app):
-    # close peer connections
-    await close_all_rtc_peers()
-    hub.stop()
+    await webrtc_peers.close_all_connections()
     camera.stop()
+    hub.stop()
 
 
 def main() -> None:
@@ -300,7 +303,7 @@ def main() -> None:
     app.router.add_get("/record_video", record_video)
     app.router.add_get("/recorded_video", recorded_video)
     app.router.add_get("/recorded_video/{filename}", get_recorded_video_file)
-    app.router.add_post("/offer", respond_to_offer)
+    app.router.add_post("/offer", webrtc_peers.respond_to_offer)
 
     # for testing only
     app.router.add_get("/", get_webrtc_test_page)
