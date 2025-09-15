@@ -73,6 +73,7 @@ Thank you, @adeept and @miguelgrinberg!
 """
 import asyncio
 import importlib
+import json
 import logging
 import os
 import threading
@@ -82,7 +83,7 @@ import time
 from aiohttp import web
 
 from basic_bot.commons import constants as c, log, messages, vid_utils
-from basic_bot.commons.web_utils_aiohttp import respond_ok, respond_file
+from basic_bot.commons.web_utils_aiohttp import json_response, respond_ok, respond_file
 
 from basic_bot.commons.hub_state import HubState
 from basic_bot.commons.hub_state_monitor import HubStateMonitor
@@ -144,15 +145,18 @@ async def video_feed(request):
 # @app.route("/stats")
 def send_stats(_request):
     """Return the FPS and other stats of the vision service."""
-    return respond_ok(
-        {
-            "capture": BaseCamera.stats(),
-            "recognition": (
-                "disabled"
-                if c.BB_DISABLE_RECOGNITION_PROVIDER
-                else RecognitionProvider.stats()
-            ),
-        },
+    return json_response(
+        200,
+        json.dumps(
+            {
+                "capture": BaseCamera.stats(),
+                "recognition": (
+                    "disabled"
+                    if c.BB_DISABLE_RECOGNITION_PROVIDER
+                    else RecognitionProvider.stats()
+                ),
+            }
+        ),
     )
 
 
