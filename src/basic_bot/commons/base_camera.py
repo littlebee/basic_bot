@@ -10,12 +10,10 @@ Thank you, @adeept and @miguelgrinberg!
 
 import time
 import threading
-import logging
 from typing import Generator, Optional, Any
 
+from basic_bot.commons import log
 from basic_bot.commons.fps_stats import FpsStats
-
-logger = logging.getLogger(__name__)
 
 try:
     from greenlet import getcurrent as get_ident  # type: ignore
@@ -86,6 +84,8 @@ class BaseCamera(object):
     event = CameraEvent()
     fps_stats = FpsStats()
 
+    is_stopped = False
+
     def __init__(self) -> None:
         """Start the background camera thread if it isn't running yet."""
         if BaseCamera.thread is None:
@@ -105,6 +105,9 @@ class BaseCamera(object):
 
         return BaseCamera.frame
 
+    def stop(self):
+        BaseCamera.is_stopped = True
+
     @staticmethod
     def frames() -> Generator[bytes, None, None]:
         """ "Generator that returns frames from the camera."""
@@ -118,12 +121,17 @@ class BaseCamera(object):
     @classmethod
     def _thread(cls) -> None:
         """Camera background thread."""
-        logger.info("Starting camera thread.")
+        log.info("Starting camera thread.")
 
         frames_iterator = cls.frames()
         for frame in frames_iterator:
+            if BaseCamera.is_stopped:
+                log.debug("Stopping camera thread")
+                break
             BaseCamera.frame = frame
             BaseCamera.event.set()  # send signal to clients
 
             BaseCamera.fps_stats.increment()
             time.sleep(0)
+
+        log.info("Base camera thread stopped.")

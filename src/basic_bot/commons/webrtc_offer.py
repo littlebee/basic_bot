@@ -15,9 +15,11 @@ relay = MediaRelay()
 
 async def close_all_rtc_peers():
     # close peer connections
+    log.info("Closing all webrtc peer connections")
     coros = [pc.close() for pc in pcs]
     await asyncio.gather(*coros)
     pcs.clear()
+    log.debug("Closed all webrtc peer connections")
 
 
 async def respond_to_offer(request):

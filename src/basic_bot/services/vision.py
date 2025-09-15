@@ -89,16 +89,14 @@ from basic_bot.commons import constants as c, log, messages, vid_utils
 from basic_bot.commons.hub_state import HubState
 from basic_bot.commons.hub_state_monitor import HubStateMonitor
 from basic_bot.commons.base_camera import BaseCamera
-from basic_bot.commons.webrtc_offer import respond_to_offer
-
+from basic_bot.commons.webrtc_offer import respond_to_offer, close_all_rtc_peers
 
 if not c.BB_DISABLE_RECOGNITION_PROVIDER:
     from basic_bot.commons.recognition_provider import RecognitionProvider
 
 from typing import Generator
 
-# TODO : at least remove log level debug here.  this is mainly for debugging
-#  WebRTC and aiortc
+# this is mainly for debugging WebRTC and aiortc
 logging.basicConfig(
     # Set the level to DEBUG for maximum verbosity, but be warned, aiortc
     # makes a lot of noise when streaming
@@ -284,9 +282,16 @@ def get_webrtc_test_client(_request):
     )
 
 
+async def on_shutdown(_app):
+    # close peer connections
+    await close_all_rtc_peers()
+    hub.stop()
+    camera.stop()
+
+
 def main() -> None:
     app = web.Application()
-    # app.on_shutdown.append(on_shutdown)
+    app.on_shutdown.append(on_shutdown)
 
     # routes
     app.router.add_get("/stats", send_stats)
