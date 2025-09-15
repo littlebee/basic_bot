@@ -147,16 +147,14 @@ def send_stats(_request):
     """Return the FPS and other stats of the vision service."""
     return json_response(
         200,
-        json.dumps(
-            {
-                "capture": BaseCamera.stats(),
-                "recognition": (
-                    "disabled"
-                    if c.BB_DISABLE_RECOGNITION_PROVIDER
-                    else RecognitionProvider.stats()
-                ),
-            }
-        ),
+        {
+            "capture": BaseCamera.stats(),
+            "recognition": (
+                "disabled"
+                if c.BB_DISABLE_RECOGNITION_PROVIDER
+                else RecognitionProvider.stats()
+            ),
+        },
     )
 
 
@@ -226,7 +224,7 @@ def recorded_video(_request):
     or `http://<ip>:<port>/recorded_video/<filename>.jpg` for the
     thumbnail image.
     """
-    return respond_ok(vid_utils.get_recorded_videos())
+    return json_response(200, vid_utils.get_recorded_videos())
 
 
 # @app.route("/recorded_video/<filename>")
