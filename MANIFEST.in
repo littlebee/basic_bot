@@ -1,3 +1,4 @@
+recursive-include src/basic_bot/public *
 recursive-include src/basic_bot/test_helpers/data *
 recursive-include src/basic_bot/commons/models *
 recursive-include src/basic_bot/created_files *
