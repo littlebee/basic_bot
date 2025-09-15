@@ -73,23 +73,24 @@ Thank you, @adeept and @miguelgrinberg!
 """
 import asyncio
 import importlib
+import json
 import logging
 import os
 import threading
 import sys
 import time
 
-
-from flask import Flask, Response, abort, send_from_directory, request
-from flask_cors import CORS
+from aiohttp import web
 
 import cv2
 
-from basic_bot.commons import constants as c, web_utils, log, messages, vid_utils
+from basic_bot.commons import constants as c, log, messages, vid_utils
 
 from basic_bot.commons.hub_state import HubState
 from basic_bot.commons.hub_state_monitor import HubStateMonitor
 from basic_bot.commons.base_camera import BaseCamera
+from basic_bot.commons.webrtc_offer import respond_to_offer
+
 
 if not c.BB_DISABLE_RECOGNITION_PROVIDER:
     from basic_bot.commons.recognition_provider import RecognitionProvider
@@ -99,7 +100,9 @@ from typing import Generator
 # TODO : at least remove log level debug here.  this is mainly for debugging
 #  WebRTC and aiortc
 logging.basicConfig(
-    # level=logging.DEBUG,  # Set the level to DEBUG for maximum verbosity
+    # Set the level to DEBUG for maximum verbosity, but be warned, aiortc
+    # makes a lot of noise when streaming
+    level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
@@ -123,10 +126,6 @@ log.info(f"loading camera module: {camera_lib}")
 camera_module = importlib.import_module(camera_lib)
 camera = camera_module.Camera()  # type: ignore
 
-app = Flask(__name__)
-CORS(app, supports_credentials=True)
-
-
 if not c.BB_DISABLE_RECOGNITION_PROVIDER:
     recognition = RecognitionProvider(camera)
 
@@ -140,19 +139,44 @@ def gen_rgb_video(camera: BaseCamera) -> Generator[bytes, None, None]:
         yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n")
 
 
-@app.route("/video_feed")
-def video_feed() -> Response:
-    """Video streaming route. Put this in the src attribute of an img tag."""
-    return Response(
-        gen_rgb_video(camera), mimetype="multipart/x-mixed-replace; boundary=frame"
+# TODO : maybe move these to aiortc web utils file (modeled after commons/web_utils)
+def json_response(status, data):
+    """Return a JSON response using aiortc web."""
+    return web.Response(
+        status=status,
+        content_type="application/json",
+        text=json.dumps(data),
     )
 
 
-@app.route("/stats")
-def send_stats() -> Response:
+def respond_ok(data=None):
+    """Return a JSON response with status ok."""
+    return json_response(200, {"status": "ok", "data": data})
+
+
+def respond_file(path, filename, content_type=None):
+    log.info(f"sending file: {filename} from {path}")
+    try:
+        content = open(os.path.join(path, filename), "br").read()
+    except FileNotFoundError as e:
+        log.info(f"Error: File not found. {e}")
+        return web.Response(status=404, text="File not found")
+
+    return web.Response(body=content, content_type=content_type)
+
+
+# @app.route("/video_feed")
+# def video_feed() -> Response:
+#     """Video streaming route. Put this in the src attribute of an img tag."""
+#     return web.Response(
+#         gen_rgb_video(camera), mimetype="multipart/x-mixed-replace; boundary=frame"
+#     )
+
+
+# @app.route("/stats")
+def send_stats(_request):
     """Return the FPS and other stats of the vision service."""
-    return web_utils.json_response(
-        app,
+    return respond_ok(
         {
             "capture": BaseCamera.stats(),
             "recognition": (
@@ -164,44 +188,43 @@ def send_stats() -> Response:
     )
 
 
-@app.route("/pause_recognition")
-def pause_recognition() -> Response:
+# @app.route("/pause_recognition")
+def pause_recognition(_request):
     """Use a GET request to pause the recognition provider."""
     if c.BB_DISABLE_RECOGNITION_PROVIDER:
-        return abort(404, "recognition provider disabled")
+        return web.Response(status=404, text="recognition provider is disabled")
 
     recognition.pause()
-    return web_utils.respond_ok(app)
+    return respond_ok()
 
 
-@app.route("/resume_recognition")
-def resume_recognition() -> Response:
+# @app.route("/resume_recognition")
+def resume_recognition(_request):
     """Use a GET request to resume the recognition provider."""
     if c.BB_DISABLE_RECOGNITION_PROVIDER:
-        return abort(404, "recognition provider disabled")
+        return web.Response(status=404, text="recognition provider disabled")
 
-    recognition.resume()
-    return web_utils.respond_ok(app)
+    return respond_ok()
 
 
 last_recording_started_at = time.time()
 last_record_duration: float = 0
 
 
-@app.route("/record_video")
-def record_video() -> Response:
+# @app.route("/record_video")
+def record_video(request):
     """Record the video feed to a file."""
     global last_recording_started_at, last_record_duration
 
     if time.time() - last_recording_started_at < last_record_duration:
-        return web_utils.respond_not_ok(app, 304, "already recording")
+        return web.Response(status=304, text="already recording")
 
     duration = float(request.args.get("duration", "10"))
     last_recording_started_at = time.time()
     last_record_duration = duration
     threading.Thread(target=record_video_thread, args=(duration,)).start()
 
-    return web_utils.respond_ok(app)
+    return respond_ok()
 
 
 def record_video_thread(duration: float) -> None:
@@ -222,8 +245,8 @@ def record_video_thread(duration: float) -> None:
         )
 
 
-@app.route("/recorded_video")
-def recorded_video() -> Response:
+# @app.route("/recorded_video")
+def recorded_video(_request):
     """
     Returns json array of string filenames (without extension) of all
     recorded video files.   The filenames can be used to download the
@@ -231,39 +254,63 @@ def recorded_video() -> Response:
     or `http://<ip>:<port>/recorded_video/<filename>.jpg` for the
     thumbnail image.
     """
-    return web_utils.json_response(app, vid_utils.get_recorded_videos())
+    return respond_ok(vid_utils.get_recorded_videos())
 
 
-@app.route("/recorded_video/<filename>")
-def send_static_js(filename: str) -> Response:
+# @app.route("/recorded_video/<filename>")
+def get_recorded_video_file(request):
     """
     Sends a recorded video file.
     """
+    filename = request.match_info["filename"]
     video_path = os.path.realpath(c.BB_VIDEO_PATH)
-    log.info(f"sending recorded video file: {filename} from {video_path}")
-    return send_from_directory(video_path, filename)
+    return respond_file(video_path, filename)
 
 
-@app.route("/ping")
-def ping() -> Response:
-    return web_utils.respond_ok(app, "pong")
+# @app.route("/ping")
+def ping(_request) -> web.Response:
+    return respond_ok("pong")
 
 
-class webapp:
-    def thread(self) -> None:
-        log.info(f"starting vision webhost on {c.BB_VISION_PORT}")
-        app.run(host="0.0.0.0", port=c.BB_VISION_PORT, threaded=True)
+# @app.route("/webrtc_test")
+def get_webrtc_test_page(_request):
+    return respond_file("./public", "webrtc_test.html", content_type="text/html")
 
-    def start_thread(self) -> None:
-        # Define a thread for flask
-        thread = threading.Thread(target=self.thread)
-        thread.setDaemon(False)
-        thread.start()
+
+# @app.route("/webrtc_test_client.js")
+def get_webrtc_test_client(_request):
+    return respond_file(
+        "./public", "webrtc_test_client.js", content_type="application/javascript"
+    )
 
 
 def main() -> None:
-    flask_app = webapp()
-    flask_app.start_thread()
+    app = web.Application()
+    # app.on_shutdown.append(on_shutdown)
+
+    # routes
+    app.router.add_get("/stats", send_stats)
+    app.router.add_get("/pause_recognition", pause_recognition)
+    app.router.add_get("/resume_recognition", resume_recognition)
+    app.router.add_get("/record_video", record_video)
+    app.router.add_get("/recorded_video", recorded_video)
+    app.router.add_get("/recorded_video/{filename}", get_recorded_video_file)
+    app.router.add_post("/offer", respond_to_offer)
+
+    # for testing only
+    app.router.add_get("/", get_webrtc_test_page)
+    app.router.add_get("/webrtc_test.html", get_webrtc_test_page)
+    app.router.add_get("/webrtc_test_client.js", get_webrtc_test_client)
+    # app.router.add_post("/offer", offer)
+
+    log.info(f"starting vision webhost on {c.BB_VISION_PORT}")
+    web.run_app(
+        app,
+        access_log=None,
+        host="0.0.0.0",
+        port=c.BB_VISION_PORT,
+        # ssl_context=ssl_context,
+    )
 
 
 if __name__ == "__main__":
