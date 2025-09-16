@@ -25,4 +25,5 @@ Pillow
 aiortc
 aiohttp_cors
 av
+pyaudio>=0.2.11
 

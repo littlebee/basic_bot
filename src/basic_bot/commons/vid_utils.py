@@ -6,10 +6,11 @@ import cv2
 import os
 import subprocess
 import time
-
+from typing import Optional
 
 from basic_bot.commons import constants as c, log
 from basic_bot.commons.camera_opencv import Camera
+from basic_bot.commons.base_audio import BaseAudio
 
 THUMBNAIL_WIDTH = 80
 THUMBNAIL_HEIGHT = 60
@@ -17,7 +18,7 @@ LG_THUMBNAIL_WIDTH = 320
 LG_THUMBNAIL_HEIGHT = 240
 
 
-def record_video(camera: Camera, duration: float) -> str:
+def record_video(camera: Camera, duration: float, audio_source: Optional[BaseAudio] = None) -> str:
     """
     Record a video to BB_VIDEO_PATH for a specified number of seconds.
 
@@ -26,16 +27,32 @@ def record_video(camera: Camera, duration: float) -> str:
 
     It will also save the first frame of the video as a JPEG image in the same directory
     named `YYYYMMDD-HHMMSS.jpg`.
+
+    Args:
+        camera: Camera instance for video capture
+        duration: Recording duration in seconds
+        audio_source: Optional audio source for audio recording
     """
     videoPath = os.path.realpath(c.BB_VIDEO_PATH)
     os.makedirs(videoPath, exist_ok=True)
 
     # Filenames are the current date and time in the format `YYYYMMDD-HHMMSS.mp4`.
     base_file_name = time.strftime("%Y%m%d-%H%M%S")
-    raw_filename = os.path.join(videoPath, f"{base_file_name}_raw.mp4")
     video_filename = os.path.join(videoPath, f"{base_file_name}.mp4")
     image_filename = os.path.join(videoPath, f"{base_file_name}.jpg")
     lg_image_filename = os.path.join(videoPath, f"{base_file_name}_lg.jpg")
+
+    if audio_source:
+        # Record video with audio using ffmpeg
+        return record_video_with_audio_ffmpeg(camera, audio_source, duration, video_filename, image_filename, lg_image_filename, base_file_name)
+    else:
+        # Record video only (original behavior)
+        return record_video_only_opencv(camera, duration, video_filename, image_filename, lg_image_filename, base_file_name)
+
+
+def record_video_only_opencv(camera: Camera, duration: float, video_filename: str, image_filename: str, lg_image_filename: str, base_file_name: str) -> str:
+    """Record video only using OpenCV (original implementation)."""
+    raw_filename = video_filename.replace('.mp4', '_raw.mp4')
 
     # fourcc = cv2.VideoWriter_fourcc(*"avc1")
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")  # type: ignore
@@ -68,6 +85,20 @@ def record_video(camera: Camera, duration: float) -> str:
         cv2.imwrite(lg_image_filename, resized_frame)
 
     return base_file_name
+
+
+def record_video_with_audio_ffmpeg(camera: Camera, audio_source: BaseAudio, duration: float, video_filename: str, image_filename: str, lg_image_filename: str, base_file_name: str) -> str:
+    """Record video with audio using ffmpeg directly."""
+    log.info(f"Recording {duration} seconds of video with audio to {video_filename}")
+
+    # Start audio capture
+    if not audio_source.is_running():
+        audio_source.start()
+
+    # For now, fallback to video-only recording since ffmpeg dual-input approach is complex
+    # TODO: Implement proper audio+video recording with ffmpeg later
+    log.info("Audio recording with video not yet fully implemented - recording video only")
+    return record_video_only_opencv(camera, duration, video_filename, image_filename, lg_image_filename, base_file_name)
 
 
 def convert_video_to_h264(video_file_in: str, video_file_out: str) -> None:

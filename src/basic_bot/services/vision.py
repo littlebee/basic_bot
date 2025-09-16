@@ -142,8 +142,25 @@ log.info(f"loading camera module: {camera_lib}")
 camera_module = importlib.import_module(camera_lib)
 camera = camera_module.Camera()
 
+# Initialize audio source if not disabled
+audio_source = None
+if not c.BB_DISABLE_AUDIO:
+    try:
+        log.info(f"loading audio module: {c.BB_AUDIO_MODULE}")
+        audio_module = importlib.import_module(c.BB_AUDIO_MODULE)
+        audio_source = audio_module.Audio(
+            sample_rate=c.BB_AUDIO_SAMPLE_RATE,
+            channels=c.BB_AUDIO_CHANNELS,
+            chunk_size=c.BB_AUDIO_CHUNK_SIZE
+        )
+        audio_source.start()
+        log.info("Audio capture initialized and started")
+    except Exception as e:
+        log.error(f"Failed to initialize audio: {e}")
+        audio_source = None
+
 log.info("Initializing webrtc offers server")
-webrtc_peers = WebrtcPeers(camera)
+webrtc_peers = WebrtcPeers(camera, audio_source)
 
 log.info("Initializing MJPEG streaming")
 mjpeg_video = MjpegVideo(camera)
@@ -165,17 +182,21 @@ async def video_feed(request: Request) -> StreamResponse:
 # @app.route("/stats")
 async def send_stats(_request: Request) -> Response:
     """Return the FPS and other stats of the vision service."""
-    return json_response(
-        200,
-        {
-            "capture": BaseCamera.stats(),
-            "recognition": (
-                "disabled"
-                if c.BB_DISABLE_RECOGNITION_PROVIDER
-                else RecognitionProvider.stats()
-            ),
-        },
-    )
+    stats = {
+        "capture": BaseCamera.stats(),
+        "recognition": (
+            "disabled"
+            if c.BB_DISABLE_RECOGNITION_PROVIDER
+            else RecognitionProvider.stats()
+        ),
+    }
+
+    if audio_source:
+        stats["audio"] = audio_source.stats()
+    else:
+        stats["audio"] = "disabled"
+
+    return json_response(200, stats)
 
 
 # @app.route("/pause_recognition")
@@ -224,7 +245,7 @@ def record_video_thread(duration: float) -> None:
                 hub.connected_socket, {"vision": {"recording": True}}
             )
         )
-        vid_utils.record_video(camera, duration)
+        vid_utils.record_video(camera, duration, audio_source)
     except Exception as e:
         log.error(f"error recording video: {e}")
     finally:
@@ -279,6 +300,8 @@ async def on_shutdown(_app: web.Application) -> None:
     await webrtc_peers.close_all_connections()
     mjpeg_video.stop()
     camera.stop()
+    if audio_source:
+        audio_source.stop()
     hub.stop()
 
 

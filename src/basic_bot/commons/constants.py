@@ -205,6 +205,44 @@ BB_VIDEO_PATH = env.env_string("BB_VIDEO_PATH", "./recorded_video")
 The path where the vision service saves recorded video.
 """
 
+# =============== Audio Service Constants
+
+default_audio_module = (
+    "basic_bot.test_helpers.audio_mock"
+    if BB_ENV == "test"
+    else "basic_bot.commons.audio_pyaudio"
+)
+BB_AUDIO_MODULE = env.env_string("BB_AUDIO_MODULE", default_audio_module)
+"""
+default: "basic_bot.commons.audio_pyaudio" or
+"basic_bot.test_helpers.audio_mock" when BB_ENV=test
+
+Audio capture module to use for microphone input.
+"""
+
+BB_AUDIO_SAMPLE_RATE = env.env_int("BB_AUDIO_SAMPLE_RATE", 16000)
+"""
+Audio sample rate in Hz. 16000 Hz is optimal for WebRTC streaming.
+For higher quality recording, consider 44100 Hz.
+"""
+
+BB_AUDIO_CHANNELS = env.env_int("BB_AUDIO_CHANNELS", 1)
+"""
+Number of audio channels. 1 for mono, 2 for stereo.
+Mono is recommended for robotics applications to reduce bandwidth.
+"""
+
+BB_AUDIO_CHUNK_SIZE = env.env_int("BB_AUDIO_CHUNK_SIZE", 1024)
+"""
+Number of audio frames per buffer. Smaller values reduce latency
+but may increase CPU usage. 1024 is a good balance.
+"""
+
+BB_DISABLE_AUDIO = env.env_bool("BB_DISABLE_AUDIO", False)
+"""
+Set this to True to disable audio capture completely.
+"""
+
 # =============== Web Server Constants
 BB_WEB_PUBLIC = env.env_string("BB_WEB_PUBLIC", "./webapp/dist")
 """
