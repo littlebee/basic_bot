@@ -69,19 +69,48 @@ class AudioStreamTrack(MediaStreamTrack):
                 silence = np.zeros((samples_per_frame, channels), dtype=np.int16)
             audio_data = silence
 
-        # Create AudioFrame - for audio, the array should be shaped as (channels, samples)
+        # Debug: Log audio data characteristics on first few frames
+        if self.frame_count < 3:
+            log.info(f"Audio frame {self.frame_count}: shape={audio_data.shape}, dtype={audio_data.dtype}, min={audio_data.min()}, max={audio_data.max()}, first_10_samples={audio_data.flat[:10]}")
+
+        # Ensure data is int16 and properly formatted
+        if audio_data.dtype != np.int16:
+            log.info(f"Converting audio from {audio_data.dtype} to int16")
+            audio_data = audio_data.astype(np.int16)
+
+        # Ensure proper byte order (little-endian for most systems)
+        if audio_data.dtype.byteorder not in ('=', '<'):
+            log.info(f"Converting audio byte order from {audio_data.dtype.byteorder} to little-endian")
+            audio_data = audio_data.astype('<i2')  # Force little-endian int16
+
+        # Create AudioFrame - back to (channels, samples) format but try different approach
         if self.audio_source.get_channels() == 1:
             # Mono audio: reshape from (samples,) to (1, samples)
             if audio_data.ndim == 1:
                 audio_data = audio_data.reshape(1, -1)
-            layout = "mono"
         else:
             # Stereo audio: reshape from (samples, 2) to (2, samples)
             if audio_data.ndim == 2 and audio_data.shape[1] == 2:
                 audio_data = audio_data.T  # Transpose to (2, samples)
-            layout = "stereo"
 
-        audio_frame = AudioFrame.from_ndarray(audio_data, format="s16", layout=layout)
+        # Debug: Log final shape before AudioFrame creation
+        if self.frame_count < 3:
+            log.info(f"Final audio shape before AudioFrame: {audio_data.shape}")
+
+        # Try different AudioFrame creation approach - create empty frame and copy data
+        try:
+            # Create empty AudioFrame with proper layout
+            audio_frame = AudioFrame(format="s16", layout="mono" if self.audio_source.get_channels() == 1 else "stereo", samples=audio_data.shape[1])
+            audio_frame.sample_rate = self.audio_source.get_sample_rate()
+
+            # Copy our data into the frame
+            frame_array = audio_frame.to_ndarray()
+            frame_array[:] = audio_data
+
+        except Exception as e:
+            log.error(f"Failed to create AudioFrame with manual approach: {e}")
+            # Fallback to from_ndarray with different format
+            audio_frame = AudioFrame.from_ndarray(audio_data, format="s16p")
 
         # Set sample rate and time_base for the frame
         audio_frame.sample_rate = self.audio_source.get_sample_rate()

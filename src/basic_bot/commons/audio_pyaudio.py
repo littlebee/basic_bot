@@ -51,6 +51,20 @@ class Audio(BaseAudio):
 
         try:
             self._pyaudio = pyaudio.PyAudio()
+
+            # Log available audio devices for debugging
+            device_count = self._pyaudio.get_device_count()
+            log.info(f"PyAudio found {device_count} audio devices:")
+
+            default_input = self._pyaudio.get_default_input_device_info()
+            log.info(f"Default input device: {default_input['name']} (index: {default_input['index']})")
+
+            # Log first few input devices
+            for i in range(min(5, device_count)):
+                device_info = self._pyaudio.get_device_info_by_index(i)
+                if device_info['maxInputChannels'] > 0:
+                    log.info(f"Input device {i}: {device_info['name']} (channels: {device_info['maxInputChannels']})")
+
             log.info(f"PyAudio initialized - Sample rate: {sample_rate}Hz, Channels: {channels}")
         except Exception as e:
             log.error(f"Failed to initialize PyAudio: {e}")
@@ -63,15 +77,22 @@ class Audio(BaseAudio):
             return
 
         try:
+            # Use default input device explicitly
+            default_device = self._pyaudio.get_default_input_device_info()
+            device_index = default_device['index']
+
+            log.info(f"Opening audio stream on device {device_index}: {default_device['name']}")
+
             self._stream = self._pyaudio.open(
                 format=self.format,
                 channels=self.channels,
                 rate=self.sample_rate,
                 input=True,
+                input_device_index=device_index,
                 frames_per_buffer=self.chunk_size
             )
             self._running = True
-            log.info("Audio capture started")
+            log.info(f"Audio capture started on device: {default_device['name']}")
         except Exception as e:
             log.error(f"Failed to start audio capture: {e}")
             self._errors += 1
@@ -109,6 +130,10 @@ class Audio(BaseAudio):
         try:
             audio_data = self._stream.read(self.chunk_size, exception_on_overflow=False)
             audio_array = np.frombuffer(audio_data, dtype=np.int16)
+
+            # Debug: Log audio data characteristics on first few frames
+            if self._frames_captured < 3:
+                log.info(f"PyAudio frame {self._frames_captured}: raw_len={len(audio_data)}, array_shape={audio_array.shape}, dtype={audio_array.dtype}, min={audio_array.min()}, max={audio_array.max()}")
 
             if self.channels == 2:
                 # Reshape for stereo
