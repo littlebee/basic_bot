@@ -15,7 +15,7 @@ import basic_bot.commons.vision_client as vision_client
 tflite_installed = False
 try:
     # first test to see if tflite_runtime is installed?
-    # flake8 will complain about the import not benig used
+    # flake8 will complain about the import not being used
     import tflite_runtime  # noqa: F401 # type: ignore
 
     tflite_installed = True

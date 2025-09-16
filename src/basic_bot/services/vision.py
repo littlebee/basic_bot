@@ -177,7 +177,7 @@ def resume_recognition(_request):
     """Use a GET request to resume the recognition provider."""
     if c.BB_DISABLE_RECOGNITION_PROVIDER:
         return web.Response(status=404, text="recognition provider disabled")
-
+    recognition.resume()
     return respond_ok()
 
 
