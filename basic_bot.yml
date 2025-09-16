@@ -16,6 +16,9 @@ services:
 
   - name: "web_server"
     run: "python -m basic_bot.services.web_server"
+    env:
+      # we have test and status pages for bb dev only
+      BB_WEB_PUBLIC: "./public"
 
   - name: "system_stats"
     run: "python -m basic_bot.services.system_stats"
@@ -24,3 +27,6 @@ services:
     run: "python -m basic_bot.services.vision"
     production_env:
       BB_CAMERA_MODULE: "basic_bot.commons.camera_picamera"
+    development_env:
+      BB_DISABLE_RECOGNITION_PROVIDER: "true"
+      BB_LOG_ALL_MESSAGES: "true"

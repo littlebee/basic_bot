@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>basic_bot WebRTC Test Page</title>
+    <style>
+      button {
+        padding: 8px 16px;
+      }
+
+      video {
+        width: 640px;
+      }
+
+      .option {
+        margin-bottom: 8px;
+      }
+
+      #media {
+        max-width: 1280px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="option">
+      <input id="use-stun" type="checkbox" />
+      <label for="use-stun">Use STUN server</label>
+    </div>
+    <button id="start" onclick="start()">Start</button>
+    <button id="stop" style="display: none" onclick="stop()">Stop</button>
+
+    <div id="media">
+      <h2>WebRTC Media streaming</h2>
+
+      <audio id="audio" autoplay="true"></audio>
+      <video id="video" autoplay="true" playsinline="true"></video>
+
+      <h2>Classic MJPEG (multipart jpeg) Media streaming</h2>
+      <div><em>look ma, no code</em></div>
+      <img src="/video_feed" />
+    </div>
+
+    <script src="webrtc_test_client.js"></script>
+  </body>
+</html>
