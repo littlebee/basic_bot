@@ -29,7 +29,11 @@ To build use the build.sh script:
 ./build.sh
 ```
 
-Note that build script also runs lint via flake8 and typechecking of python via mypy.
+## Linting and typechecking
+```sh
+./lint.sh
+```
+
 
 ## Installing locally
 
