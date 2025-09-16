@@ -51,6 +51,9 @@ jobs:
       - name: Run build and install
         run: ./install-dev.sh
 
+      - name: Run linters and type checker
+        run: ./lint.sh
+
       - name: Run tests
         run: |
           echo 'npm path:'
