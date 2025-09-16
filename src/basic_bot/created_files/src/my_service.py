@@ -48,7 +48,7 @@ hub_monitor.start()
 # https://github.com/littlebee/daphbot-due/blob/aa7ed90d60df33009c5bd252c31fa0fb25076fad/src/daphbot_service.py
 
 
-async def main():
+async def main() -> None:
     log.info("in my_service:main()")
     i = 0
     while True:

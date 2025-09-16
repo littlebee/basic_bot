@@ -51,7 +51,7 @@ except ImportError:
     )
 
     class Motor:
-        def __init__(self):
+        def __init__(self) -> None:
             self.throttle = 0
 
     left_motor = Motor()

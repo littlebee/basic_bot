@@ -22,11 +22,11 @@ import psutil
 import signal
 
 
-def main():
+def main() -> None:
     matching_processes = []
     for process in psutil.process_iter(["pid", "name", "cmdline"]):
         try:
-            cmdLine = str(process.info.get("cmdline"))
+            cmdLine = str(process.info.get("cmdline"))  # type: ignore[attr-defined]
             if cmdLine:
                 # print("looking at: ", cmdLine)
                 if "via=bb_start" in cmdLine:

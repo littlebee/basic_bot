@@ -24,6 +24,7 @@ import cv2
 from PIL import Image
 from PIL import ImageFont, ImageDraw
 import numpy as np
+from typing import Any
 
 from ai_edge_litert.interpreter import Interpreter  # type: ignore
 
@@ -58,7 +59,7 @@ if input_details[0]["dtype"] == np.float32:
 
 print("reading test image")
 img = cv2.imread(test_image)
-initial_h, initial_w, channels = img.shape  # type: ignore
+initial_h, initial_w, channels = img.shape
 frame = cv2.resize(img, (width, height))
 
 input_data = np.expand_dims(frame, axis=0)
@@ -75,7 +76,7 @@ detected_scores = interpreter.get_tensor(output_details[2]["index"])
 num_boxes = interpreter.get_tensor(output_details[3]["index"])
 
 
-editable_img = Image.open(test_image)  # type: ignore
+editable_img = Image.open(test_image)
 draw = ImageDraw.Draw(editable_img, "RGBA")
 font_file = model_path = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "testdata", "Helvetica.ttf")
@@ -85,7 +86,7 @@ helvetica = ImageFont.truetype(font_file, size=72)
 
 # print(f"Done. {detected_boxes=}, {detected_classes=}, {detected_scores=}, {num_boxes=}")
 # Function to draw a rectangle with width > 1
-def draw_rectangle(draw, coordinates, color, width=1):
+def draw_rectangle(draw: Any, coordinates: Any, color: Any, width: int = 1) -> None:
     for i in range(width):
         rect_start = (coordinates[0] - i, coordinates[1] - i)
         rect_end = (coordinates[2] + i, coordinates[3] + i)

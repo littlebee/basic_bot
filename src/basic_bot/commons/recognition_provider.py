@@ -1,7 +1,8 @@
 import time
 import threading
 import asyncio
-import websockets.client as websockets
+import websockets
+import websockets.client
 import traceback
 
 from typing import Any, List, Dict, Optional
@@ -95,13 +96,13 @@ class RecognitionProvider:
 
     @classmethod
     async def provide_state(cls) -> None:
-        previous_objects: List[dict] = []
+        previous_objects: List[dict[str, Any]] = []
         while True:
             try:
                 log.info(
                     f"recognition connecting to hub central at {constants.BB_HUB_URI}"
                 )
-                async with websockets.connect(constants.BB_HUB_URI) as websocket:
+                async with websockets.client.connect(constants.BB_HUB_URI) as websocket:
                     await messages.send_identity(websocket, "recognition")
                     while True:
                         if not cls.pause_event.is_set():

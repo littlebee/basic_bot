@@ -31,7 +31,7 @@ import yaml
 from jsonschema import validate, ValidationError
 
 
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Any
 
 
 from basic_bot.commons.script_helpers.pid_files import is_pid_file_valid
@@ -55,7 +55,7 @@ arg_parser.add_argument(
 )
 
 
-def validate_unique_names(config):
+def validate_unique_names(config: dict[str, Any]) -> bool:
     service_names = []
     for service in config["services"]:
         service_name = service["name"]
@@ -138,7 +138,7 @@ def start_service(
             )
 
 
-def start_services(config: dict, services_filter: Optional[List[str]] = None):
+def start_services(config: dict[str, Any], services_filter: Optional[List[str]] = None) -> None:
     env_vars = config.get("env", {})
     env_vars.update(config.get(f"{c.BB_ENV}_env", {}))
 

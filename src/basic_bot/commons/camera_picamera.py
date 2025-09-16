@@ -2,7 +2,7 @@ import time
 from typing import Generator
 
 # see, https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf
-from picamera2 import Picamera2  # type: ignore
+from picamera2 import Picamera2
 
 from basic_bot.commons import log, constants as c
 from basic_bot.commons.base_camera import BaseCamera

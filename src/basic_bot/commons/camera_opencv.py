@@ -2,7 +2,8 @@ import os
 import time
 import cv2
 
-from typing import Generator
+from typing import Generator, Union
+import numpy as np
 
 from basic_bot.commons import constants as c, log
 from basic_bot.commons.base_camera import BaseCamera
@@ -43,7 +44,7 @@ class Camera(BaseCamera):
     def init_camera() -> cv2.VideoCapture:
         log.info("initializing VideoCapture")
 
-        camera = cv2.VideoCapture(Camera.video_source)  # , apiPreference=cv2.CAP_V4L2)
+        camera = cv2.VideoCapture(Camera.video_source)  # type: ignore[call-arg]
         if not camera.isOpened():
             raise RuntimeError("Could not start camera.")
 
@@ -64,7 +65,7 @@ class Camera(BaseCamera):
         return camera
 
     @staticmethod
-    def frames() -> Generator[bytes, None, None]:
+    def frames() -> Generator[Union[bytes, np.ndarray], None, None]:
         """
         Generator function that yields frames from the camera. Required by BaseCamera
         """

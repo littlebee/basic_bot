@@ -6,7 +6,7 @@
 import yaml
 from jsonschema import validate, ValidationError
 
-from typing import TypedDict
+from typing import TypedDict, Any, cast
 from typing_extensions import NotRequired
 from dataclasses import dataclass
 
@@ -15,7 +15,7 @@ from basic_bot.commons.servo_config_file_schema import servo_config_file_schema
 from basic_bot.commons import constants as c, log
 
 
-def validate_unique_names(config: dict) -> bool:
+def validate_unique_names(config: dict[str, Any]) -> bool:
     servo_names = []
     for servo in config["servos"]:
         servo_name = servo["name"]
@@ -25,14 +25,15 @@ def validate_unique_names(config: dict) -> bool:
     return True
 
 
-def read_servo_config() -> dict:
+def read_servo_config() -> dict[str, Any]:
     """
     Read and return the servo configuration from the `servo_config.yml` file.
     """
     try:
         log.info(f"Reading servo config from {c.BB_SERVO_CONFIG_FILE}")
         with open(c.BB_SERVO_CONFIG_FILE, "r") as f:
-            config = yaml.safe_load(f)
+            config_raw = yaml.safe_load(f)
+            config: dict[str, Any] = cast(dict[str, Any], config_raw)
 
             validate(config, servo_config_file_schema)
             validate_unique_names(config)
@@ -48,8 +49,6 @@ def read_servo_config() -> dict:
     except ValidationError as e:
         log.info(f"Config file validation error: {e}")
         raise
-
-    return config
 
 
 class ServoOptions(TypedDict):

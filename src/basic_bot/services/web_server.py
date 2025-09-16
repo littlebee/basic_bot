@@ -11,7 +11,7 @@ import logging
 
 import psutil
 
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, Response
 from flask_cors import CORS
 
 from basic_bot.commons import web_utils, log, constants as c
@@ -31,7 +31,7 @@ log.info(f"serving from dir_path: {dir_path}")
 
 
 @app.route("/stats")
-def send_stats():
+def send_stats() -> Response:
     (cpu_temp, *rest) = [
         int(i) / 1000
         for i in os.popen("cat /sys/devices/virtual/thermal/thermal_zone*/temp")
@@ -53,45 +53,45 @@ def send_stats():
 
 
 @app.route("/state")
-def send_state():
+def send_state() -> Response:
     return web_utils.json_response(app, hub_state.state)
 
 
 @app.route("/<path:filename>")
-def send_file(filename):
+def send_file(filename: str) -> Response:
     return send_from_directory(dir_path, filename)
 
 
 @app.route("/static/js/<path:path>")
-def send_static_js(path):
+def send_static_js(path: str) -> Response:
     return send_from_directory(dir_path + "/static/js", path)
 
 
 @app.route("/static/css/<path:path>")
-def send_static_css(path):
+def send_static_css(path: str) -> Response:
     return send_from_directory(dir_path + "/static/css", path)
 
 
 @app.route("/")
-def index():
+def index() -> Response:
     return send_from_directory(dir_path, "index.html")
 
 
 class webapp:
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
-    def thread(self):
+    def thread(self) -> None:
         app.run(host="0.0.0.0", port=80, threaded=True)
 
-    def start_thread(self):
+    def start_thread(self) -> None:
         thread = threading.Thread(target=self.thread)
         # 'True' means it is a front thread,it would close when the mainloop() closes
         thread.setDaemon(False)
         thread.start()  # Thread starts
 
 
-def start_app():
+def start_app() -> None:
     logger = logging.getLogger(__name__)
     logger.info(f"webapp started. serving {dir_path}")
 

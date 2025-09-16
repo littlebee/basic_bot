@@ -3,19 +3,19 @@ import basic_bot.test_helpers.central_hub as hub
 import basic_bot.test_helpers.start_stop as sst
 
 
-def setup_module():
+def setup_module() -> None:
     # start the central hub and any other services needed to test your service
     sst.start_service("central_hub", "python -m basic_bot.services.central_hub")
     sst.start_service("my_service", "python src/my_service.py")
 
 
-def teardown_module():
+def teardown_module() -> None:
     sst.stop_service("central_hub")
     sst.stop_service("my_service")
 
 
 class TestMyService:
-    def test_worthless_counter(self):
+    def test_worthless_counter(self) -> None:
         """
         Replace this with a test of your real service
         """

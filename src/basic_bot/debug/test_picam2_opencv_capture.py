@@ -11,7 +11,7 @@ python -m basic_bot.debug.test_picam2_opencv_capture
 import os
 import time
 
-from picamera2 import Picamera2  # type: ignore
+from picamera2 import Picamera2
 from libcamera import controls  # type: ignore
 import cv2
 

@@ -1,7 +1,7 @@
 import os
 import cv2
 import numpy as np
-import tflite_runtime.interpreter as tflite  # type: ignore
+import tflite_runtime.interpreter as tflite
 
 from typing import Optional, List, Dict, Any
 

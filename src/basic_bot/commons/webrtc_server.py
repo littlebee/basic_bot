@@ -1,6 +1,7 @@
 import asyncio
 import json
 from typing import Any
+import numpy as np
 
 from aiohttp import web
 from aiortc import RTCPeerConnection, RTCSessionDescription
@@ -21,12 +22,19 @@ class CameraStreamTrack(MediaStreamTrack):
         self.frame_count = 0
         self.camera = camera
 
-    async def recv(self):
+    async def recv(self) -> VideoFrame:
         # Generate a simple gray frame
         # frame_data = np.full((480, 640, 3), 128, dtype=np.uint8)
 
-        frame_data = self.camera.frame
-        video_frame = VideoFrame.from_ndarray(frame_data, format="bgr24")
+        frame_data = self.camera.get_frame()
+        if frame_data is None:
+            # Create a default black frame if no frame is available
+            frame_array = np.zeros((480, 640, 3), dtype=np.uint8)
+        else:
+            # The frame from camera is actually a numpy array despite the typing
+            frame_array = frame_data  # type: ignore
+
+        video_frame = VideoFrame.from_ndarray(frame_array, format="bgr24")
 
         # Set PTS and time_base for the frame
         self.frame_count += 1
@@ -43,7 +51,7 @@ class WebrtcPeers:
         self.relay = MediaRelay()
         self.camera = camera
 
-    async def close_all_connections(self):
+    async def close_all_connections(self) -> None:
         # close peer connections
         log.info("Closing all webrtc peer connections")
         coros = [pc.close() for pc in self.pcs]
@@ -51,7 +59,7 @@ class WebrtcPeers:
         self.pcs.clear()
         log.debug("Closed all webrtc peer connections")
 
-    async def respond_to_offer(self, request):
+    async def respond_to_offer(self, request: web.Request) -> web.Response:
         params = await request.json()
         offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
 
@@ -61,14 +69,14 @@ class WebrtcPeers:
         log.info(f"Creating webrtc offer for {request.remote}")
 
         @pc.on("datachannel")
-        def on_datachannel(channel):
-            @channel.on("message")
-            def on_message(message):
+        def on_datachannel(channel: Any) -> None:
+            @channel.on("message")  # type: ignore
+            def on_message(message: str) -> None:
                 if isinstance(message, str) and message.startswith("ping"):
                     channel.send("pong" + message[4:])
 
         @pc.on("connectionstatechange")
-        async def on_connectionstatechange():
+        async def on_connectionstatechange() -> None:
             log.info(f"Connection state is {pc.connectionState}")
             if pc.connectionState == "failed":
                 await pc.close()

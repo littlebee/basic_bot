@@ -21,8 +21,9 @@ https://github.com/aallan/benchmarking-ml-on-the-edge/blob/98467e058732a6626b6fb
 import os
 import cv2
 import numpy as np
+from typing import Any
 
-import tflite_runtime.interpreter as tflite  # type: ignore
+import tflite_runtime.interpreter as tflite
 
 from PIL import Image
 from PIL import ImageFont, ImageDraw
@@ -60,7 +61,7 @@ if input_details[0]["dtype"] == np.float32:
 
 print("reading test image")
 img = cv2.imread(test_image)
-initial_h, initial_w, channels = img.shape  # type: ignore
+initial_h, initial_w, channels = img.shape
 frame = cv2.resize(img, (width, height))
 
 input_data = np.expand_dims(frame, axis=0)
@@ -87,7 +88,7 @@ helvetica = ImageFont.truetype(font_file, size=72)
 
 # print(f"Done. {detected_boxes=}, {detected_classes=}, {detected_scores=}, {num_boxes=}")
 # Function to draw a rectangle with width > 1
-def draw_rectangle(draw, coordinates, color, width=1):
+def draw_rectangle(draw: Any, coordinates: Any, color: Any, width: int = 1) -> None:
     for i in range(width):
         rect_start = (coordinates[0] - i, coordinates[1] - i)
         rect_end = (coordinates[2] + i, coordinates[3] + i)

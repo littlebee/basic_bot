@@ -5,7 +5,7 @@ import traceback
 import json
 from contextlib import asynccontextmanager
 
-from typing import Callable, Optional, List, AsyncGenerator, Union, Literal
+from typing import Any, Callable, Optional, List, AsyncGenerator, Union, Literal
 from websockets.client import WebSocketClientProtocol
 
 from basic_bot.commons import constants as c, messages, log
@@ -65,7 +65,7 @@ class HubStateMonitor:
                 [
                     WebSocketClientProtocol,
                     str,
-                    dict,
+                    dict[str, Any],
                 ],
                 None,
             ]
@@ -104,7 +104,7 @@ class HubStateMonitor:
     @asynccontextmanager
     async def connect_to_hub(
         self,
-    ) -> AsyncGenerator[websockets.client.WebSocketClientProtocol, None]:
+    ) -> AsyncGenerator[WebSocketClientProtocol, None]:
         log.info(f"hub_state_monitor connecting to central_hub at {c.BB_HUB_URI}")
         async with websockets.client.connect(c.BB_HUB_URI) as websocket:
             log.info("hub_state_monitor connected to central_hub")
@@ -118,7 +118,7 @@ class HubStateMonitor:
 
     async def parse_next_message(
         self, websocket: WebSocketClientProtocol
-    ) -> AsyncGenerator[tuple[str, dict], None]:
+    ) -> AsyncGenerator[tuple[str, dict[str, Any]], None]:
         async for message in websocket:
             if should_exit:
                 return
