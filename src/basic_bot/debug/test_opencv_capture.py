@@ -28,7 +28,7 @@ video_file = os.path.join(os.getcwd(), "opencv_capture_test_output.mp4")
 
 # Create an object to read
 # from camera
-video = cv2.VideoCapture(video_channel)
+video = cv2.VideoCapture(video_channel)  # type: ignore[call-arg]
 
 # We need to check if camera
 # is opened previously or not

@@ -39,7 +39,7 @@ def start_service(service_name: str, run_cmd: str, env: Dict[str, str] = {}) -> 
     )
 
 
-def stop_service(service_name) -> None:
+def stop_service(service_name: str) -> None:
     """
     stops the requested service using bb_stop command.
 

@@ -1,10 +1,15 @@
 import asyncio
+from typing import TYPE_CHECKING
 
 from aiohttp import web, MultipartWriter, client_exceptions
 import cv2
 
 from basic_bot.commons import log
 from basic_bot.commons.base_camera import BaseCamera
+
+if TYPE_CHECKING:
+    from aiohttp.web_request import Request
+    from aiohttp.web_response import StreamResponse
 
 
 class MjpegVideo:
@@ -30,12 +35,12 @@ class MjpegVideo:
     def __init__(self, camera: BaseCamera):
         self.camera = camera
 
-    def stop(self):
+    def stop(self) -> None:
         log.info("stopping any MJPEG streamers")
         MjpegVideo.is_stopping = True
 
     #  see https://docs.aiohttp.org/en/stable/multipart.html
-    async def stream_mjpeg_video(self, request, camera: BaseCamera):
+    async def stream_mjpeg_video(self, request: 'Request', camera: BaseCamera) -> 'StreamResponse':
         """MJPEG video streaming function."""
         boundary_marker = "--frame"
         response = web.StreamResponse(
@@ -48,7 +53,10 @@ class MjpegVideo:
         await response.prepare(request)
         while not MjpegVideo.is_stopping:
             frame = camera.get_frame()
-            jpeg = cv2.imencode(".jpg", frame)[1].tobytes()  # type: ignore
+            if frame is not None:
+                jpeg = cv2.imencode(".jpg", frame)[1].tobytes()  # type: ignore[arg-type]
+            else:
+                continue
             with MultipartWriter("image/jpeg", boundary=boundary_marker) as mpwriter:
                 mpwriter.append(jpeg, {"Content-Type": "image/jpeg"})
                 try:

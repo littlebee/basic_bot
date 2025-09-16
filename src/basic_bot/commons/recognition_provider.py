@@ -95,7 +95,7 @@ class RecognitionProvider:
 
     @classmethod
     async def provide_state(cls) -> None:
-        previous_objects: List[dict] = []
+        previous_objects: List[dict[str, Any]] = []
         while True:
             try:
                 log.info(

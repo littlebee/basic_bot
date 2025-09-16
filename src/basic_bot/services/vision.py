@@ -93,6 +93,8 @@ import sys
 import time
 
 from aiohttp import web
+from aiohttp.web_request import Request
+from aiohttp.web_response import Response, StreamResponse
 
 from basic_bot.commons import constants as c, log, messages, vid_utils
 from basic_bot.commons.web_utils_aiohttp import (
@@ -137,7 +139,7 @@ else:
 
 log.info(f"loading camera module: {camera_lib}")
 camera_module = importlib.import_module(camera_lib)
-camera = camera_module.Camera()  # type: ignore
+camera = camera_module.Camera()
 
 log.info("Initializing webrtc offers server")
 webrtc_peers = WebrtcPeers(camera)
@@ -153,14 +155,14 @@ public_directory = os.path.abspath(os.path.join(script_directory, "../public"))
 
 
 # @app.route("/video_feed")
-async def video_feed(request):
+async def video_feed(request: Request) -> StreamResponse:
     """Video streaming route. Put this in the src attribute of an img tag."""
     # asyncio.create_task(stream_mjpeg_video(request, camera))
     return await mjpeg_video.stream_mjpeg_video(request, camera)
 
 
 # @app.route("/stats")
-def send_stats(_request):
+async def send_stats(_request: Request) -> Response:
     """Return the FPS and other stats of the vision service."""
     return json_response(
         200,
@@ -176,7 +178,7 @@ def send_stats(_request):
 
 
 # @app.route("/pause_recognition")
-def pause_recognition(_request):
+async def pause_recognition(_request: Request) -> Response:
     """Use a GET request to pause the recognition provider."""
     if c.BB_DISABLE_RECOGNITION_PROVIDER:
         return web.Response(status=404, text="recognition provider is disabled")
@@ -186,7 +188,7 @@ def pause_recognition(_request):
 
 
 # @app.route("/resume_recognition")
-def resume_recognition(_request):
+async def resume_recognition(_request: Request) -> Response:
     """Use a GET request to resume the recognition provider."""
     if c.BB_DISABLE_RECOGNITION_PROVIDER:
         return web.Response(status=404, text="recognition provider disabled")
@@ -199,7 +201,7 @@ last_record_duration: float = 0
 
 
 # @app.route("/record_video")
-def record_video(request):
+async def record_video(request: Request) -> Response:
     """Record the video feed to a file."""
     global last_recording_started_at, last_record_duration
 
@@ -233,7 +235,7 @@ def record_video_thread(duration: float) -> None:
 
 
 # @app.route("/recorded_video")
-def recorded_video(_request):
+async def recorded_video(_request: Request) -> Response:
     """
     Returns json array of string filenames (without extension) of all
     recorded video files.   The filenames can be used to download the
@@ -245,7 +247,7 @@ def recorded_video(_request):
 
 
 # @app.route("/recorded_video/<filename>")
-def get_recorded_video_file(request):
+async def get_recorded_video_file(request: Request) -> Response:
     """
     Sends a recorded video file.
     """
@@ -256,23 +258,23 @@ def get_recorded_video_file(request):
 
 
 # @app.route("/ping")
-def ping(_request) -> web.Response:
+async def ping(_request: Request) -> Response:
     return respond_ok("pong")
 
 
 # @app.route("/webrtc_test")
-def get_webrtc_test_page(_request):
+async def get_webrtc_test_page(_request: Request) -> Response:
     return respond_file(public_directory, "webrtc_test.html", content_type="text/html")
 
 
 # @app.route("/webrtc_test_client.js")
-def get_webrtc_test_client(_request):
+async def get_webrtc_test_client(_request: Request) -> Response:
     return respond_file(
         public_directory, "webrtc_test_client.js", content_type="application/javascript"
     )
 
 
-async def on_shutdown(_app):
+async def on_shutdown(_app: web.Application) -> None:
     await webrtc_peers.close_all_connections()
     mjpeg_video.stop()
     camera.stop()

@@ -10,28 +10,30 @@ import basic_bot.test_helpers.constants as tc
 # ws messages.  See: https://pypi.org/project/websocket-client/
 # `conda install -c conda-forge websocket-client`
 import websocket
+from websocket import WebSocket
 
 websocket.enableTrace(True)
 
 
-def connect(identity: Optional[str] = None) -> websocket.WebSocket:
+def connect(identity: Optional[str] = None) -> WebSocket:
     """connect to central hub and return a websocket (websocket-client lib)"""
-    ws = websocket.create_connection(c.BB_HUB_URI, timeout=tc.DEFAULT_TIMEOUT)
+    ws: WebSocket = websocket.create_connection(c.BB_HUB_URI, timeout=tc.DEFAULT_TIMEOUT)
 
     if identity:
         send(ws, {"type": "identity", "data": identity})
         # clear the iseeu response
-        assert recv(ws)
+        response = recv(ws)
+        assert response
 
     return ws
 
 
-def send(ws: websocket.WebSocket, dict: Dict[str, Any]) -> None:
+def send(ws: WebSocket, dict: Dict[str, Any]) -> None:
     """send dictionary as json to central hub"""
     ws.send(json.dumps(dict))
 
 
-def send_get_state(ws: websocket.WebSocket, namesList: List[str]) -> None:
+def send_get_state(ws: WebSocket, namesList: List[str]) -> None:
     send(
         ws,
         {
@@ -41,7 +43,7 @@ def send_get_state(ws: websocket.WebSocket, namesList: List[str]) -> None:
     )
 
 
-def send_update_state(ws: websocket.WebSocket, dict: Dict[str, Any]) -> None:
+def send_update_state(ws: WebSocket, dict: Dict[str, Any]) -> None:
     send(
         ws,
         {
@@ -51,21 +53,22 @@ def send_update_state(ws: websocket.WebSocket, dict: Dict[str, Any]) -> None:
     )
 
 
-def send_identity(ws: websocket.WebSocket, name: str) -> None:
+def send_identity(ws: WebSocket, name: str) -> None:
     send(ws, {"type": "identity", "data": name})
 
 
-def send_subscribe(ws: websocket.WebSocket, namesList: List[str]) -> None:
+def send_subscribe(ws: WebSocket, namesList: List[str]) -> None:
     send(ws, {"type": "subscribeState", "data": namesList})
 
 
-def recv(ws: websocket.WebSocket) -> Dict[str, Any]:
-    message = json.loads(ws.recv())
+def recv(ws: WebSocket) -> Dict[str, Any]:
+    message_str = ws.recv()
+    message: Dict[str, Any] = json.loads(message_str)
     print(f"test helper received: {message}")
     return message
 
 
-def has_received_data(ws: websocket.WebSocket) -> Optional[Dict[str, Any]]:
+def has_received_data(ws: WebSocket) -> Optional[Dict[str, Any]]:
     # note zero doesn't work here because it causes it creates a non blocking socket
     # plus we need to give central hub chance to reply for test purposes
     ws.settimeout(0.1)
@@ -77,11 +80,12 @@ def has_received_data(ws: websocket.WebSocket) -> Optional[Dict[str, Any]]:
         ws.settimeout(tc.DEFAULT_TIMEOUT)
 
 
-def has_received_state_update(ws: websocket.WebSocket, key: str, value: Any) -> bool:
+def has_received_state_update(ws: WebSocket, key: str, value: Any) -> bool:
     while True:
         message = recv(ws)
         if message["type"] == "stateUpdate" and key in message["data"]:
             break
 
-    stateUpdateData = message["data"]
-    return stateUpdateData.get(key) == value
+    state_update_data: Dict[str, Any] = message["data"]
+    received_value: Any = state_update_data.get(key)
+    return bool(received_value == value)

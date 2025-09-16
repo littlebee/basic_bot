@@ -152,7 +152,7 @@ async def send_message(websocket: WebSocketServerProtocol, message: str) -> None
         log.info(
             f"sending {message} to {websocket.remote_address[0]}:{websocket.remote_address[1]}"
         )
-    if websocket and websocket != "all":
+    if websocket:
         await websocket.send(message)
     elif connected_sockets:  # asyncio.wait doesn't accept an empty list
         # The type ignore is to suppress the mypy error below when running on linux:
@@ -161,7 +161,7 @@ async def send_message(websocket: WebSocketServerProtocol, message: str) -> None
         # mypy on the mac doesn't have this issue.  Looking at the type definition for asyncio.wait,
         # it looks like mypy on the linux (Python 3.11.2) doesn't realize that there is an overload
         # that takes an iterable of coroutines: `fs: Iterable[Awaitable[_T]]`
-        await asyncio.wait([websocket.send(message) for websocket in connected_sockets])  # type: ignore
+        await asyncio.wait([websocket.send(message) for websocket in connected_sockets])
 
 
 async def send_state_update_to_subscribers(message_data: Dict[str, Any]) -> None:
@@ -225,7 +225,7 @@ async def notify_state(
 # NOTE that there is no "all" option here, need a websocket,
 #  ye shall not ever broadcast this info
 async def notify_iseeu(websocket: WebSocketServerProtocol) -> None:
-    if not websocket or websocket == "all":
+    if not websocket:
         return
     await send_message(websocket, iseeu_message(websocket))
 
@@ -284,7 +284,7 @@ async def handle_state_subscribe(
     websocket: WebSocketServerProtocol, subscription_keys: List[str]
 ) -> None:
 
-    if subscription_keys == "*":
+    if len(subscription_keys) == 1 and subscription_keys[0] == "*":
         log.debug(f"adding {websocket.remote_address[1]} to star subscribers")
         star_subscribers.add(websocket)
         return
@@ -307,7 +307,7 @@ async def handle_state_unsubscribe(
     websocket: WebSocketServerProtocol, data: List[str]
 ) -> None:
     subscription_keys: List[str] = []
-    if data == "*":
+    if len(data) == 1 and data[0] == "*":
         subscription_keys = list(subscribers.keys())
     else:
         subscription_keys = data

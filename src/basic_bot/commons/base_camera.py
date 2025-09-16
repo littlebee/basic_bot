@@ -10,7 +10,8 @@ Thank you, @adeept and @miguelgrinberg!
 
 import time
 import threading
-from typing import Generator, Optional, Any
+from typing import Generator, Optional, Any, Union
+import numpy as np
 
 from basic_bot.commons import log
 from basic_bot.commons.fps_stats import FpsStats
@@ -42,7 +43,7 @@ class CameraEvent(object):
             # add an entry for it in the self.events dict
             # each entry has two elements, a threading.Event() and a timestamp
             self.events[ident] = [threading.Event(), time.time()]
-        return self.events[ident][0].wait()
+        return self.events[ident][0].wait() or False
 
     def set(self) -> None:
         """Invoked by the camera thread when a new frame is available."""
@@ -79,7 +80,7 @@ class BaseCamera(object):
     thread: Optional[threading.Thread] = (
         None  # background thread that reads frames from camera
     )
-    frame: Optional[bytes] = None  # current frame is stored here by background thread
+    frame: Optional[Union[bytes, np.ndarray]] = None  # current frame is stored here by background thread
 
     event = CameraEvent()
     fps_stats = FpsStats()
@@ -97,7 +98,7 @@ class BaseCamera(object):
             # while self.get_frame() is None:
             #     time.sleep(0)
 
-    def get_frame(self) -> Optional[bytes]:
+    def get_frame(self) -> Optional[Union[bytes, np.ndarray]]:
         """Return the current camera frame."""
         # wait for a signal from the camera thread
         BaseCamera.event.wait()
@@ -105,11 +106,11 @@ class BaseCamera(object):
 
         return BaseCamera.frame
 
-    def stop(self):
+    def stop(self) -> None:
         BaseCamera.is_stopped = True
 
     @staticmethod
-    def frames() -> Generator[bytes, None, None]:
+    def frames() -> Generator[Union[bytes, np.ndarray], None, None]:
         """ "Generator that returns frames from the camera."""
         raise RuntimeError("Must be implemented by subclasses.")
 

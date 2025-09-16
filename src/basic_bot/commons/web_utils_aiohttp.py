@@ -5,15 +5,18 @@ Utility functions for handling aiohttp web responses.
 import json
 import os
 
+from typing import Any, Optional
 from aiohttp import web
 from aiohttp.abc import AbstractAccessLogger
+from aiohttp.web_request import BaseRequest
+from aiohttp.web_response import Response, StreamResponse
 
 
 from basic_bot.commons import log
 
 
 # TODO : maybe move these to aiohttp web utils file (modeled after commons/web_utils)
-def json_response(status, data):
+def json_response(status: int, data: Any) -> Response:
     """Return a JSON response using aiortc web."""
     return web.Response(
         status=status,
@@ -22,12 +25,12 @@ def json_response(status, data):
     )
 
 
-def respond_ok(data=None):
+def respond_ok(data: Any = None) -> Response:
     """Return a JSON response with status ok."""
     return json_response(200, {"status": "ok", "data": data})
 
 
-def respond_file(path, filename, content_type=None):
+def respond_file(path: str, filename: str, content_type: Optional[str] = None) -> Response:
     log.info(f"sending file: {filename} from {path}")
     try:
         content = open(os.path.join(path, filename), "br").read()
@@ -40,7 +43,7 @@ def respond_file(path, filename, content_type=None):
 
 # see source: https://docs.aiohttp.org/en/stable/logging.html#access-logs
 class AccessLogger(AbstractAccessLogger):
-    def log(self, request, response, time):
+    def log(self, request: BaseRequest, response: StreamResponse, time: float) -> None:
         log.info(
             f"Access from {request.remote} "
             f'"{request.method} {request.path} '
@@ -48,7 +51,7 @@ class AccessLogger(AbstractAccessLogger):
         )
 
     @property
-    def enabled(self):
+    def enabled(self) -> bool:
         """Return True if logger is enabled.
 
         Override this property if logging is disabled to avoid the

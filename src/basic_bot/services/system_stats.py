@@ -36,7 +36,7 @@ import websockets
 from basic_bot.commons import constants as c, messages
 
 
-def get_update_message():
+def get_update_message() -> str:
     cpu_temp = 0
     try:
         # This only works on linux according to the psutil docs
@@ -45,7 +45,7 @@ def get_update_message():
         # On a Raspberry Pi5, the cpu temp is under the "cpu_thermal" key although the
         # key may be different on other linux systems. The psutil docs suggest that it
         # may be under the "coretemp" key on some systems.
-        cpu_temp = temps["cpu_thermal"][0].current
+        cpu_temp = int(temps["cpu_thermal"][0].current)
     except:
         pass
 
@@ -64,11 +64,11 @@ def get_update_message():
     )
 
 
-async def provide_state():
+async def provide_state() -> None:
     while True:
         try:
             print(f"connecting to {c.BB_HUB_URI}")
-            async with websockets.connect(c.BB_HUB_URI) as websocket:
+            async with websockets.connect(c.BB_HUB_URI) as websocket:  # type: ignore
                 await messages.send_identity(websocket, "system_stats")
                 while True:
                     message = get_update_message()
@@ -81,7 +81,7 @@ async def provide_state():
         time.sleep(5)
 
 
-def start_provider():
+def start_provider() -> None:
     asyncio.run(provide_state())
 
 

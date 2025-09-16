@@ -30,11 +30,11 @@ else:
 
     class servo_af:  # type: ignore
         class Servo:
-            def __init__(self, channel, min_pulse=500, max_pulse=2500):
+            def __init__(self, channel: int, min_pulse: int = 500, max_pulse: int = 2500) -> None:
                 self.channel = channel
                 self.min_pulse = min_pulse
                 self.max_pulse = max_pulse
-                self.fraction = 0
+                self.fraction: float = 0.0
 
 
 # env var to turn on console debug output
@@ -126,7 +126,8 @@ class Servo:
     def current_angle(self) -> float:
         """Returns the current angle of the servo motor"""
         try:
-            return self.servo.fraction * self.motor_range
+            fraction: float = float(self.servo.fraction)
+            return fraction * self.motor_range
         except OSError as error:
             # Was getting intermittent exception from adafruit servo kit
             # originating from i2c_bus.read_i2c_block_data()

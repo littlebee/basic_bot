@@ -3,7 +3,8 @@ import cv2
 import random
 import time
 
-from typing import Generator
+from typing import Generator, Union
+import numpy as np
 
 from basic_bot.commons import log, constants as c
 from basic_bot.commons.base_camera import BaseCamera
@@ -46,7 +47,7 @@ class Camera(BaseCamera):
     """
 
     @staticmethod
-    def frames() -> Generator[bytes, None, None]:
+    def frames() -> Generator[Union[bytes, np.ndarray], None, None]:
         """
         Generator function that yields frames from the camera. Required by BaseCamera
         """
@@ -62,7 +63,7 @@ class Camera(BaseCamera):
                 index = random.randint(0, len(not_pet_images) - 1)
                 img = not_pet_images[index]
 
-            yield img  # type: ignore
+            yield img
             time.sleep(
                 1 / c.BB_CAMERA_FPS - (time.time() - tstart)
             )  # Limit supply to camera FPS

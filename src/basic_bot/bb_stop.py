@@ -18,7 +18,7 @@ import signal
 import yaml
 from jsonschema import validate, ValidationError
 
-from typing import Optional, List
+from typing import Optional, List, Any
 
 
 from basic_bot.commons.script_helpers.pid_files import is_pid_file_valid
@@ -79,7 +79,7 @@ def stop_service(
     os.remove(pid_file)
 
 
-def stop_services(config: dict, services_filter: Optional[List[str]] = None) -> None:
+def stop_services(config: dict[str, Any], services_filter: Optional[List[str]] = None) -> None:
     for service in config["services"]:
         if services_filter and service["name"] not in services_filter:
             continue

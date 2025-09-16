@@ -59,12 +59,13 @@ def record_video(camera: Camera, duration: float) -> str:
     convert_video_to_h264(raw_filename, video_filename)
 
     log.info(f"Saving thumbnail image to {image_filename}")
-    resized_frame = cv2.resize(first_frame, (THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))
-    cv2.imwrite(image_filename, resized_frame)
+    if first_frame is not None:
+        resized_frame = cv2.resize(first_frame, (THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))  # type: ignore[arg-type]
+        cv2.imwrite(image_filename, resized_frame)
 
-    log.info(f"Saving thumbnail image to {lg_image_filename}")
-    resized_frame = cv2.resize(first_frame, (LG_THUMBNAIL_WIDTH, LG_THUMBNAIL_HEIGHT))
-    cv2.imwrite(lg_image_filename, resized_frame)
+        log.info(f"Saving thumbnail image to {lg_image_filename}")
+        resized_frame = cv2.resize(first_frame, (LG_THUMBNAIL_WIDTH, LG_THUMBNAIL_HEIGHT))  # type: ignore[arg-type]
+        cv2.imwrite(lg_image_filename, resized_frame)
 
     return base_file_name
 

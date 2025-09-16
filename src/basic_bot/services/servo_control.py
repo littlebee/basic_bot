@@ -74,8 +74,10 @@
 """
 
 import asyncio
+from typing import Dict, Any
 
 from basic_bot.commons import log, messages
+from websockets.client import WebSocketClientProtocol
 from basic_bot.commons.servo_pca9685 import Servo
 from basic_bot.commons.servo_config import read_servo_config
 from basic_bot.commons.hub_state import HubState
@@ -102,7 +104,7 @@ hub_state = HubState(
 )
 
 
-async def send_servo_config(websocket):
+async def send_servo_config(websocket: WebSocketClientProtocol) -> None:
     # read config from the Servo objects instead of the file for
     # testing mostly,  Just giving back the config we read from the file
     # is disingenuous and doesn't tell us if the Servo object has the data
@@ -125,10 +127,10 @@ async def send_servo_config(websocket):
     )
 
 
-last_servo_angles: dict = {}
+last_servo_angles: dict[str, Any] = {}
 
 
-async def send_servo_angles(websocket, force=False):
+async def send_servo_angles(websocket: WebSocketClientProtocol, force: bool = False) -> None:
     global last_servo_angles
 
     angles = {name: servo.current_angle for name, servo in servos_by_name.items()}
@@ -142,13 +144,13 @@ async def send_servo_angles(websocket, force=False):
     )
 
 
-async def update_servo_angles(websocket):
+async def update_servo_angles(websocket: WebSocketClientProtocol) -> None:
     while True:
         await send_servo_angles(websocket)
         await asyncio.sleep(ANGLE_UPDATE_FREQUENCY)
 
 
-def handle_connect(websocket):
+def handle_connect(websocket: WebSocketClientProtocol) -> None:
     # if we disconnect and reconnect we need to resend the current state
     log.info("connected to central hub")
     asyncio.create_task(send_servo_config(websocket))
@@ -158,7 +160,7 @@ def handle_connect(websocket):
     asyncio.create_task(update_servo_angles(websocket))
 
 
-def handle_state_update(_websocket, _msg_type, msg_data):
+def handle_state_update(_websocket: WebSocketClientProtocol, _msg_type: str, msg_data: Dict[str, Any]) -> None:
     angles = msg_data.get("servo_angles")
     log.debug(f"received servo_angles: {angles}")
     if angles:

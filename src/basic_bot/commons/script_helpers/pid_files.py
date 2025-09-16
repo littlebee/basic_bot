@@ -1,7 +1,7 @@
 import psutil
 
 
-def is_process_running(pid: int):
+def is_process_running(pid: int) -> bool:
     try:
         psutil.Process(pid)
         return True
@@ -9,7 +9,7 @@ def is_process_running(pid: int):
         return False
 
 
-def is_pid_file_valid(pid_file: str):
+def is_pid_file_valid(pid_file: str) -> bool:
     try:
         with open(pid_file, "r") as f:
             pid = int(f.read())

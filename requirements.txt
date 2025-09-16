@@ -13,3 +13,5 @@ types-Flask-Cors
 types-psutil
 types-requests
 types-PyYAML
+types-jsonschema
+opencv-stubs
