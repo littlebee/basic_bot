@@ -23,4 +23,6 @@ websocket-client
 aiohttp
 Pillow
 aiortc
+aiohttp_cors
 av
+
