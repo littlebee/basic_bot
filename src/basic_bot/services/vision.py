@@ -4,9 +4,9 @@ Provide image feed and object recognition based on open-cv for the
 video capture input.  This service will provide a list of objects
 and their bounding boxes in the image feed via central hub.
 
-## Video Feed
+## MJPEG Video Feed
 
-A video feed is provided via http://<ip>:<port>/video_feed that
+A Motion JPEG (MJPEG) video feed is provided via http://<ip>:<port>/video_feed that
 can be used as the `src` attribute to an HTML 'img' element.
 The image feed is a multipart jpeg stream (for now; TODO: reassess this).
 Assuming that the vision service is running on the same host machine as the browser client
@@ -14,6 +14,19 @@ location, you can do something like:
 ```html
 <img src="http://localhost:5001/video_feed" />
 ```
+
+## WebRTC video supported
+
+The vision service when running will respond to WebRTC offers a allow
+streaming video from the robot camera.
+
+It should not be neccessary to use both MJPEG and WebRTC streaming and
+WebRTC video should be preferred for its lower latency and less overhead
+needed to encode jpg frames for MJPEG streaming.
+
+See, [webrtc_test_client.js](https://github.com/littlebee/basic_bot/blob/bee/webRTC-attempt2/src/basic_bot/public/webrtc_test_client.js)
+and associated .html for example of how to use WebRTC stream from browser.
+
 ## Object Recognition
 
 The following data is provided to central_hub as fast as image capture and
