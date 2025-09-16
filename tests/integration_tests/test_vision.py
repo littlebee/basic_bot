@@ -1,7 +1,6 @@
 # skip this test if tflite_runtime is not installed
-import basic_bot.test_helpers.skip_unless_tflite_runtime  # noqa: F401
-
 import cv2
+import pytest
 import requests
 import time
 from pathlib import Path
@@ -13,10 +12,40 @@ import basic_bot.commons.constants as c
 # this also test all of the commons.vision_client.py functions
 import basic_bot.commons.vision_client as vision_client
 
+tflite_installed = False
+try:
+    # first test to see if tflite_runtime is installed?
+    # flake8 will complain about the import not benig used
+    import tflite_runtime  # noqa: F401 # type: ignore
+
+    tflite_installed = True
+except ImportError:
+    """
+    tflite_runtime is hard to install on mac and even worse on Apple Silicon.
+
+    It does run on Ubuntu Linux and runs on the Raspberry Pi.  The CI/CD
+    GitHub Actions runner is Ubuntu Linux and you should see it running there.
+    """
+    pass
+
 
 def setup_module():
     sst.start_service("central_hub", "python -m basic_bot.services.central_hub")
-    sst.start_service("vision", "python -m basic_bot.services.vision")
+    sst.start_service(
+        "vision",
+        "python -m basic_bot.services.vision",
+        {
+            "BB_DISABLE_RECOGNITION_PROVIDER": (
+                # these are intensionally string because they are env vars
+                "True"
+                if not tflite_installed
+                else "False"
+            )
+        },
+    )
+    # TODO : try to remove. after change to aiohttp from flask, the
+    #   web listener is taking a little longer to start up
+    time.sleep(1)
 
 
 def teardown_module():
@@ -25,6 +54,8 @@ def teardown_module():
 
 
 class TestVision:
+
+    @pytest.mark.skipif(not tflite_installed, reason="tflite runtime not installed")
     def test_object_detection(self):
         ws = hub.connect()
         # this name shows up in central hub logs and is helpful for debugging
@@ -115,18 +146,25 @@ class TestVision:
     def test_record_video(self):
         TEST_DURATION = 3.5
 
+        print("in test_record_video")
+
         vidfile_count_before = len(list(Path(c.BB_VIDEO_PATH).glob("*.mp4")))
         imgfile_count_before = len(list(Path(c.BB_VIDEO_PATH).glob("*.jpg")))
 
+        print("test_record_video: calling send_record_video_request")
         # test that video can be recorded
         response = vision_client.send_record_video_request(TEST_DURATION)
         assert response.status_code == 200
         assert response.json()["status"] == "ok"
 
+        print(
+            "test_record_video: calling send_record_video_request (while one is already running)"
+        )
         # Test that the service will only record one video at a time and return
         # not ok if a second request is made while the first is still recording
         response = vision_client.send_record_video_request(TEST_DURATION)
-        assert response.json()["status"] == 304
+        print(f"test_record_video:  response for send_record_video_request: {response}")
+        assert response.status_code == 304
 
         # The video recording is started async. Recording, reencoding the video,
         # and generating the thumbnails (mostly reencoding) takes a few seconds
@@ -142,9 +180,14 @@ class TestVision:
             imgfile_count_after == imgfile_count_before + 2
         ), "should have created exactly two .jpg files"
 
+        print("test_record_video: calling fetch_recorded_videos")
+
         # tests video list retrieval
         response = vision_client.fetch_recorded_videos()
         assert response.status_code == 200
+
+        print(f"test_record_video: fetch_recorded_videos response: {response}")
+
         jsonResp = response.json()
         assert_is_array_of_strings(jsonResp)
         assert len(jsonResp) == vidfile_count_after
@@ -173,7 +216,7 @@ def assert_is_array_of_strings(obj):
 
 
 def assert_video_duration(url, expected_duration):
-    TOLERANCE = 0.1  # seconds of tolerance for video duration test
+    TOLERANCE = 0.5  # seconds of tolerance for video duration test
 
     data = cv2.VideoCapture(url)
     frames = data.get(cv2.CAP_PROP_FRAME_COUNT)

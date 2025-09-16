@@ -124,6 +124,7 @@ def start_service(
 
     with open(log_file, "w") as log:
         # must use full env with Popen env arg
+        print(f"starting test service with {args=}")
         process = subprocess.Popen(args, stdout=log, stderr=log, env=env)
         log_ts = get_log_time()
         time.sleep(0.5)

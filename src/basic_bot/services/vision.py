@@ -82,7 +82,12 @@ import time
 from aiohttp import web
 
 from basic_bot.commons import constants as c, log, messages, vid_utils
-from basic_bot.commons.web_utils_aiohttp import json_response, respond_ok, respond_file
+from basic_bot.commons.web_utils_aiohttp import (
+    json_response,
+    respond_ok,
+    respond_file,
+    AccessLogger,
+)
 
 from basic_bot.commons.hub_state import HubState
 from basic_bot.commons.hub_state_monitor import HubStateMonitor
@@ -188,7 +193,7 @@ def record_video(request):
     if time.time() - last_recording_started_at < last_record_duration:
         return web.Response(status=304, text="already recording")
 
-    duration = float(request.args.get("duration", "10"))
+    duration = float(request.rel_url.query.get("duration", "10"))
     last_recording_started_at = time.time()
     last_record_duration = duration
     threading.Thread(target=record_video_thread, args=(duration,)).start()
@@ -232,8 +237,9 @@ def get_recorded_video_file(request):
     Sends a recorded video file.
     """
     filename = request.match_info["filename"]
+    content_type = "video/mp4" if filename.endswith(".mp4") else "image/jpeg"
     video_path = os.path.realpath(c.BB_VIDEO_PATH)
-    return respond_file(video_path, filename)
+    return respond_file(video_path, filename, content_type=content_type)
 
 
 # @app.route("/ping")
@@ -285,7 +291,7 @@ def main() -> None:
     log.info(f"starting vision webhost on {c.BB_VISION_PORT}")
     web.run_app(
         app,
-        access_log=None,
+        access_log_class=AccessLogger,
         host="0.0.0.0",
         port=c.BB_VISION_PORT,
         # ssl_context=ssl_context,
