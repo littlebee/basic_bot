@@ -95,6 +95,7 @@ import time
 from aiohttp import web
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response, StreamResponse
+import aiohttp_cors
 
 from basic_bot.commons import constants as c, log, messages, vid_utils
 from basic_bot.commons.web_utils_aiohttp import (
@@ -302,6 +303,21 @@ def main() -> None:
     app.router.add_get("/webrtc_test.html", get_webrtc_test_page)
     app.router.add_get("/webrtc_test_client.js", get_webrtc_test_client)
     # app.router.add_post("/offer", offer)
+
+    # Configure CORS with a default setup for all routes.
+    cors = aiohttp_cors.setup(
+        app,
+        defaults={
+            "*": aiohttp_cors.ResourceOptions(
+                allow_credentials=True,
+                expose_headers="*",
+                allow_headers="*",
+                allow_methods="*",
+            )
+        },
+    )
+    for route in list(app.router.routes()):
+        cors.add(route)
 
     log.info(f"starting vision webhost on {c.BB_VISION_PORT}")
     web.run_app(
