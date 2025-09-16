@@ -550,6 +550,28 @@
   
   
     <li class="md-nav__item">
+      <a href="../../commons/mjpeg_video/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    mjpeg_video
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../commons/persist_state/" class="md-nav__link">
         
   
@@ -731,6 +753,50 @@
   
   <span class="md-ellipsis">
     web_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commons/web_utils_aiohttp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    web_utils_aiohttp
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commons/webrtc_server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    webrtc_server
     
   </span>
   
@@ -1326,9 +1392,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#video-feed" class="md-nav__link">
+  <a href="#mjpeg-video-feed" class="md-nav__link">
     <span class="md-ellipsis">
-      Video Feed
+      MJPEG Video Feed
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#webrtc-video-supported" class="md-nav__link">
+    <span class="md-ellipsis">
+      WebRTC video supported
     </span>
   </a>
   
@@ -1366,15 +1441,6 @@
   <a href="#camera" class="md-nav__link">
     <span class="md-ellipsis">
       camera
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gen_rgb_video" class="md-nav__link">
-    <span class="md-ellipsis">
-      gen_rgb_video
     </span>
   </a>
   
@@ -1435,9 +1501,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#send_static_js" class="md-nav__link">
+  <a href="#get_recorded_video_file" class="md-nav__link">
     <span class="md-ellipsis">
-      send_static_js
+      get_recorded_video_file
     </span>
   </a>
   
@@ -1958,9 +2024,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#video-feed" class="md-nav__link">
+  <a href="#mjpeg-video-feed" class="md-nav__link">
     <span class="md-ellipsis">
-      Video Feed
+      MJPEG Video Feed
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#webrtc-video-supported" class="md-nav__link">
+    <span class="md-ellipsis">
+      WebRTC video supported
     </span>
   </a>
   
@@ -1998,15 +2073,6 @@
   <a href="#camera" class="md-nav__link">
     <span class="md-ellipsis">
       camera
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gen_rgb_video" class="md-nav__link">
-    <span class="md-ellipsis">
-      gen_rgb_video
     </span>
   </a>
   
@@ -2067,9 +2133,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#send_static_js" class="md-nav__link">
+  <a href="#get_recorded_video_file" class="md-nav__link">
     <span class="md-ellipsis">
-      send_static_js
+      get_recorded_video_file
     </span>
   </a>
   
@@ -2101,12 +2167,20 @@
 <p>Provide image feed and object recognition based on open-cv for the
 video capture input.  This service will provide a list of objects
 and their bounding boxes in the image feed via central hub.</p>
-<h2 id="video-feed">Video Feed</h2>
-<p>A video feed is provided via http://<ip>:<port>/video_feed that
+<h2 id="mjpeg-video-feed">MJPEG Video Feed</h2>
+<p>A Motion JPEG (MJPEG) video feed is provided via http://<ip>:<port>/video_feed that
 can be used as the <code>src</code> attribute to an HTML 'img' element.
 The image feed is a multipart jpeg stream (for now; TODO: reassess this).
 Assuming that the vision service is running on the same host machine as the browser client
 location, you can do something like:</p>
+<h2 id="webrtc-video-supported">WebRTC video supported</h2>
+<p>The vision service when running will respond to WebRTC offers a allow
+streaming video from the robot camera.</p>
+<p>It should not be neccessary to use both MJPEG and WebRTC streaming and
+WebRTC video should be preferred for its lower latency and less overhead
+needed to encode jpg frames for MJPEG streaming.</p>
+<p>See, <a href="https://github.com/littlebee/basic_bot/blob/bee/webRTC-attempt2/src/basic_bot/public/webrtc_test_client.js">webrtc_test_client.js</a>
+and associated .html for example of how to use WebRTC stream from browser.</p>
 <h2 id="object-recognition">Object Recognition</h2>
 <p>The following data is provided to central_hub as fast as image capture and
 recognition can be done:</p>
@@ -2153,55 +2227,43 @@ https://blog.miguelgrinberg.com/post/flask-video-streaming-revisited</p>
 <p><a id="basic_bot.services.vision.camera"></a></p>
 <h4 id="camera">camera</h4>
 <p>type: ignore</p>
-<p><a id="basic_bot.services.vision.gen_rgb_video"></a></p>
-<h4 id="gen_rgb_video">gen_rgb_video</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">gen_rgb_video</span><span class="p">(</span><span class="n">camera</span><span class="p">:</span> <span class="n">BaseCamera</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
-</span></code></pre></div>
-<p>Video streaming generator function.</p>
 <p><a id="basic_bot.services.vision.video_feed"></a></p>
 <h4 id="video_feed">video_feed</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/video_feed&quot;</span><span class="p">)</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">video_feed</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Response</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">video_feed</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Video streaming route. Put this in the src attribute of an img tag.</p>
 <p><a id="basic_bot.services.vision.send_stats"></a></p>
 <h4 id="send_stats">send_stats</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/stats&quot;</span><span class="p">)</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">send_stats</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Response</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">send_stats</span><span class="p">(</span><span class="n">_request</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Return the FPS and other stats of the vision service.</p>
 <p><a id="basic_bot.services.vision.pause_recognition"></a></p>
 <h4 id="pause_recognition">pause_recognition</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/pause_recognition&quot;</span><span class="p">)</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">pause_recognition</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Response</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">pause_recognition</span><span class="p">(</span><span class="n">_request</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Use a GET request to pause the recognition provider.</p>
 <p><a id="basic_bot.services.vision.resume_recognition"></a></p>
 <h4 id="resume_recognition">resume_recognition</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/resume_recognition&quot;</span><span class="p">)</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">resume_recognition</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Response</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">resume_recognition</span><span class="p">(</span><span class="n">_request</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Use a GET request to resume the recognition provider.</p>
 <p><a id="basic_bot.services.vision.record_video"></a></p>
 <h4 id="record_video">record_video</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/record_video&quot;</span><span class="p">)</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">record_video</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Response</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">record_video</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Record the video feed to a file.</p>
 <p><a id="basic_bot.services.vision.recorded_video"></a></p>
 <h4 id="recorded_video">recorded_video</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/recorded_video&quot;</span><span class="p">)</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">recorded_video</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Response</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">recorded_video</span><span class="p">(</span><span class="n">_request</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Returns json array of string filenames (without extension) of all
 recorded video files.   The filenames can be used to download the
 using a url like <code>http://&lt;ip&gt;:&lt;port&gt;/recorded_video/&lt;filename&gt;.mp4</code>
 or <code>http://&lt;ip&gt;:&lt;port&gt;/recorded_video/&lt;filename&gt;.jpg</code> for the
 thumbnail image.</p>
-<p><a id="basic_bot.services.vision.send_static_js"></a></p>
-<h4 id="send_static_js">send_static_js</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/recorded_video/&lt;filename&gt;&quot;</span><span class="p">)</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">send_static_js</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span>
+<p><a id="basic_bot.services.vision.get_recorded_video_file"></a></p>
+<h4 id="get_recorded_video_file">get_recorded_video_file</h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_recorded_video_file</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Sends a recorded video file.</p>
 
