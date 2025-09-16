@@ -1,6 +1,6 @@
 import asyncio
 import json
-from typing import Any, Optional
+from typing import Any
 import numpy as np
 
 from aiohttp import web

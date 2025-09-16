@@ -11,7 +11,6 @@ import logging
 
 import psutil
 
-from typing import Any
 from flask import Flask, send_from_directory, Response
 from flask_cors import CORS
 
