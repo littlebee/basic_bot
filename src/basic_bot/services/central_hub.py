@@ -105,7 +105,10 @@ import websockets
 import traceback
 from typing import Any, Dict, List, Optional
 
-from websockets.server import WebSocketServerProtocol
+try:
+    from websockets.server import WebSocketServerProtocol
+except ImportError:
+    from websockets.server import ServerProtocol as WebSocketServerProtocol  # type: ignore
 
 from basic_bot.commons import constants, log
 from basic_bot.commons.hub_state import HubState

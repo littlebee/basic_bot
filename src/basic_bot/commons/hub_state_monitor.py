@@ -6,7 +6,10 @@ import json
 from contextlib import asynccontextmanager
 
 from typing import Any, Callable, Optional, List, AsyncGenerator, Union, Literal
-from websockets.client import WebSocketClientProtocol
+try:
+    from websockets.client import WebSocketClientProtocol
+except ImportError:
+    from websockets.client import ClientProtocol as WebSocketClientProtocol  # type: ignore
 
 from basic_bot.commons import constants as c, messages, log
 from basic_bot.commons.hub_state import HubState
@@ -104,9 +107,11 @@ class HubStateMonitor:
     @asynccontextmanager
     async def connect_to_hub(
         self,
-    ) -> AsyncGenerator[websockets.client.WebSocketClientProtocol, None]:
+    ) -> AsyncGenerator[WebSocketClientProtocol, None]:
         log.info(f"hub_state_monitor connecting to central_hub at {c.BB_HUB_URI}")
-        async with websockets.client.connect(c.BB_HUB_URI) as websocket:
+        # Handle different websockets library versions
+        connect_func = getattr(websockets, 'connect', None) or websockets.client.connect
+        async with connect_func(c.BB_HUB_URI) as websocket:
             log.info("hub_state_monitor connected to central_hub")
             state_keys = self.subscribed_keys if self.subscribed_keys != "*" else None
             self.connected_socket = websocket
