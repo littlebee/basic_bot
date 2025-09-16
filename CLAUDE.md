@@ -8,10 +8,13 @@ basic_bot is a Python-centric robotics platform that provides an ultra-lightweig
 
 ## Essential Commands
 
-### Build and Lint
+### Build
 ```bash
-# Build the entire project (includes linting and type checking)
+# Build the entire project using the `python -m build`
 ./build.sh
+
+# Run both linting and type checking
+./lint.sh
 
 # Run linting only
 python -m flake8 src/basic_bot
