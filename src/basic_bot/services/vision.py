@@ -24,7 +24,7 @@ It should not be neccessary to use both MJPEG and WebRTC streaming and
 WebRTC video should be preferred for its lower latency and less overhead
 needed to encode jpg frames for MJPEG streaming.
 
-See, [webrtc_test_client.js](https://github.com/littlebee/basic_bot/blob/bee/webRTC-attempt2/src/basic_bot/public/webrtc_test_client.js)
+See, [webrtc_test_client.js](https://github.com/littlebee/basic_bot/blob/0808450a5d220feaa1efdfcb0738216af89f0f75/src/basic_bot/public/webrtc_test_client.js)
 and associated .html for example of how to use WebRTC stream from browser.
 
 ## Object Recognition
