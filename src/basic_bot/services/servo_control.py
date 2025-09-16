@@ -77,10 +77,7 @@ import asyncio
 from typing import Dict, Any
 
 from basic_bot.commons import log, messages
-try:
-    from websockets.client import WebSocketClientProtocol
-except ImportError:
-    from websockets.client import ClientProtocol as WebSocketClientProtocol  # type: ignore
+from websockets.client import WebSocketClientProtocol
 from basic_bot.commons.servo_pca9685 import Servo
 from basic_bot.commons.servo_config import read_servo_config
 from basic_bot.commons.hub_state import HubState

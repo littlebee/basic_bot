@@ -31,10 +31,7 @@ import json
 import asyncio
 import traceback
 import websockets
-try:
-    from websockets.client import WebSocketClientProtocol
-except ImportError:
-    from websockets.client import ClientProtocol as WebSocketClientProtocol  # type: ignore
+from websockets.client import WebSocketClientProtocol
 import websockets.client
 
 from basic_bot.commons import constants as c, messages, log
@@ -77,9 +74,7 @@ async def provide_state() -> None:
     while True:
         try:
             log.info(f"connecting to {c.BB_HUB_URI}")
-            # Handle different websockets library versions
-            connect_func = getattr(websockets, 'connect', None) or websockets.client.connect
-            async with connect_func(c.BB_HUB_URI) as websocket:
+            async with websockets.client.connect(c.BB_HUB_URI) as websocket:
                 # reset motors incase of restart due to crash
                 left_motor.throttle = 0
                 right_motor.throttle = 0

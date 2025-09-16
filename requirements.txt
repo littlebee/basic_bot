@@ -18,7 +18,7 @@ opencv-stubs
 
 # Runtime dependencies needed for mypy type checking
 numpy
-websockets
+websockets==10.4
 websocket-client
 aiohttp
 Pillow

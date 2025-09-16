@@ -102,9 +102,7 @@ class RecognitionProvider:
                 log.info(
                     f"recognition connecting to hub central at {constants.BB_HUB_URI}"
                 )
-                # Handle different websockets library versions
-                connect_func = getattr(websockets, 'connect', None) or websockets.client.connect
-                async with connect_func(constants.BB_HUB_URI) as websocket:
+                async with websockets.client.connect(constants.BB_HUB_URI) as websocket:
                     await messages.send_identity(websocket, "recognition")
                     while True:
                         if not cls.pause_event.is_set():
