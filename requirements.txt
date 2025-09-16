@@ -15,3 +15,12 @@ types-requests
 types-PyYAML
 types-jsonschema
 opencv-stubs
+
+# Runtime dependencies needed for mypy type checking
+numpy
+websockets
+websocket-client
+aiohttp
+Pillow
+aiortc
+av
