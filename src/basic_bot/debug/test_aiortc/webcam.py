@@ -30,14 +30,14 @@ microphone = None
 
 
 def create_local_tracks(
-    play_from: str, decode: bool
+    play_from: str, decode: bool, audio_only: bool = False
 ) -> tuple[Optional[MediaStreamTrack], Optional[MediaStreamTrack]]:
     global relay, webcam, microphone
 
     if play_from:
         # If a file name was given, play from that file.
         player = MediaPlayer(play_from, decode=decode)
-        return player.audio, player.video
+        return player.audio, None if audio_only else player.video
     else:
         # Otherwise, play from the system's default webcam and microphone.
         #
@@ -47,24 +47,30 @@ def create_local_tracks(
         options = {"framerate": "30", "video_size": "640x480"}
         if relay is None:
             if platform.system() == "Darwin":
-                webcam = MediaPlayer(
-                    "default:none", format="avfoundation", options=options
-                )
+                if not audio_only:
+                    webcam = MediaPlayer(
+                        "default:none", format="avfoundation", options=options
+                    )
                 microphone = MediaPlayer(
                     "none:default", format="avfoundation"
                 )
             elif platform.system() == "Windows":
-                webcam = MediaPlayer(
-                    "video=Integrated Camera", format="dshow", options=options
-                )
+                if not audio_only:
+                    webcam = MediaPlayer(
+                        "video=Integrated Camera", format="dshow", options=options
+                    )
                 microphone = MediaPlayer(
                     "audio=Microphone", format="dshow"
                 )
             else:
-                webcam = MediaPlayer("/dev/video0", format="v4l2", options=options)
+                if not audio_only:
+                    webcam = MediaPlayer("/dev/video0", format="v4l2", options=options)
                 microphone = MediaPlayer("default", format="pulse")
             relay = MediaRelay()
-        return relay.subscribe(microphone.audio), relay.subscribe(webcam.video)
+
+        audio_track = relay.subscribe(microphone.audio) if microphone else None
+        video_track = relay.subscribe(webcam.video) if not audio_only and webcam else None
+        return audio_track, video_track
 
 
 def force_codec(pc: RTCPeerConnection, sender: RTCRtpSender, forced_codec: str) -> None:
@@ -102,7 +108,7 @@ async def offer(request: web.Request) -> web.Response:
 
     # open media source
     audio, video = create_local_tracks(
-        args.play_from, decode=not args.play_without_decoding
+        args.play_from, decode=not args.play_without_decoding, audio_only=args.audio_only
     )
 
     if audio:
@@ -172,6 +178,9 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--video-codec", help="Force a specific video codec (e.g. video/H264)"
+    )
+    parser.add_argument(
+        "--audio-only", help="Stream audio only, no video", action="store_true"
     )
 
     args = parser.parse_args()
