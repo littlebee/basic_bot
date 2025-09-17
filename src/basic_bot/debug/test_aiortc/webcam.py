@@ -10,6 +10,7 @@ import logging
 import os
 import platform
 import ssl
+import subprocess
 from typing import Optional
 
 from aiohttp import web
@@ -27,12 +28,13 @@ pcs = set()
 relay = None
 webcam = None
 microphone = None
+arecord_process = None
 
 
 def create_local_tracks(
-    play_from: str, decode: bool, audio_only: bool = False
+    play_from: str, decode: bool, audio_only: bool = False, use_arecord: bool = False
 ) -> tuple[Optional[MediaStreamTrack], Optional[MediaStreamTrack]]:
-    global relay, webcam, microphone
+    global relay, webcam, microphone, arecord_process
 
     if play_from:
         # If a file name was given, play from that file.
@@ -65,7 +67,23 @@ def create_local_tracks(
             else:
                 if not audio_only:
                     webcam = MediaPlayer("/dev/video0", format="v4l2", options=options)
-                microphone = MediaPlayer("default", format="pulse")
+
+                if use_arecord:
+                    # Use arecord for audio capture on Linux with low latency
+                    arecord_process = subprocess.Popen(
+                        ["arecord", "-f", "cd", "-t", "wav",
+                         "--buffer-size=512", "--period-size=128"],
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.DEVNULL,
+                        bufsize=0  # Unbuffered stdout
+                    )
+                    microphone = MediaPlayer(
+                        arecord_process.stdout,
+                        format="wav",
+                        options={"probesize": "32", "analyzeduration": "0"}
+                    )
+                else:
+                    microphone = MediaPlayer("default", format="pulse")
             relay = MediaRelay()
 
         audio_track = relay.subscribe(microphone.audio) if microphone else None
@@ -108,7 +126,7 @@ async def offer(request: web.Request) -> web.Response:
 
     # open media source
     audio, video = create_local_tracks(
-        args.play_from, decode=not args.play_without_decoding, audio_only=args.audio_only
+        args.play_from, decode=not args.play_without_decoding, audio_only=args.audio_only, use_arecord=args.use_arecord
     )
 
     if audio:
@@ -152,6 +170,11 @@ async def on_shutdown(app: web.Application) -> None:
     if microphone is not None:
         microphone.audio.stop()
 
+    # If arecord process is running, terminate it.
+    if arecord_process is not None:
+        arecord_process.terminate()
+        arecord_process.wait()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="WebRTC webcam demo")
@@ -181,6 +204,9 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--audio-only", help="Stream audio only, no video", action="store_true"
+    )
+    parser.add_argument(
+        "--use-arecord", help="Use arecord for audio capture (Linux only)", action="store_true"
     )
 
     args = parser.parse_args()
