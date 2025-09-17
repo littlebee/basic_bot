@@ -26,19 +26,20 @@ ROOT = os.path.dirname(__file__)
 pcs = set()
 relay = None
 webcam = None
+microphone = None
 
 
 def create_local_tracks(
     play_from: str, decode: bool
 ) -> tuple[Optional[MediaStreamTrack], Optional[MediaStreamTrack]]:
-    global relay, webcam
+    global relay, webcam, microphone
 
     if play_from:
         # If a file name was given, play from that file.
         player = MediaPlayer(play_from, decode=decode)
         return player.audio, player.video
     else:
-        # Otherwise, play from the system's default webcam.
+        # Otherwise, play from the system's default webcam and microphone.
         #
         # In order to serve the same webcam to multiple users we make use of
         # a `MediaRelay`. The webcam will stay open, so it is our responsability
@@ -49,14 +50,21 @@ def create_local_tracks(
                 webcam = MediaPlayer(
                     "default:none", format="avfoundation", options=options
                 )
+                microphone = MediaPlayer(
+                    "none:default", format="avfoundation"
+                )
             elif platform.system() == "Windows":
                 webcam = MediaPlayer(
                     "video=Integrated Camera", format="dshow", options=options
                 )
+                microphone = MediaPlayer(
+                    "audio=Microphone", format="dshow"
+                )
             else:
                 webcam = MediaPlayer("/dev/video0", format="v4l2", options=options)
+                microphone = MediaPlayer("default", format="pulse")
             relay = MediaRelay()
-        return None, relay.subscribe(webcam.video)
+        return relay.subscribe(microphone.audio), relay.subscribe(webcam.video)
 
 
 def force_codec(pc: RTCPeerConnection, sender: RTCRtpSender, forced_codec: str) -> None:
@@ -133,6 +141,10 @@ async def on_shutdown(app: web.Application) -> None:
     # If a shared webcam was opened, stop it.
     if webcam is not None:
         webcam.video.stop()
+
+    # If a shared microphone was opened, stop it.
+    if microphone is not None:
+        microphone.audio.stop()
 
 
 if __name__ == "__main__":
