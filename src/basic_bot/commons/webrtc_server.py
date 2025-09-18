@@ -105,7 +105,7 @@ class WebrtcPeers:
                 # Use default system microphone via PulseAudio
                 log.info("Initializing PulseAudio for audio streaming")
                 if platform.system() == "Darwin":
-                    self.microphone = MediaPlayer("none:default", format="avfoundation")
+                    self.microphone = MediaPlayer(":0", format="avfoundation")
                 elif platform.system() == "Windows":
                     self.microphone = MediaPlayer("audio=Microphone", format="dshow")
                 else:
