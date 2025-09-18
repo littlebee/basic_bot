@@ -86,8 +86,8 @@ def create_local_tracks(
                     microphone = MediaPlayer("default", format="pulse")
             relay = MediaRelay()
 
-        audio_track = relay.subscribe(microphone.audio) if microphone else None
-        video_track = relay.subscribe(webcam.video) if not audio_only and webcam else None
+        audio_track = relay.subscribe(microphone.audio) if microphone and microphone.audio else None
+        video_track = relay.subscribe(webcam.video) if not audio_only and webcam and webcam.video else None
         return audio_track, video_track
 
 
@@ -163,11 +163,11 @@ async def on_shutdown(app: web.Application) -> None:
     pcs.clear()
 
     # If a shared webcam was opened, stop it.
-    if webcam is not None:
+    if webcam is not None and webcam.video:
         webcam.video.stop()
 
     # If a shared microphone was opened, stop it.
-    if microphone is not None:
+    if microphone is not None and microphone.audio:
         microphone.audio.stop()
 
     # If arecord process is running, terminate it.
@@ -216,6 +216,7 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.INFO)
 
+    ssl_context: Optional[ssl.SSLContext]
     if args.cert_file:
         ssl_context = ssl.SSLContext()
         ssl_context.load_cert_chain(args.cert_file, args.key_file)

@@ -63,7 +63,7 @@ class WebrtcPeers:
             # Audio already initialized, return existing track
             return (
                 self.audio_relay.subscribe(self.microphone.audio)
-                if self.audio_relay
+                if self.audio_relay and self.microphone.audio
                 else None
             )
 
@@ -115,7 +115,7 @@ class WebrtcPeers:
             # Initialize audio relay for sharing between multiple peers
             self.audio_relay = MediaRelay()
             log.info("Audio streaming initialized successfully")
-            return self.audio_relay.subscribe(self.microphone.audio)
+            return self.audio_relay.subscribe(self.microphone.audio) if self.microphone.audio else None
 
         except Exception as e:
             log.error(f"Failed to initialize audio streaming: {e}")
@@ -126,7 +126,8 @@ class WebrtcPeers:
         """Clean up audio resources."""
         if self.microphone is not None:
             try:
-                self.microphone.audio.stop()
+                if self.microphone.audio:
+                    self.microphone.audio.stop()
             except Exception as e:
                 log.error(f"Error stopping microphone: {e}")
             self.microphone = None
