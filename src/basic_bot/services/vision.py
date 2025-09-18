@@ -226,7 +226,7 @@ def record_video_thread(duration: float) -> None:
                 hub.connected_socket, {"vision": {"recording": True}}
             )
         )
-        vid_utils.record_video(camera, duration)
+        vid_utils.record_webrtc_video(camera, duration)
     except Exception as e:
         log.error(f"error recording video: {e}")
     finally:
