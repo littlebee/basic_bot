@@ -122,12 +122,15 @@ class RecognitionProvider:
 
         if new_objects != cls.previous_objects:
             cls.previous_objects = new_objects
-            await messages.send_update_state(
-                websocket,
-                {
-                    "recognition": new_objects,
-                },
-            )
+            try:
+                await messages.send_update_state(
+                    websocket,
+                    {
+                        "recognition": new_objects,
+                    },
+                )
+            except websockets.exceptions.ConnectionClosedError:
+                log.info("recognition: websocket connection closed on send")
 
     @classmethod
     async def provide_state(cls) -> None:
