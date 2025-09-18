@@ -205,6 +205,37 @@ BB_VIDEO_PATH = env.env_string("BB_VIDEO_PATH", "./recorded_video")
 The path where the vision service saves recorded video.
 """
 
+# =============== Audio Streaming Constants
+BB_USE_ARECORD = env.env_bool("BB_USE_ARECORD", False)
+"""
+Set this to True to use arecord for audio capture instead of PulseAudio (Linux only).
+Provides lower latency audio streaming via direct ALSA access.
+"""
+
+BB_AUDIO_BUFFER_SIZE = env.env_int("BB_AUDIO_BUFFER_SIZE", 16)
+"""
+Buffer size for arecord audio capture. Smaller values reduce latency but may cause audio dropouts.
+Only used when BB_USE_ARECORD is True.
+"""
+
+BB_AUDIO_PERIOD_SIZE = env.env_int("BB_AUDIO_PERIOD_SIZE", 4)
+"""
+Period size for arecord audio capture. Smaller values reduce latency.
+Only used when BB_USE_ARECORD is True.
+"""
+
+BB_AUDIO_SAMPLE_RATE = env.env_int("BB_AUDIO_SAMPLE_RATE", 16000)
+"""
+Sample rate for arecord audio capture. Lower values reduce processing overhead and latency.
+22050 provides good quality with minimal latency. Only used when BB_USE_ARECORD is True.
+"""
+
+BB_AUDIO_CHANNELS = env.env_int("BB_AUDIO_CHANNELS", 1)
+"""
+Number of audio channels for arecord capture. 1=mono, 2=stereo.
+Mono reduces processing overhead and latency. Only used when BB_USE_ARECORD is True.
+"""
+
 # =============== Web Server Constants
 BB_WEB_PUBLIC = env.env_string("BB_WEB_PUBLIC", "./webapp/dist")
 """
