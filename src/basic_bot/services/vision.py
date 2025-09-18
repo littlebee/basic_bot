@@ -280,7 +280,7 @@ async def get_webrtc_test_client(_request: Request) -> Response:
 async def on_shutdown(_app: web.Application) -> None:
     await webrtc_peers.close_all_connections()
     mjpeg_video.stop()
-    if recognition:
+    if not c.BB_DISABLE_RECOGNITION_PROVIDER:
         recognition.stop()
     camera.stop()
     hub.stop()
