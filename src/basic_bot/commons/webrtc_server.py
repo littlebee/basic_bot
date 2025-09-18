@@ -61,21 +61,35 @@ class WebrtcPeers:
         """Initialize audio streaming. Returns audio track or None if initialization fails."""
         if self.microphone is not None:
             # Audio already initialized, return existing track
-            return self.audio_relay.subscribe(self.microphone.audio) if self.audio_relay else None
+            return (
+                self.audio_relay.subscribe(self.microphone.audio)
+                if self.audio_relay
+                else None
+            )
 
         try:
             if c.BB_USE_ARECORD and platform.system() == "Linux":
                 # Use arecord for low-latency audio capture on Linux
                 log.info("Initializing arecord for audio streaming")
                 self.arecord_process = subprocess.Popen(
-                    ["arecord", "-f", "S16_LE", "-r", str(c.BB_AUDIO_SAMPLE_RATE),
-                     "-c", str(c.BB_AUDIO_CHANNELS), "-t", "raw",
-                     f"--buffer-size={c.BB_AUDIO_BUFFER_SIZE}",
-                     f"--period-size={c.BB_AUDIO_PERIOD_SIZE}",
-                     "--disable-resample", "--disable-channels"],
+                    [
+                        "arecord",
+                        "-f",
+                        "S16_LE",
+                        "-r",
+                        str(c.BB_AUDIO_SAMPLE_RATE),
+                        "-c",
+                        str(c.BB_AUDIO_CHANNELS),
+                        "-t",
+                        "raw",
+                        f"--buffer-size={c.BB_AUDIO_BUFFER_SIZE}",
+                        f"--period-size={c.BB_AUDIO_PERIOD_SIZE}",
+                        "--disable-resample",
+                        "--disable-channels",
+                    ],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.DEVNULL,
-                    bufsize=0  # Unbuffered stdout
+                    bufsize=0,  # Unbuffered stdout
                 )
                 self.microphone = MediaPlayer(
                     self.arecord_process.stdout,
@@ -84,8 +98,8 @@ class WebrtcPeers:
                         "sample_rate": str(c.BB_AUDIO_SAMPLE_RATE),
                         "channels": str(c.BB_AUDIO_CHANNELS),
                         "probesize": "32",
-                        "analyzeduration": "0"
-                    }
+                        "analyzeduration": "0",
+                    },
                 )
             else:
                 # Use default system microphone via PulseAudio
@@ -114,7 +128,7 @@ class WebrtcPeers:
             try:
                 self.microphone.audio.stop()
             except Exception as e:
-                log.warning(f"Error stopping microphone: {e}")
+                log.error(f"Error stopping microphone: {e}")
             self.microphone = None
 
         if self.arecord_process is not None:
@@ -122,7 +136,7 @@ class WebrtcPeers:
                 self.arecord_process.terminate()
                 self.arecord_process.wait()
             except Exception as e:
-                log.warning(f"Error terminating arecord process: {e}")
+                log.error(f"Error terminating arecord process: {e}")
             self.arecord_process = None
 
         self.audio_relay = None
@@ -170,7 +184,7 @@ class WebrtcPeers:
             pc.addTrack(audio_track)
             log.debug("Added audio track to WebRTC connection")
         else:
-            log.warning("Failed to initialize audio track for WebRTC connection")
+            log.error("Failed to initialize audio track for WebRTC connection")
 
         # handle offer
         await pc.setRemoteDescription(offer)

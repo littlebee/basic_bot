@@ -27,6 +27,10 @@ services:
     run: "python -m basic_bot.services.vision"
     production_env:
       BB_CAMERA_MODULE: "basic_bot.commons.camera_picamera"
+      # the "production env", a pi5 bookworm that has the desktop
+      # and mediapipe running. I think the mediapipe is not allowing
+      # the aiortc->ffmpeg to get the default microphone
+      BB_USE_ARECORD: "true"
     development_env:
       BB_DISABLE_RECOGNITION_PROVIDER: "true"
       BB_LOG_ALL_MESSAGES: "true"
