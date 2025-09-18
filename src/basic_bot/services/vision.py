@@ -111,7 +111,9 @@ from basic_bot.commons.base_camera import BaseCamera
 from basic_bot.commons.webrtc_server import WebrtcPeers
 from basic_bot.commons.mjpeg_video import MjpegVideo
 
-if not c.BB_DISABLE_RECOGNITION_PROVIDER:
+if c.BB_DISABLE_RECOGNITION_PROVIDER:
+    log.info("Recognition provider is disabled (BB_DISABLE_RECOGNITION_PROVIDER)")
+else:
     from basic_bot.commons.recognition_provider import RecognitionProvider
 
 # this is mainly for debugging WebRTC and aiortc
@@ -278,6 +280,8 @@ async def get_webrtc_test_client(_request: Request) -> Response:
 async def on_shutdown(_app: web.Application) -> None:
     await webrtc_peers.close_all_connections()
     mjpeg_video.stop()
+    if not c.BB_DISABLE_RECOGNITION_PROVIDER:
+        recognition.stop()
     camera.stop()
     hub.stop()
 

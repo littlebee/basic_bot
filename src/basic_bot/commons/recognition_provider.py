@@ -6,6 +6,8 @@ import websockets.client
 import traceback
 
 from typing import Any, List, Dict, Optional
+from websockets.client import WebSocketClientProtocol
+
 
 from basic_bot.commons import constants, messages, log
 from basic_bot.commons.fps_stats import FpsStats
@@ -53,6 +55,8 @@ class RecognitionProvider:
     last_frame_duration: float = 0
     last_dimensions: Dict[str, Any] = {}
     total_objects_detected: int = 0
+    previous_objects: List[dict[str, Any]] = []
+    is_stopping: bool = False
 
     next_objects_event: threading.Event = threading.Event()
     pause_event: threading.Event = threading.Event()
@@ -84,6 +88,12 @@ class RecognitionProvider:
         """Resume the recognition thread"""
         RecognitionProvider.pause_event.set()
 
+    def stop(self) -> None:
+        """Stops the singleton recognition thread"""
+        log.info("Recognition provider stopping")
+        RecognitionProvider.is_stopping = True
+        self.resume()  # resume in case paused
+
     @classmethod
     def stats(cls) -> Dict[str, Any]:
         """Return the fps stats dictionary."""
@@ -95,52 +105,58 @@ class RecognitionProvider:
         }
 
     @classmethod
+    async def process_next_frame(cls, websocket: WebSocketClientProtocol) -> None:
+        frame = cls.camera.get_frame()
+
+        t1 = time.time()
+        new_objects = detector.get_prediction(frame)
+        cls.last_frame_duration = time.time() - t1
+        cls.last_objects_seen = new_objects
+        cls.last_dimensions = frame.shape
+
+        cls.fps_stats.increment()
+
+        num_objects = len(cls.last_objects_seen)
+        cls.next_objects_event.set()  # send signal to clients
+        cls.total_objects_detected += num_objects
+
+        if new_objects != cls.previous_objects:
+            cls.previous_objects = new_objects
+            await messages.send_update_state(
+                websocket,
+                {
+                    "recognition": new_objects,
+                },
+            )
+
+    @classmethod
     async def provide_state(cls) -> None:
-        previous_objects: List[dict[str, Any]] = []
-        while True:
+        while not cls.is_stopping:
             try:
                 log.info(
                     f"recognition connecting to hub central at {constants.BB_HUB_URI}"
                 )
                 async with websockets.client.connect(constants.BB_HUB_URI) as websocket:
                     await messages.send_identity(websocket, "recognition")
-                    while True:
+                    while not cls.is_stopping:
                         if not cls.pause_event.is_set():
                             log.info("recognition waiting on pause event")
                             cls.pause_event.wait()
                             log.info("recognition resumed")
 
-                        frame = cls.camera.get_frame()
-
-                        t1 = time.time()
-                        new_objects = detector.get_prediction(frame)
-                        cls.last_frame_duration = time.time() - t1
-                        cls.last_objects_seen = new_objects
-                        cls.last_dimensions = frame.shape
-
-                        cls.fps_stats.increment()
-
-                        num_objects = len(cls.last_objects_seen)
-                        cls.next_objects_event.set()  # send signal to clients
-                        cls.total_objects_detected += num_objects
-
-                        if new_objects != previous_objects:
-                            previous_objects = new_objects
-                            await messages.send_update_state(
-                                websocket,
-                                {
-                                    "recognition": new_objects,
-                                },
-                            )
-
+                        await cls.process_next_frame(websocket)
                         await asyncio.sleep(0)
-
-                        # time.sleep(0)
             except:
-                traceback.print_exc()
+                if not cls.is_stopping:
+                    traceback.print_exc()
+                    log.error("recognition: websocket connection fail")
 
-            log.info("central_hub socket disconnected.  Reconnecting in 5 sec...")
-            time.sleep(5)
+            log.info("recognition thread: central_hub socket disconnected.")
+            if not cls.is_stopping:
+                log.info("Recognition reconnecting to central_hub in 5 sec...")
+                time.sleep(5)
+
+        log.info("recognition thread exiting")
 
     @classmethod
     def _thread(cls) -> None:
