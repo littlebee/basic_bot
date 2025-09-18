@@ -68,17 +68,24 @@ class WebrtcPeers:
                 # Use arecord for low-latency audio capture on Linux
                 log.info("Initializing arecord for audio streaming")
                 self.arecord_process = subprocess.Popen(
-                    ["arecord", "-f", "cd", "-t", "wav",
+                    ["arecord", "-f", "S16_LE", "-r", str(c.BB_AUDIO_SAMPLE_RATE),
+                     "-c", str(c.BB_AUDIO_CHANNELS), "-t", "raw",
                      f"--buffer-size={c.BB_AUDIO_BUFFER_SIZE}",
-                     f"--period-size={c.BB_AUDIO_PERIOD_SIZE}"],
+                     f"--period-size={c.BB_AUDIO_PERIOD_SIZE}",
+                     "--disable-resample", "--disable-channels"],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.DEVNULL,
                     bufsize=0  # Unbuffered stdout
                 )
                 self.microphone = MediaPlayer(
                     self.arecord_process.stdout,
-                    format="wav",
-                    options={"probesize": "32", "analyzeduration": "0"}
+                    format="s16le",
+                    options={
+                        "sample_rate": str(c.BB_AUDIO_SAMPLE_RATE),
+                        "channels": str(c.BB_AUDIO_CHANNELS),
+                        "probesize": "32",
+                        "analyzeduration": "0"
+                    }
                 )
             else:
                 # Use default system microphone via PulseAudio
