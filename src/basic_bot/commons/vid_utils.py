@@ -204,7 +204,7 @@ async def _record_webrtc_async(output_file: str, duration: float) -> None:
 
         # Record for specified duration
         start_time = time.time()
-        while time.time() - start_time < duration + 2:
+        while time.time() - start_time < duration:
             await asyncio.sleep(0.1)
 
         log.debug(f"WebRTC recording completed after {duration} seconds")

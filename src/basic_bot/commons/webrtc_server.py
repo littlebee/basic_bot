@@ -2,6 +2,7 @@ import asyncio
 import json
 import platform
 import subprocess
+import time
 from typing import Any, Optional
 import numpy as np
 
@@ -21,12 +22,13 @@ class CameraStreamTrack(MediaStreamTrack):
 
     def __init__(self, camera: BaseCamera):
         super().__init__()
-        self.frame_count = 0
         self.camera = camera
+        self.start_time = None
 
     async def recv(self) -> VideoFrame:
-        # Generate a simple gray frame
-        # frame_data = np.full((480, 640, 3), 128, dtype=np.uint8)
+        # Initialize start time on first frame
+        if self.start_time is None:
+            self.start_time = time.time()
 
         frame_data = self.camera.get_frame()
         if frame_data is None:
@@ -38,12 +40,12 @@ class CameraStreamTrack(MediaStreamTrack):
 
         video_frame = VideoFrame.from_ndarray(frame_array, format="bgr24")
 
-        # Set PTS and time_base for the frame
-        self.frame_count += 1
-        video_frame.pts = self.frame_count * 90000 // 30  # Assuming 30 fps
+        # Set PTS based on elapsed time for proper timing
+        elapsed_time = time.time() - self.start_time
+        video_frame.pts = int(elapsed_time * 90000)  # 90kHz timebase
         video_frame.time_base = Fraction(1, 90000)
 
-        await asyncio.sleep(1 / 30)  # Simulate 30 fps
+        await asyncio.sleep(1 / 30)  # Target 30 fps
         return video_frame
 
 
