@@ -23,7 +23,7 @@ class CameraStreamTrack(MediaStreamTrack):
     def __init__(self, camera: BaseCamera):
         super().__init__()
         self.camera = camera
-        self.start_time = None
+        self.start_time: Optional[float] = None
 
     async def recv(self) -> VideoFrame:
         # Initialize start time on first frame
