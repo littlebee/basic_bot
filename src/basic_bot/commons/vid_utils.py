@@ -8,6 +8,7 @@ import os
 import subprocess
 import time
 import aiohttp
+import numpy as np
 from aiortc import RTCPeerConnection, RTCSessionDescription
 from aiortc.contrib.media import MediaRecorder
 
@@ -105,7 +106,7 @@ def record_webrtc_video(camera: Camera, duration: float) -> str:
     # Capture thumbnail from camera first, while camera is still running
     log.info(f"Capturing thumbnail from camera for {image_filename}")
     first_frame = camera.get_frame()
-    if first_frame is not None:
+    if first_frame is not None and isinstance(first_frame, np.ndarray):
         resized_frame = cv2.resize(first_frame, (THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))
         cv2.imwrite(image_filename, resized_frame)
 
