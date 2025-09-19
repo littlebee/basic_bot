@@ -166,9 +166,8 @@ def dump_thread_stacks() -> None:
         log.info("Thread %s:" % thread_id)
         traceback.print_stack(frame)
 
-    # listen for signal USR1 to dump thread stacks to log
 
-
+# listen for signal USR1 to dump thread stacks to log
 signal.signal(signal.SIGUSR1, lambda _signum, _frame: dump_thread_stacks())
 
 
@@ -241,9 +240,14 @@ def record_video_thread(duration: float) -> None:
                 hub.connected_socket, {"vision": {"recording": True}}
             )
         )
-        vid_utils.record_webrtc_video(camera, duration)
+        if c.BB_LEGACY_RECORD_VIDEO:
+            vid_utils.record_video(camera, duration)
+        else:
+            vid_utils.record_webrtc_video(camera, duration)
+
     except Exception as e:
         log.error(f"error recording video: {e}")
+
     finally:
         if not is_stopping:
             asyncio.run(
