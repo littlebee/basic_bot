@@ -166,9 +166,9 @@ class TestVision:
         print(f"test_record_video:  response for send_record_video_request: {response}")
         assert response.status_code == 304
 
-        # The video recording is started async. Recording, reencoding the video,
-        # and generating the thumbnails (mostly reencoding) takes a few seconds
-        time.sleep(TEST_DURATION * 3)
+        # The video recording is started async. WebRTC recording, thumbnail generation,
+        # and file finalization takes several seconds. Need extra time for async completion.
+        time.sleep(TEST_DURATION * 5)
 
         vidfile_count_after = len(list(Path(c.BB_VIDEO_PATH).glob("*.mp4")))
         assert (
@@ -216,7 +216,7 @@ def assert_is_array_of_strings(obj):
 
 
 def assert_video_duration(url, expected_duration):
-    TOLERANCE = 0.5  # seconds of tolerance for video duration test
+    TOLERANCE = 1.5  # seconds of tolerance for WebRTC video duration test (includes buffering)
 
     data = cv2.VideoCapture(url)
     frames = data.get(cv2.CAP_PROP_FRAME_COUNT)

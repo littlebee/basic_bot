@@ -80,7 +80,9 @@ class BaseCamera(object):
     thread: Optional[threading.Thread] = (
         None  # background thread that reads frames from camera
     )
-    frame: Optional[Union[bytes, np.ndarray]] = None  # current frame is stored here by background thread
+    frame: Optional[Union[bytes, np.ndarray]] = (
+        None  # current frame is stored here by background thread
+    )
 
     event = CameraEvent()
     fps_stats = FpsStats()
@@ -101,12 +103,16 @@ class BaseCamera(object):
     def get_frame(self) -> Optional[Union[bytes, np.ndarray]]:
         """Return the current camera frame."""
         # wait for a signal from the camera thread
+        if BaseCamera.is_stopped:
+            return None
+
         BaseCamera.event.wait()
         BaseCamera.event.clear()
 
         return BaseCamera.frame
 
     def stop(self) -> None:
+        BaseCamera.event.set()  # wake up the threads to exit
         BaseCamera.is_stopped = True
 
     @staticmethod

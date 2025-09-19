@@ -205,6 +205,12 @@ BB_VIDEO_PATH = env.env_string("BB_VIDEO_PATH", "./recorded_video")
 The path where the vision service saves recorded video.
 """
 
+BB_LEGACY_RECORD_VIDEO = env.env_bool("BB_LEGACY_RECORD_VIDEO", False)
+"""
+Set this to True to use the legacy video recording method which buffers
+frames directly from the camera module instead of using WebRTC.
+"""
+
 # =============== Audio Streaming Constants
 BB_USE_ARECORD = env.env_bool("BB_USE_ARECORD", False)
 """

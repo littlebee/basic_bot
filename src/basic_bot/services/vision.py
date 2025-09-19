@@ -88,9 +88,11 @@ import asyncio
 import importlib
 import logging
 import os
-import threading
+import signal
 import sys
+import threading
 import time
+import traceback
 
 from aiohttp import web
 from aiohttp.web_request import Request
@@ -125,6 +127,7 @@ logging.basicConfig(
 )
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
+is_stopping = False
 
 # TODO : maybe using HubStateMonitor as just a means of publishing
 # state updates (without any actual monitoring) should be composed
@@ -155,6 +158,17 @@ if not c.BB_DISABLE_RECOGNITION_PROVIDER:
 
 script_directory = os.path.abspath(os.path.dirname(__file__))
 public_directory = os.path.abspath(os.path.join(script_directory, "../public"))
+
+
+# dumps the stack traces of all threads to the log
+def dump_thread_stacks() -> None:
+    for thread_id, frame in sys._current_frames().items():
+        log.info("Thread %s:" % thread_id)
+        traceback.print_stack(frame)
+
+
+# listen for signal USR1 to dump thread stacks to log
+signal.signal(signal.SIGUSR1, lambda _signum, _frame: dump_thread_stacks())
 
 
 # @app.route("/video_feed")
@@ -226,15 +240,21 @@ def record_video_thread(duration: float) -> None:
                 hub.connected_socket, {"vision": {"recording": True}}
             )
         )
-        vid_utils.record_video(camera, duration)
+        if c.BB_LEGACY_RECORD_VIDEO:
+            vid_utils.record_video(camera, duration)
+        else:
+            vid_utils.record_webrtc_video(camera, duration)
+
     except Exception as e:
         log.error(f"error recording video: {e}")
+
     finally:
-        asyncio.run(
-            messages.send_update_state(
-                hub.connected_socket, {"vision": {"recording": False}}
+        if not is_stopping:
+            asyncio.run(
+                messages.send_update_state(
+                    hub.connected_socket, {"vision": {"recording": False}}
+                )
             )
-        )
 
 
 # @app.route("/recorded_video")
@@ -278,6 +298,10 @@ async def get_webrtc_test_client(_request: Request) -> Response:
 
 
 async def on_shutdown(_app: web.Application) -> None:
+    global is_stopping
+    is_stopping = True
+    log.info("vision service shutting down...")
+
     await webrtc_peers.close_all_connections()
     mjpeg_video.stop()
     if not c.BB_DISABLE_RECOGNITION_PROVIDER:
