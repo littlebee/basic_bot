@@ -68,11 +68,13 @@ async def record_webrtc_stream():
         async with aiohttp.ClientSession() as session:
             offer_data = {
                 "sdp": pc.localDescription.sdp,
-                "type": pc.localDescription.type
+                "type": pc.localDescription.type,
             }
 
             headers = {"Content-Type": "application/json"}
-            async with session.post(WEBRTC_ENDPOINT, json=offer_data, headers=headers) as response:
+            async with session.post(
+                WEBRTC_ENDPOINT, json=offer_data, headers=headers
+            ) as response:
                 if response.status != 200:
                     raise RuntimeError(f"Failed to send offer: {response.status}")
 
@@ -80,8 +82,7 @@ async def record_webrtc_stream():
 
                 # Set remote description
                 answer = RTCSessionDescription(
-                    sdp=answer_data["sdp"],
-                    type=answer_data["type"]
+                    sdp=answer_data["sdp"], type=answer_data["type"]
                 )
                 await pc.setRemoteDescription(answer)
 

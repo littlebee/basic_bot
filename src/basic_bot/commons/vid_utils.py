@@ -102,10 +102,7 @@ def record_webrtc_video(camera: Camera, duration: float) -> str:
     image_filename = os.path.join(videoPath, f"{base_file_name}.jpg")
     lg_image_filename = os.path.join(videoPath, f"{base_file_name}_lg.jpg")
 
-    # Run the async WebRTC recording
-    asyncio.run(_record_webrtc_async(video_filename, duration))
-
-    # Capture thumbnail from camera
+    # Capture thumbnail from camera first, while camera is still running
     log.info(f"Capturing thumbnail from camera for {image_filename}")
     first_frame = camera.get_frame()
     if first_frame is not None:
@@ -118,6 +115,9 @@ def record_webrtc_video(camera: Camera, duration: float) -> str:
         )
         cv2.imwrite(lg_image_filename, resized_frame)
 
+    # Run the async WebRTC recording
+    asyncio.run(_record_webrtc_async(video_filename, duration))
+
     return base_file_name
 
 
@@ -129,7 +129,7 @@ async def _record_webrtc_async(output_file: str, duration: float) -> None:
         output_file: Full path to output MP4 file
         duration: Recording duration in seconds
     """
-    webrtc_endpoint = "http://localhost:5801/offer"
+    webrtc_endpoint = f"http://localhost:{c.BB_VISION_PORT}/offer"
 
     log.info(f"Recording {duration} seconds of WebRTC video/audio to {output_file}")
 
@@ -212,6 +212,8 @@ async def _record_webrtc_async(output_file: str, duration: float) -> None:
         # Stop recording
         if recorder:
             await recorder.stop()
+            # Give the recorder a moment to finalize the file
+            await asyncio.sleep(0.5)
             log.debug(f"WebRTC recording saved to {output_file}")
 
     except Exception as e:
