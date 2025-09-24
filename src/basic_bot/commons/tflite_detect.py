@@ -76,7 +76,6 @@ class TFLiteDetect:
             input_data = (np.float32(input_data) - 127.5) / 127.5  # type: ignore
         self.interpreter.set_tensor(self.input_details[0]["index"], input_data)
 
-        log.debug("Running inference...")
         self.interpreter.invoke()
         detected_boxes = self.interpreter.get_tensor(self.output_details[0]["index"])
         detected_classes = self.interpreter.get_tensor(self.output_details[1]["index"])
@@ -102,5 +101,5 @@ class TFLiteDetect:
                         "confidence": score,
                     }
                 )
-        log.debug(f"tflite_detect results: {results}")
+        # log.debug(f"tflite_detect results: {results}")
         return results

@@ -1,15 +1,10 @@
 import asyncio
-from typing import TYPE_CHECKING
-
 from aiohttp import web, MultipartWriter, client_exceptions
+
 import cv2
 
 from basic_bot.commons import log
 from basic_bot.commons.base_camera import BaseCamera
-
-if TYPE_CHECKING:
-    from aiohttp.web_request import Request
-    from aiohttp.web_response import StreamResponse
 
 
 class MjpegVideo:
@@ -40,19 +35,12 @@ class MjpegVideo:
         MjpegVideo.is_stopping = True
 
     #  see https://docs.aiohttp.org/en/stable/multipart.html
-    async def stream_mjpeg_video(self, request: 'Request', camera: BaseCamera) -> 'StreamResponse':
-        """MJPEG video streaming function."""
-        boundary_marker = "--frame"
-        response = web.StreamResponse(
-            status=200,
-            reason="OK",
-            headers={
-                "Content-Type": f"multipart/x-mixed-replace;boundary={boundary_marker}"
-            },
-        )
-        await response.prepare(request)
+    async def stream_mjpeg_video(
+        self, response: web.StreamResponse, camera: BaseCamera, boundary_marker: str
+    ) -> web.StreamResponse:
+
         while not MjpegVideo.is_stopping:
-            frame = camera.get_frame()
+            frame = camera.frame
             if frame is not None:
                 jpeg = cv2.imencode(".jpg", frame)[1].tobytes()  # type: ignore[arg-type]
             else:
@@ -68,3 +56,26 @@ class MjpegVideo:
             await asyncio.sleep(1 / 30)
 
         return response
+
+
+def stream_mjpeg_video(
+    response: web.StreamResponse, camera: BaseCamera, boundary_marker: str
+) -> web.StreamResponse:
+
+    while not MjpegVideo.is_stopping:
+        frame = camera.frame
+        if frame is not None:
+            jpeg = cv2.imencode(".jpg", frame)[1].tobytes()  # type: ignore[arg-type]
+        else:
+            continue
+        with MultipartWriter("image/jpeg", boundary=boundary_marker) as mpwriter:
+            mpwriter.append(jpeg, {"Content-Type": "image/jpeg"})
+            try:
+                await mpwriter.write(response, close_boundary=False)
+            except client_exceptions.ClientConnectionResetError:
+                await mpwriter.close()
+                break
+        await response.drain()
+        await asyncio.sleep(1 / 30)
+
+    return response

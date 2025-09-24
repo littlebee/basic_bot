@@ -93,6 +93,7 @@ import sys
 import threading
 import time
 import traceback
+from concurrent.futures import ThreadPoolExecutor
 
 from aiohttp import web
 from aiohttp.web_request import Request
@@ -111,7 +112,7 @@ from basic_bot.commons.hub_state import HubState
 from basic_bot.commons.hub_state_monitor import HubStateMonitor
 from basic_bot.commons.base_camera import BaseCamera
 from basic_bot.commons.webrtc_server import WebrtcPeers
-from basic_bot.commons.mjpeg_video import MjpegVideo
+from basic_bot.commons.mjpeg_video import MjpegVideo, stream_mjpeg_video
 
 if c.BB_DISABLE_RECOGNITION_PROVIDER:
     log.info("Recognition provider is disabled (BB_DISABLE_RECOGNITION_PROVIDER)")
@@ -145,7 +146,7 @@ else:
 
 log.info(f"loading camera module: {camera_lib}")
 camera_module = importlib.import_module(camera_lib)
-camera = camera_module.Camera()
+camera: BaseCamera = camera_module.Camera()
 
 log.info("Initializing webrtc offers server")
 webrtc_peers = WebrtcPeers(camera)
@@ -175,7 +176,27 @@ signal.signal(signal.SIGUSR1, lambda _signum, _frame: dump_thread_stacks())
 async def video_feed(request: Request) -> StreamResponse:
     """Video streaming route. Put this in the src attribute of an img tag."""
     # asyncio.create_task(stream_mjpeg_video(request, camera))
-    return await mjpeg_video.stream_mjpeg_video(request, camera)
+    # return await mjpeg_video.stream_mjpeg_video(request, camera)
+
+    boundary_marker = "--frame"
+    response: web.StreamResponse = web.StreamResponse(
+        status=200,
+        reason="OK",
+        headers={
+            "Content-Type": f"multipart/x-mixed-replace;boundary={boundary_marker}"
+        },
+    )
+    await response.prepare(request)
+
+    loop = asyncio.get_event_loop()
+    response = await loop.run_in_executor(
+        request.app["executor"],
+        stream_mjpeg_video,
+        response,
+        camera,
+        boundary_marker,
+    )
+    return response
 
 
 # @app.route("/stats")
@@ -313,7 +334,7 @@ async def on_shutdown(_app: web.Application) -> None:
 def main() -> None:
     app = web.Application()
     app.on_shutdown.append(on_shutdown)
-
+    app["executor"] = ThreadPoolExecutor(max_workers=3)
     # routes
     app.router.add_get("/stats", send_stats)
     app.router.add_get("/pause_recognition", pause_recognition)
