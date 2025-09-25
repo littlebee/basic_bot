@@ -152,6 +152,7 @@ webrtc_peers = WebrtcPeers(camera)
 
 log.info("Initializing MJPEG streaming")
 mjpeg_video = MjpegVideo(camera)
+mjpeg_video.start()
 
 if not c.BB_DISABLE_RECOGNITION_PROVIDER:
     recognition = RecognitionProvider(camera)
@@ -169,13 +170,6 @@ def dump_thread_stacks() -> None:
 
 # listen for signal USR1 to dump thread stacks to log
 signal.signal(signal.SIGUSR1, lambda _signum, _frame: dump_thread_stacks())
-
-
-# @app.route("/video_feed")
-async def video_feed(request: Request) -> StreamResponse:
-    """Video streaming route. Put this in the src attribute of an img tag."""
-    # asyncio.create_task(stream_mjpeg_video(request, camera))
-    return await mjpeg_video.stream_mjpeg_video(request, camera)
 
 
 # @app.route("/stats")
@@ -297,6 +291,17 @@ async def get_webrtc_test_client(_request: Request) -> Response:
     )
 
 
+async def video_feed(request: Request) -> StreamResponse:
+    """
+    MJPEG video streaming route.  This is used as the `src` attribute
+    of an html <img> tag.
+    """
+    host_name = request.host.split(":")[0]
+    video_feed_url = f"http://{host_name}:{c.BB_MJPEG_VIDEO_PORT}/video_feed"
+    log.info(f"redirecting to mjpeg video feed to {video_feed_url}")
+    raise web.HTTPFound(video_feed_url)
+
+
 async def on_shutdown(_app: web.Application) -> None:
     global is_stopping
     is_stopping = True
@@ -323,7 +328,7 @@ def main() -> None:
     app.router.add_get("/recorded_video/{filename}", get_recorded_video_file)
     # this is for handling WebRTC video handshake
     app.router.add_post("/offer", webrtc_peers.respond_to_offer)
-    # this is the older and deprecated MJPEG video feed
+    # this is for MJPEG video streaming
     app.router.add_get("/video_feed", video_feed)
 
     # for testing only

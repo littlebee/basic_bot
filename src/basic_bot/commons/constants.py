@@ -187,6 +187,13 @@ BB_VISION_PORT = env.env_int("BB_VISION_PORT", 5802 if BB_ENV == "test" else 580
 The HTTP port that the vision service listens on for video streaming and REST api.
 """
 
+BB_MJPEG_VIDEO_PORT = env.env_int(
+    "BB_MJPEG_VIDEO_PORT", 5804 if BB_ENV == "test" else 5803
+)
+"""
+The HTTP port that the vision service listens on for video MJPEG streaming.
+"""
+
 BB_VISION_URI = env.env_string(
     "BB_VISION_URI", f"http://{BB_VISION_HOST}:{BB_VISION_PORT}"
 )
