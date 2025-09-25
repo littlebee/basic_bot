@@ -62,7 +62,7 @@ class MjpegVideo:
 
 def gen_rgb_video(camera: BaseCamera) -> Generator[bytes, None, None]:
     """Video streaming generator function."""
-    while True:
+    while MjpegVideo.is_stopping is False:
         frame = camera.get_frame()
 
         jpeg = cv2.imencode(".jpg", frame)[1].tobytes()  # type: ignore
