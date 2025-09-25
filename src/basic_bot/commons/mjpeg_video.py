@@ -1,15 +1,22 @@
-import asyncio
-from typing import TYPE_CHECKING
+import threading
 
-from aiohttp import web, MultipartWriter, client_exceptions
+from typing import Generator
+
 import cv2
+from flask import Flask, Response
+from flask_cors import CORS
 
-from basic_bot.commons import log
+
+from basic_bot.commons import constants as c, log
 from basic_bot.commons.base_camera import BaseCamera
 
-if TYPE_CHECKING:
-    from aiohttp.web_request import Request
-    from aiohttp.web_response import StreamResponse
+# MJPEG video streaming runs on Flask becuase doing it with aiohttp
+# was causing issues with the audio streaming via WebRTC when more than
+# one MJPEG stream was active.  I'm pretty sure that it was because of
+# asyncio starvation.  I'm convinced that running all requests, including
+# ones that might block, in the same event loop is a bad idea.
+flaskApp = Flask(__name__)
+CORS(flaskApp, supports_credentials=True)
 
 
 class MjpegVideo:
@@ -31,40 +38,41 @@ class MjpegVideo:
     """
 
     is_stopping = False
+    camera: BaseCamera
 
     def __init__(self, camera: BaseCamera):
-        self.camera = camera
+        MjpegVideo.camera = camera
 
     def stop(self) -> None:
         log.info("stopping any MJPEG streamers")
         MjpegVideo.is_stopping = True
 
-    #  see https://docs.aiohttp.org/en/stable/multipart.html
-    async def stream_mjpeg_video(self, request: 'Request', camera: BaseCamera) -> 'StreamResponse':
-        """MJPEG video streaming function."""
-        boundary_marker = "--frame"
-        response = web.StreamResponse(
-            status=200,
-            reason="OK",
-            headers={
-                "Content-Type": f"multipart/x-mixed-replace;boundary={boundary_marker}"
-            },
-        )
-        await response.prepare(request)
-        while not MjpegVideo.is_stopping:
-            frame = camera.get_frame()
-            if frame is not None:
-                jpeg = cv2.imencode(".jpg", frame)[1].tobytes()  # type: ignore[arg-type]
-            else:
-                continue
-            with MultipartWriter("image/jpeg", boundary=boundary_marker) as mpwriter:
-                mpwriter.append(jpeg, {"Content-Type": "image/jpeg"})
-                try:
-                    await mpwriter.write(response, close_boundary=False)
-                except client_exceptions.ClientConnectionResetError:
-                    await mpwriter.close()
-                    break
-            await response.drain()
-            await asyncio.sleep(1 / 30)
+    def start(self) -> None:
+        log.info("starting MJPEG streamer")
+        MjpegVideo.is_stopping = False
 
-        return response
+        thread = threading.Thread(target=self._flask_app_thread, daemon=True)
+        thread.start()
+
+    def _flask_app_thread(self) -> None:
+        port = c.BB_MJPEG_VIDEO_PORT
+        log.info(f"starting video_feed webhost on {port}")
+        flaskApp.run(host="0.0.0.0", port=port, threaded=True)
+
+
+def gen_rgb_video(camera: BaseCamera) -> Generator[bytes, None, None]:
+    """Video streaming generator function."""
+    while True:
+        frame = camera.get_frame()
+
+        jpeg = cv2.imencode(".jpg", frame)[1].tobytes()  # type: ignore
+        yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n")
+
+
+@flaskApp.route("/video_feed")
+def video_feed() -> Response:
+    """Video streaming route. Put this in the src attribute of an img tag."""
+    return Response(
+        gen_rgb_video(MjpegVideo.camera),
+        mimetype="multipart/x-mixed-replace; boundary=frame",
+    )
