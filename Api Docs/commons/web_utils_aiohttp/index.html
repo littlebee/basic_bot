@@ -1090,6 +1090,28 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../debug/test_webrtc_recording/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    test_webrtc_recording
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2005,12 +2027,12 @@
 <p>Utility functions for handling aiohttp web responses.</p>
 <p><a id="basic_bot.commons.web_utils_aiohttp.json_response"></a></p>
 <h4 id="json_response">json_response</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">json_response</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">json_response</span><span class="p">(</span><span class="n">status</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span>
 </span></code></pre></div>
 <p>Return a JSON response using aiortc web.</p>
 <p><a id="basic_bot.commons.web_utils_aiohttp.respond_ok"></a></p>
 <h4 id="respond_ok">respond_ok</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">respond_ok</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">respond_ok</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span>
 </span></code></pre></div>
 <p>Return a JSON response with status ok.</p>
 <p><a id="basic_bot.commons.web_utils_aiohttp.AccessLogger"></a></p>
@@ -2020,7 +2042,7 @@
 <p><a id="basic_bot.commons.web_utils_aiohttp.AccessLogger.enabled"></a></p>
 <h4 id="enabled">enabled</h4>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@property</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">enabled</span><span class="p">()</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">enabled</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p>Return True if logger is enabled.</p>
 <p>Override this property if logging is disabled to avoid the

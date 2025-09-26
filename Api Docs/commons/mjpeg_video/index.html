@@ -610,9 +610,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#stream_mjpeg_video" class="md-nav__link">
+  <a href="#gen_rgb_video" class="md-nav__link">
     <span class="md-ellipsis">
-      stream_mjpeg_video
+      gen_rgb_video
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#video_feed" class="md-nav__link">
+    <span class="md-ellipsis">
+      video_feed
     </span>
   </a>
   
@@ -1062,6 +1071,28 @@
   
   <span class="md-ellipsis">
     test_tflite_runtime
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../debug/test_webrtc_recording/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    test_webrtc_recording
     
   </span>
   
@@ -1935,9 +1966,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#stream_mjpeg_video" class="md-nav__link">
+  <a href="#gen_rgb_video" class="md-nav__link">
     <span class="md-ellipsis">
-      stream_mjpeg_video
+      gen_rgb_video
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#video_feed" class="md-nav__link">
+    <span class="md-ellipsis">
+      video_feed
     </span>
   </a>
   
@@ -1981,11 +2021,17 @@ endpoint.</p>
 effort to set up on the client side, it provides features such as audio
 track and low latency and support for low bandwidth usage that make
 WebRTC a better choice for streaming video to a browser (IMO)</p>
-<p><a id="basic_bot.commons.mjpeg_video.MjpegVideo.stream_mjpeg_video"></a></p>
-<h4 id="stream_mjpeg_video">stream_mjpeg_video</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_mjpeg_video</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">camera</span><span class="p">:</span> <span class="n">BaseCamera</span><span class="p">)</span>
+<p><a id="basic_bot.commons.mjpeg_video.gen_rgb_video"></a></p>
+<h4 id="gen_rgb_video">gen_rgb_video</h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">gen_rgb_video</span><span class="p">(</span><span class="n">camera</span><span class="p">:</span> <span class="n">BaseCamera</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
 </span></code></pre></div>
-<p>MJPEG video streaming function.</p>
+<p>Video streaming generator function.</p>
+<p><a id="basic_bot.commons.mjpeg_video.video_feed"></a></p>
+<h4 id="video_feed">video_feed</h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@flaskApp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/video_feed&quot;</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">video_feed</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Response</span>
+</span></code></pre></div>
+<p>Video streaming route. Put this in the src attribute of an img tag.</p>
 
 
 

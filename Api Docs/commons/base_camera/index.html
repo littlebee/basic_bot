@@ -388,15 +388,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#frame" class="md-nav__link">
-    <span class="md-ellipsis">
-      frame
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#__init__" class="md-nav__link">
     <span class="md-ellipsis">
       __init__
@@ -1140,6 +1131,28 @@
   
   <span class="md-ellipsis">
     test_tflite_runtime
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../debug/test_webrtc_recording/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    test_webrtc_recording
     
   </span>
   
@@ -2055,15 +2068,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#frame" class="md-nav__link">
-    <span class="md-ellipsis">
-      frame
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#__init__" class="md-nav__link">
     <span class="md-ellipsis">
       __init__
@@ -2155,9 +2159,6 @@ available.</p>
 <p>BaseCamera is an abstract base class that for camera implementations.  It
 creates a background thread that reads frames from the camera and signals
 when a new frame is available.</p>
-<p><a id="basic_bot.commons.base_camera.BaseCamera.frame"></a></p>
-<h4 id="frame">frame</h4>
-<p>current frame is stored here by background thread</p>
 <p><a id="basic_bot.commons.base_camera.BaseCamera.__init__"></a></p>
 <h4 id="__init__">__init__</h4>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
@@ -2165,13 +2166,13 @@ when a new frame is available.</p>
 <p>Start the background camera thread if it isn't running yet.</p>
 <p><a id="basic_bot.commons.base_camera.BaseCamera.get_frame"></a></p>
 <h4 id="get_frame">get_frame</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_frame</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_frame</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span>
 </span></code></pre></div>
 <p>Return the current camera frame.</p>
 <p><a id="basic_bot.commons.base_camera.BaseCamera.frames"></a></p>
 <h4 id="frames">frames</h4>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nd">@staticmethod</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">frames</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">frames</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
 </span></code></pre></div>
 <p>"Generator that returns frames from the camera.</p>
 <p><a id="basic_bot.commons.base_camera.BaseCamera.stats"></a></p>

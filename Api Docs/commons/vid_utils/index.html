@@ -763,6 +763,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#record_webrtc_video" class="md-nav__link">
+    <span class="md-ellipsis">
+      record_webrtc_video
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#convert_video_to_h264" class="md-nav__link">
     <span class="md-ellipsis">
       convert_video_to_h264
@@ -1065,6 +1074,28 @@
   
   <span class="md-ellipsis">
     test_tflite_runtime
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../debug/test_webrtc_recording/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    test_webrtc_recording
     
   </span>
   
@@ -1937,6 +1968,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#record_webrtc_video" class="md-nav__link">
+    <span class="md-ellipsis">
+      record_webrtc_video
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#convert_video_to_h264" class="md-nav__link">
     <span class="md-ellipsis">
       convert_video_to_h264
@@ -1982,9 +2022,27 @@
 The filename is the current date and time in the format <code>YYYYMMDD-HHMMSS.mp4</code>.</p>
 <p>It will also save the first frame of the video as a JPEG image in the same directory
 named <code>YYYYMMDD-HHMMSS.jpg</code>.</p>
+<p><a id="basic_bot.commons.vid_utils.record_webrtc_video"></a></p>
+<h4 id="record_webrtc_video">record_webrtc_video</h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">record_webrtc_video</span><span class="p">(</span><span class="n">camera</span><span class="p">:</span> <span class="n">Camera</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</span></code></pre></div>
+<p>Record video and audio via WebRTC from the vision service for a specified number of seconds.</p>
+<p>This function connects to the vision service's WebRTC endpoint to record both video and audio,
+while still using the provided camera to capture thumbnail frames.</p>
+<p>Calling this function will save an MP4 video file to the BB_VIDEO_PATH directory.
+The filename is the current date and time in the format <code>YYYYMMDD-HHMMSS.mp4</code>.</p>
+<p>It will also save the first frame of the video as a JPEG image in the same directory
+named <code>YYYYMMDD-HHMMSS.jpg</code>, captured from the provided camera parameter.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>camera</code> - Camera instance used for thumbnail generation</li>
+<li><code>duration</code> - Recording duration in seconds</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<p>Base filename (without extension) of the recorded files</p>
 <p><a id="basic_bot.commons.vid_utils.convert_video_to_h264"></a></p>
 <h4 id="convert_video_to_h264">convert_video_to_h264</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">convert_video_to_h264</span><span class="p">(</span><span class="n">video_file_in</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">video_file_out</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">convert_video_to_h264</span><span class="p">(</span><span class="n">video_file_in</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">video_file_out</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p>Sse system installed ffmpeg to convert video to h264.  This was needed to make the
 mp4 video captured using openCV compatible with web browsers.</p>
@@ -1995,7 +2053,7 @@ The solution descibed however (use apt-get to install opencv python instead of p
 probably causes other issues :/.</p>
 <p><a id="basic_bot.commons.vid_utils.get_recorded_videos"></a></p>
 <h4 id="get_recorded_videos">get_recorded_videos</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_recorded_videos</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_recorded_videos</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 </span></code></pre></div>
 <p>Get a list of recorded videos in the BB_VIDEO_PATH directory.</p>
 
