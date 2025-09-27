@@ -164,7 +164,9 @@ Then **`cd` to the directory** you uploaded to:
 ```sh
 bb_start
 ```
-will start all of the services in  `./basic_bot.yml` as individual processes running detached.  If your shell/terminal is closed, they will keep running.
+This command will start all of the services in  `./basic_bot.yml` as individual processes running detached.  If your shell/terminal is closed, they will keep running.
+
+For more information about basic_bot.yml, see the [Config File Schema document](https://littlebee.github.io/basic_bot/Configuration/Config%20File%20Schema/).
 
 
 ## Debugging issues
