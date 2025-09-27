@@ -1,4 +1,7 @@
 site_name: basic_bot Docs
+exclude_docs: |
+  _archives/*
+
 theme:
   name: material
   collapse_navigation: true
