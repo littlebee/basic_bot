@@ -25,15 +25,15 @@ config_file_schema = {
         # overridden by the service `env' property.
         "env": {"type": "object", "additionalProperties": {"type": "string"}},
         #
-        # Environment variables that are set for all services started unless
-        # overridden by the service `env' property. These are merged with the
-        # `env` property
+        # Environment variables for all services that are set when the BB_ENV matches
+        # the text preceeding`_env`. These are merged with the `env` property and take
+        # precedence over it.
         "test_env": {"type": "object", "additionalProperties": {"type": "string"}},
-        "production_env": {
+        "development_env": {
             "type": "object",
             "additionalProperties": {"type": "string"},
         },
-        "development_env": {
+        "production_env": {
             "type": "object",
             "additionalProperties": {"type": "string"},
         },
@@ -65,9 +65,7 @@ config_file_schema = {
                     "log_file": {"type": "string"},
                     "pid_file": {"type": "string"},
                     #
-                    # Environment variables that are set for this service. These
-                    # are merged with the `env` properties for the overall
-                    # configuration above.  These are the penultimate environmen.
+                    # Environment variables that are set for this service.
                     "env": {
                         "type": "object",
                         "additionalProperties": {"type": "string"},
@@ -75,8 +73,8 @@ config_file_schema = {
                     #
                     # Environment variables that are set for this service in the
                     # test, production and development  environments.
-                    # These are merged with the `env`s above and are the
-                    # ultimate environment variables.
+                    # These are merged with the `env`s above and take precedence
+                    # over them.
                     "test_env": {
                         "type": "object",
                         "additionalProperties": {"type": "string"},
