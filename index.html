@@ -243,21 +243,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Status">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#updates" class="md-nav__link">
-    <span class="md-ellipsis">
-      Updates
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -2016,21 +2001,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Status">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#updates" class="md-nav__link">
-    <span class="md-ellipsis">
-      Updates
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -2218,10 +2188,7 @@
 🎯 <a href="https://github.com/littlebee/basic_bot/issues">Comments and suggestions welcomed</a></p>
 <h2 id="status">Status</h2>
 <p><strong><em> This is still a work in progress </em></strong></p>
-<h3 id="updates">Updates</h3>
-<p>20250128 - We have <a href="https://littlebee.github.io/basic_bot/">online hosted docs</a>! 🎉</p>
-<p>20250127 - It can see! Working basic_bot.services.vision_cv service that uses open cv2 and tensorflow lite.  Still trying to decide what else is needed in the beta version - support for GPIO in?  Doing this in parallel with implementing the first working example of using basic_bot - <a href="https://github.com/littlebee/daphbot-due">daphbot-due</a></p>
-<p>20250120 - Basic working central_hub and web_server services merged.  Working on adding basic motor controller service similar to Scatbot.</p>
+<p>Latest update:  We have WebRTC video! 🚀🎉.  Check out the <a href="https://github.com/littlebee/basic_bot/blob/main/Blog.md">lazy blog</a> for more details and older updates.</p>
 <h2 id="getting-started">Getting Started</h2>
 <p>On your development computer (not your bot's onboard computer; see later in this doc)</p>
 <p><div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># first create or activate a python venv</span>
@@ -2319,7 +2286,8 @@ add the export below to rc.local before starting your robot.
 <p>Then <strong><code>cd</code> to the directory</strong> you uploaded to:
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>bb_start
 </span></code></pre></div>
-will start all of the services in  <code>./basic_bot.yml</code> as individual processes running detached.  If your shell/terminal is closed, they will keep running.</p>
+This command will start all of the services in  <code>./basic_bot.yml</code> as individual processes running detached.  If your shell/terminal is closed, they will keep running.</p>
+<p>For more information about basic_bot.yml, see the <a href="https://littlebee.github.io/basic_bot/Configuration/Config%20File%20Schema/">Config File Schema document</a>.</p>
 <h2 id="debugging-issues">Debugging issues</h2>
 <p>You can debug issues with a service by looking at the ./logs/* files for each service.</p>
 <p>basic_bot also provides several scripts in the <code>basic_bot.debug</code> package that can be used to diagnose 3rd party software like opencv and Tensor Flow Lite.</p>
@@ -2348,7 +2316,7 @@ will start all of the services in  <code>./basic_bot.yml</code> as individual pr
 <p>See also, https://github.com/littlebee/basic_bot/issues/61</p>
 <h2 id="how-it-all-works">How it all works</h2>
 <p>Start with the docs for [<a href="https://littlebee.github.io/basic_bot/Api%20Docs/services/central_hub/">central_hub service docs</a>]</p>
-<p>Under "Api Docs", you will find central_hub and all the services in the diagram below.  The services should all have very detailed docs.</p>
+<p>Under "Api Docs" on the left, you will find central_hub and all the services in the diagram below.  The services should all have very detailed docs.</p>
 <p><img alt="system network diagram" src="https://github.com/littlebee/basic_bot/blob/main/docs/_assets/basic_bot_network_diagram.png?raw=true" /></p>
 
 
