@@ -230,9 +230,9 @@ See also, https://github.com/littlebee/basic_bot/issues/61
 
 Start with the docs for [[central_hub service docs](https://littlebee.github.io/basic_bot/Api%20Docs/services/central_hub/)]
 
-### TODO add updated version of How It All Works from scatbot
+Under "Api Docs" on the left, you will find central_hub and all the services in the diagram below.  The services should all have very detailed docs.
 
-!()[https://github.com/littlebee/scatbot/blob/c2800de8906b14173201d16030e8d390157eb641/docs/img/scatbot-systems-diagram.png]
+![system network diagram](https://github.com/littlebee/basic_bot/blob/main/docs/_assets/basic_bot_network_diagram.png?raw=true)
 
 
 
