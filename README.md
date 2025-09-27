@@ -15,14 +15,8 @@ A Python centric, basic robotics platform providing
 ## Status
 *** This is still a work in progress ***
 
-### Updates
+Latest update:  We have WebRTC video! 🚀🎉.  Check out the [lazy blog](https://github.com/littlebee/basic_bot/blob/main/Blog.md) for more details and older updates.
 
-20250128 - We have [online hosted docs](https://littlebee.github.io/basic_bot/)! 🎉
-
-20250127 - It can see! Working basic_bot.services.vision_cv service that uses open cv2 and tensorflow lite.  Still trying to decide what else is needed in the beta version - support for GPIO in?  Doing this in parallel with implementing the first working example of using basic_bot - [daphbot-due](https://github.com/littlebee/daphbot-due)
-
-
-20250120 - Basic working central_hub and web_server services merged.  Working on adding basic motor controller service similar to Scatbot.
 
 ## Getting Started
 On your development computer (not your bot's onboard computer; see later in this doc)
