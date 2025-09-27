@@ -66,6 +66,22 @@ mkdocs serve
 ./deploy-docs.sh
 ```
 
+### Third party tools
+
+basic_bot uses several third-party components to produce the docs that eventually get published to GitHub.io at https://littlebee.github.io/basic_bot/
+
+- [MkDocs](https://www.mkdocs.org/)
+- [mkdocs-material](https://squidfunk.github.io/mkdocs-material/) - provides the Material UI style pattern to our docs.
+- [pydoc-markdown](https://niklasrosenstein.github.io/pydoc-markdown/) - used to extract the doc-strings from the basic_bot Python code, modules, and functions, into individual files.
+
+### Internal scripts
+
+Several scripts are provided in the basic_bot root dir for document build and deploy.
+
+- `./deploy-docs.sh` will first call `./build-docs` to build the /docs directory.  Then, it leverages the `mkdocs gh-deploy` command provided by MkDocs to publish the prepared documentation to GitHub Pages.
+- `./build-docs.sh` is used to build the markdown docs, in the `./docs` directory.  It crawls several subdirectories in the src/basic_bot directory and uses [pydoc-markdown] to extract the Python docstrings from .py files into the docs/**.md files.    It also looks for all README.md files in the directories scanned and includes those in the docs/.   The root README.md is also copied to the docs and becomes the "Getting Started" landing page of the documentation.
+
+
 ## Testing
 
 Run the main test.sh script from the project root dir:
