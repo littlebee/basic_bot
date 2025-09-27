@@ -15,14 +15,8 @@ A Python centric, basic robotics platform providing
 ## Status
 *** This is still a work in progress ***
 
-### Updates
+Latest update:  We have WebRTC video! 🚀🎉.  Check out the [lazy blog](https://github.com/littlebee/basic_bot/blob/main/Blog.md) for more details and older updates.
 
-20250128 - We have [online hosted docs](https://littlebee.github.io/basic_bot/)! 🎉
-
-20250127 - It can see! Working basic_bot.services.vision_cv service that uses open cv2 and tensorflow lite.  Still trying to decide what else is needed in the beta version - support for GPIO in?  Doing this in parallel with implementing the first working example of using basic_bot - [daphbot-due](https://github.com/littlebee/daphbot-due)
-
-
-20250120 - Basic working central_hub and web_server services merged.  Working on adding basic motor controller service similar to Scatbot.
 
 ## Getting Started
 On your development computer (not your bot's onboard computer; see later in this doc)
@@ -170,7 +164,9 @@ Then **`cd` to the directory** you uploaded to:
 ```sh
 bb_start
 ```
-will start all of the services in  `./basic_bot.yml` as individual processes running detached.  If your shell/terminal is closed, they will keep running.
+This command will start all of the services in  `./basic_bot.yml` as individual processes running detached.  If your shell/terminal is closed, they will keep running.
+
+For more information about basic_bot.yml, see the [Config File Schema document](https://littlebee.github.io/basic_bot/Configuration/Config%20File%20Schema/).
 
 
 ## Debugging issues
@@ -230,9 +226,9 @@ See also, https://github.com/littlebee/basic_bot/issues/61
 
 Start with the docs for [[central_hub service docs](https://littlebee.github.io/basic_bot/Api%20Docs/services/central_hub/)]
 
-### TODO add updated version of How It All Works from scatbot
+Under "Api Docs" on the left, you will find central_hub and all the services in the diagram below.  The services should all have very detailed docs.
 
-!()[https://github.com/littlebee/scatbot/blob/c2800de8906b14173201d16030e8d390157eb641/docs/img/scatbot-systems-diagram.png]
+![system network diagram](https://github.com/littlebee/basic_bot/blob/main/docs/_assets/basic_bot_network_diagram.png?raw=true)
 
 
 
