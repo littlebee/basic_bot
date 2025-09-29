@@ -20,12 +20,16 @@
     font-weight: 700;
     color: #fff;
     text-shadow: 0 0 20px rgba(255, 152, 0, 0.5);
-    transition: opacity 0.3s ease-in-out;
-    opacity: 1;
     min-width: 200px;
     text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
 }
 
-.counter.fade {
-    opacity: 0.3;
+@keyframes fadeIn {
+    from {
+        opacity: 0.3;
+    }
+    to {
+        opacity: 1;
+    }
 }
