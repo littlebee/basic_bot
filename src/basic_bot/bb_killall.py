@@ -44,9 +44,15 @@ def main() -> None:
     else:
         print("No processes found matching the regex.")
 
-    # remove all files in the pids directory
-    for pid_file in os.listdir("./pids"):
-        os.remove(f"./pids/{pid_file}")
+    # remove all files in the local pids directory if it exists
+    if os.path.exists("./pids") and os.path.isdir("./pids"):
+        pid_files = os.listdir("./pids")
+        if pid_files:
+            print(f"Cleaning up {len(pid_files)} PID file(s) from ./pids")
+            for pid_file in pid_files:
+                os.remove(f"./pids/{pid_file}")
+        else:
+            print("No PID files to clean up in ./pids")
 
 
 if __name__ == "__main__":
