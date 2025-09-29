@@ -52,5 +52,18 @@ describe("App", () => {
         screen.getAllByText("basic_bot");
     });
 
+    it("displays the worthless counter when state is updated", async () => {
+        await renderApp();
+
+        // Initially should show the placeholder
+        screen.getByText("—");
+
+        // Send a state update with a counter value
+        await hubClient.sendHubStateUpdate({ worthless_counter: 42 });
+
+        // Wait for the counter to be displayed
+        await waitFor(() => screen.getByText("42"));
+    });
+
     // Add your tests here
 });
