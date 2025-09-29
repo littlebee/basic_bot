@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 
-   Simple service service example that just sets sets a state key value,
-   sleeps for a while prints the current local state and then sleeps for a while.
+Simple service service example that just sets sets a state key value,
+sleeps for a while prints the current local state and then sleeps for a while.
 
 """
 import asyncio
@@ -63,7 +63,7 @@ async def main() -> None:
             await bb_message.send_update_state(
                 hub_monitor.connected_socket, {"worthless_counter": i}
             )
-        await asyncio.sleep(1)
+        await asyncio.sleep(0.01)
         log.info(f"my_service state: {hub_state.state}")
 
 

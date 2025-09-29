@@ -10,6 +10,7 @@ import {
 
 import { Header } from "./Header";
 import { HubStateDialog } from "./HubStateDialog";
+import { WorthlessCounter } from "./components/WorthlessCounter";
 
 interface AppProps {
     hubPort?: number;
@@ -55,7 +56,9 @@ function App({ hubPort, autoReconnect }: AppProps) {
                     <div className="corner-bg">
                         <div className="corner"></div>
                     </div>
-                    <div className="content">Add Content here</div>
+                    <div className="content">
+                        <WorthlessCounter value={hubState.worthless_counter} />
+                    </div>
                 </div>
             </div>
             <HubStateDialog

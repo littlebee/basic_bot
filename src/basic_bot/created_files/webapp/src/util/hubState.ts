@@ -19,7 +19,7 @@ export interface IHubState {
     // this is for the UI only
     hubConnStatus?: string;
     // the keys below are shared from central hub.  See hub_state.py
-    hub_stats: {
+    hub_stats?: {
         state_updates_recv: number;
     };
 
@@ -38,6 +38,9 @@ export interface IHubState {
     servo_angles?: Record<string, number>;
     // published by the basic_bot.services.servo_control module
     servo_actual_angles?: Record<string, number>;
+
+    // provided by my_service example
+    worthless_counter?: number;
 }
 
 export interface IRecognizedObject {
