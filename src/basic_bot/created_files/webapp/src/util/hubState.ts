@@ -41,6 +41,8 @@ export interface IHubState {
 
     // provided by my_service example
     worthless_counter?: number;
+    // consumed by my_service example
+    worthless_counter_interval?: number;
 }
 
 export interface IRecognizedObject {
