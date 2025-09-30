@@ -33,3 +33,14 @@
         opacity: 1;
     }
 }
+
+.intervalControl {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.intervalInput {
+    padding: 5px;
+    font-size: 16px;
+    width: 100px;
+}

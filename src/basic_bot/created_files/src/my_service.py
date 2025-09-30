@@ -15,7 +15,7 @@ import basic_bot.commons.messages as bb_message
 # HubState is a class that manages the process local copy of the state.
 # Each service runs as a process and  has its own partial or full instance
 # of HubState.
-hub_state = HubState({"worthless_counter": -999})
+hub_state = HubState({"worthless_counter": -999, "worthless_counter_interval": 1.0})
 
 # HubStateMonitor will open a websocket connection to the central hub
 # and start a thread to listen for state changes.  The monitor will call,
@@ -26,7 +26,7 @@ hub_monitor = HubStateMonitor(
     # identity of the service
     "my_service",
     # keys to subscribe to
-    ["worthless_counter", "subsystem_stats"],
+    ["worthless_counter", "worthless_counter_interval", "subsystem_stats"],
     # callback function to call when a message is received
     # Note that when started using bb_start, any standard output or error
     # will be captured and logged to the ./logs directory.
@@ -63,7 +63,8 @@ async def main() -> None:
             await bb_message.send_update_state(
                 hub_monitor.connected_socket, {"worthless_counter": i}
             )
-        await asyncio.sleep(0.01)
+        interval = hub_state.state.get("worthless_counter_interval", 1.0)
+        await asyncio.sleep(interval)
         log.info(f"my_service state: {hub_state.state}")
 
 
