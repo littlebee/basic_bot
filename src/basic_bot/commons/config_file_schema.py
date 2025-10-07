@@ -90,5 +90,37 @@ config_file_schema = {
                 },
             },
         },
+        #
+        # Most central_hub clients connect to the websocket served by central_hub.
+        # For some applications, such as connecting to and controlling robots behind
+        # a firewall / restrictive router, it may be neccessary to have the bot
+        # connect outbound to a public facing host.
+        "outbound_clients": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "object",
+                "required": ["name", "uri", "identity"],
+                "properties": {
+                    #
+                    # Must have unique name for each host.
+                    "name": {"type": "string"},
+                    #
+                    # This is the websocket uri of the host to connect to.
+                    # Example: "wss://mypublichost.com:5001"
+                    "uri": {"type": "string"},
+                    #
+                    # This is the name that central_hub expect the bot to use
+                    # when it sends the identity after first connecting.
+                    # It must match the identity configured in basic_bot.yml
+                    "identity": {"type": "string"},
+                    #
+                    # This is a shared secret token that central_hub expects
+                    # the bot to use when it sends the identity message. This
+                    # would be configureed in the secrets of the public host.
+                    "shared_token": {"type": "string"},
+                },
+            },
+        },
     },
 }

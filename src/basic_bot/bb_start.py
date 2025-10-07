@@ -26,9 +26,7 @@ import os
 import shlex
 import subprocess
 import time
-import traceback
-import yaml
-from jsonschema import validate, ValidationError
+from jsonschema import ValidationError
 
 
 from typing import Optional, Dict, List, Any
@@ -36,7 +34,7 @@ from typing import Optional, Dict, List, Any
 
 from basic_bot.commons.script_helpers.pid_files import is_pid_file_valid
 from basic_bot.commons.script_helpers.log_files import get_log_time
-from basic_bot.commons.config_file_schema import config_file_schema
+from basic_bot.commons.config_file import read_config_file
 from basic_bot.commons import constants as c
 
 
@@ -138,7 +136,9 @@ def start_service(
             )
 
 
-def start_services(config: dict[str, Any], services_filter: Optional[List[str]] = None) -> None:
+def start_services(
+    config: dict[str, Any], services_filter: Optional[List[str]] = None
+) -> None:
     env_vars = config.get("env", {})
     env_vars.update(config.get(f"{c.BB_ENV}_env", {}))
 
@@ -159,26 +159,13 @@ def start_services(config: dict[str, Any], services_filter: Optional[List[str]] 
 
 def main() -> None:
     args = arg_parser.parse_args()
+    config = read_config_file(args.file)
+    validate_unique_names(config)
+    services_filter = None
+    if args.services:
+        services_filter = args.services.split(",")
 
-    try:
-        with open(args.file, "r") as f:
-            config = yaml.safe_load(f)
-        validate(config, config_file_schema)
-        validate_unique_names(config)
-
-        services_filter = None
-        if args.services:
-            services_filter = args.services.split(",")
-
-        start_services(config, services_filter)
-
-    except FileNotFoundError as e:
-        print(f"Error: File not found. {e}")
-        traceback.print_exc()
-    except yaml.YAMLError:
-        print(f"Error: Invalid YAML syntax: {args.file}")
-    except ValidationError as e:
-        print(f"Config file validation error: {e}")
+    start_services(config, services_filter)
 
 
 if __name__ == "__main__":

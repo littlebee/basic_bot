@@ -15,15 +15,13 @@ bb_stop --help
 import argparse
 import os
 import signal
-import yaml
-from jsonschema import validate, ValidationError
 
 from typing import Optional, List, Any
 
 
 from basic_bot.commons.script_helpers.pid_files import is_pid_file_valid
 from basic_bot.commons.script_helpers.log_files import get_log_time
-from basic_bot.commons.config_file_schema import config_file_schema
+from basic_bot.commons.config_file import read_config_file
 
 
 arg_parser = argparse.ArgumentParser(prog="bb_stop", description=__doc__)
@@ -79,7 +77,9 @@ def stop_service(
     os.remove(pid_file)
 
 
-def stop_services(config: dict[str, Any], services_filter: Optional[List[str]] = None) -> None:
+def stop_services(
+    config: dict[str, Any], services_filter: Optional[List[str]] = None
+) -> None:
     for service in config["services"]:
         if services_filter and service["name"] not in services_filter:
             continue
@@ -93,24 +93,12 @@ def stop_services(config: dict[str, Any], services_filter: Optional[List[str]] =
 
 def main() -> None:
     args = arg_parser.parse_args()
+    config = read_config_file(args.file)
+    services_filter = None
+    if args.services:
+        services_filter = args.services.split(",")
 
-    try:
-        with open(args.file, "r") as f:
-            config = yaml.safe_load(f)
-        validate(config, config_file_schema)
-
-        services_filter = None
-        if args.services:
-            services_filter = args.services.split(",")
-
-        stop_services(config, services_filter)
-
-    except FileNotFoundError:
-        print(f"Error: File not found: {args.file}")
-    except yaml.YAMLError:
-        print(f"Error: Invalid YAML syntax: {args.file}")
-    except ValidationError as e:
-        print(f"Config file validation error: {e.message}")
+    stop_services(config, services_filter)
 
 
 if __name__ == "__main__":

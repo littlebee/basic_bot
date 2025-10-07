@@ -1,3 +1,14 @@
+# Basic Bot development configuration file.
+#
+# This configuration is intended for development and testing purposes of
+# basic_bot and not users.
+#
+# See src/basic_bot/commons/config_file_schema.py for details
+# on the configuration file schema.
+#
+# See src/basic_bot/created_files/basic_bot.yml for the configuration file
+# that is created when you run `bb_create` to create your own bot.
+
 bot_name: "basic_bot"
 version: "0.1.0"
 
@@ -34,3 +45,9 @@ services:
     development_env:
       BB_DISABLE_RECOGNITION_PROVIDER: "true"
       BB_LOG_ALL_MESSAGES: "true"
+
+outbound_clients:
+  - name: "example_client"
+    uri: "wss://someec2instance.compute.amazonaws.com:5001"
+    identity: "example_client_1"
+    shared_token: "sdl243097sdlw498glk3wg98yagalkwo8sKLLKJwergwg@@#$!%"
