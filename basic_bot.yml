@@ -50,4 +50,4 @@ outbound_clients:
   - name: "example_client"
     uri: "wss://someec2instance.compute.amazonaws.com:5001"
     identity: "example_client_1"
-    shared_token: "sdl243097sdlw498glk3wg98yagalkwo8sKLLKJwergwg@@#$!%"
+    shared_token_file: "./tokens/example_client_1.txt"

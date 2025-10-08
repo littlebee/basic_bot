@@ -384,8 +384,6 @@ async def main() -> None:
     log.info(f"Starting server on port {constants.BB_HUB_PORT}")
     # TODO : figure out why the type error below
     async with websockets.serve(handle_message, port=constants.BB_HUB_PORT):  # type: ignore
-        # log.info("Starting hub stats task")
-        # await send_hub_stats_task()
         await asyncio.Future()  # run forever
 
 

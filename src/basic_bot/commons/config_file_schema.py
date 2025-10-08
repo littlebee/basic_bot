@@ -115,10 +115,14 @@ config_file_schema = {
                     # It must match the identity configured in basic_bot.yml
                     "identity": {"type": "string"},
                     #
-                    # This is a shared secret token that central_hub expects
-                    # the bot to use when it sends the identity message. This
-                    # would be configureed in the secrets of the public host.
-                    "shared_token": {"type": "string"},
+                    # This is an optional file path pointing to a file that
+                    # contains a shared secret token that central_hub sends
+                    # to the outbound connection when it first connects.
+                    #
+                    # This can be used to authenticate the bot by the public
+                    # facing host.  The token must match the token configured
+                    # via secrets on the public host.
+                    "shared_token_file": {"type": "string"},
                 },
             },
         },
