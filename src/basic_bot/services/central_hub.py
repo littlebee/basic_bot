@@ -103,12 +103,13 @@ import json
 import asyncio
 import websockets
 import traceback
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from websockets.server import WebSocketServerProtocol
 
 from basic_bot.commons import constants, log
 from basic_bot.commons.hub_state import HubState
+from basic_bot.commons.outbound_clients import OutboundClients
 
 
 log.info("Initializing hub state")
@@ -120,6 +121,9 @@ hub_state = HubState(
         "subsystem_stats": {},
     },
 )
+
+# Will be initialized in main() if outbound clients are configured
+outbound_clients: Optional[OutboundClients] = None
 
 # these are all of the client sockets that are connected to the hub
 connected_sockets: set[WebSocketServerProtocol] = set()
@@ -180,7 +184,6 @@ async def send_state_update_to_subscribers(message_data: Dict[str, Any]) -> None
         log.info(
             f"send_state_update_to_subscribers: no subscribers for {message_data.keys()}"
         )
-        return
 
     relay_message = json.dumps(
         {
@@ -192,6 +195,8 @@ async def send_state_update_to_subscribers(message_data: Dict[str, Any]) -> None
             "data": message_data,
         }
     )
+
+    # Send to local subscribers
     sockets_to_close: set[WebSocketServerProtocol] = set()
     for socket in subscribed_sockets:
         try:
@@ -213,6 +218,10 @@ async def send_state_update_to_subscribers(message_data: Dict[str, Any]) -> None
         log.info(f"relay error: closing socket {socket.remote_address[1]}")
         await unregister(socket)
         await socket.close()
+
+    # Also forward to outbound clients if configured
+    if outbound_clients:
+        await outbound_clients.broadcast(relay_message)
 
 
 async def notify_state(
@@ -330,48 +339,65 @@ async def handle_ping(websocket: WebSocketServerProtocol) -> None:
     await send_message(websocket, json.dumps({"type": "pong"}))
 
 
-async def handle_message(websocket: WebSocketServerProtocol) -> None:
+async def handle_message(
+    websocket: WebSocketServerProtocol, message: Union[str, bytes]
+) -> None:
+    """
+    Process a single message from either inbound or outbound websocket connection.
+
+    Args:
+        websocket: The websocket connection that sent the message.
+        message: The raw message (string or bytes) to process.
+    """
+    try:
+        jsonData = json.loads(message)
+        messageType = jsonData.get("type")
+        messageData = jsonData.get("data")
+    except:
+        log.error(f"error parsing message: {str(message)}")
+        return
+
+    if constants.BB_LOG_ALL_MESSAGES and messageType != "ping":
+        log.info(f"received {str(message)} from {websocket.remote_address[1]}")
+
+    # {type: "getState, data: [state_keys] or omitted}
+    if messageType == "getState":
+        await handle_state_request(websocket, messageData)
+    # {type: "updateState" data: { new state }}
+    elif messageType == "updateState":
+        await handle_state_update(messageData)
+    # {type: "subscribeState", data: [state_keys] or "*"
+    elif messageType == "subscribeState":
+        await handle_state_subscribe(websocket, messageData)
+    # {type: "unsubscribeState", data: [state_keys] or "*"
+    elif messageType == "unsubscribeState":
+        await handle_state_unsubscribe(websocket, messageData)
+    # {type: "identity", data: "subsystem_name"}
+    elif messageType == "identity":
+        await handle_identity(websocket, messageData)
+    elif messageType == "ping":
+        await handle_ping(websocket)
+    else:
+        log.error(f"received unsupported message: {messageType}")
+
+    if constants.BB_LOG_ALL_MESSAGES and messageType != "ping":
+        log.info(f"getting next message for {websocket.remote_address[1]}")
+
+
+async def handle_connect(websocket: WebSocketServerProtocol) -> None:
+    """
+    Handle an inbound websocket connection.
+    Registers the connection, processes all messages, and unregisters on disconnect.
+    """
     await register(websocket)
     try:
         async for message in websocket:
-            try:
-                jsonData = json.loads(message)
-                messageType = jsonData.get("type")
-                messageData = jsonData.get("data")
-            except:
-                log.error(f"error parsing message: {str(message)}")
-                continue
-
-            if constants.BB_LOG_ALL_MESSAGES and messageType != "ping":
-                log.info(f"received {str(message)} from {websocket.remote_address[1]}")
-
-            # {type: "getState, data: [state_keys] or omitted}
-            if messageType == "getState":
-                await handle_state_request(websocket, messageData)
-            # {type: "updateState" data: { new state }}
-            elif messageType == "updateState":
-                await handle_state_update(messageData)
-            # {type: "subscribeState", data: [state_keys] or "*"
-            elif messageType == "subscribeState":
-                await handle_state_subscribe(websocket, messageData)
-            # {type: "unsubscribeState", data: [state_keys] or "*"
-            elif messageType == "unsubscribeState":
-                await handle_state_unsubscribe(websocket, messageData)
-            # {type: "identity", data: "subsystem_name"}
-            elif messageType == "identity":
-                await handle_identity(websocket, messageData)
-            elif messageType == "ping":
-                await handle_ping(websocket)
-            else:
-                log.error(f"received unsupported message: {messageType}")
-
-            if constants.BB_LOG_ALL_MESSAGES and messageType != "ping":
-                log.info(f"getting next message for {websocket.remote_address[1]}")
+            await handle_message(websocket, message)
 
     except Exception as e:
         # don't log the exception if it's just a disconnect "no close frame"
         if "no close frame received" not in str(e):
-            log.error(f"handle_message from {websocket.remote_address[1]}: {e}")
+            log.error(f"handle_connect from {websocket.remote_address[1]}: {e}")
             traceback.print_exc()
             raise e
 
@@ -381,9 +407,23 @@ async def handle_message(websocket: WebSocketServerProtocol) -> None:
 
 
 async def main() -> None:
+    global outbound_clients
+
     log.info(f"Starting server on port {constants.BB_HUB_PORT}")
+
+    # Initialize and start outbound client connections if configured
+    outbound_clients = OutboundClients(on_message_received=handle_message)
+    if outbound_clients.outbound_clients:
+        log.info(
+            f"Starting {len(outbound_clients.outbound_clients)} outbound client(s)"
+        )
+        await outbound_clients.connect_all()
+    else:
+        log.info("No outbound clients configured")
+        outbound_clients = None
+
     # TODO : figure out why the type error below
-    async with websockets.serve(handle_message, port=constants.BB_HUB_PORT):  # type: ignore
+    async with websockets.serve(handle_connect, port=constants.BB_HUB_PORT):  # type: ignore
         await asyncio.Future()  # run forever
 
 
