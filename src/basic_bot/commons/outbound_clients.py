@@ -7,7 +7,7 @@ import asyncio
 import websockets.client
 from websockets.client import WebSocketClientProtocol
 
-from basic_bot.commons import log
+from basic_bot.commons import log, constants as c
 from basic_bot.commons.config_file import read_config_file
 
 from typing import Optional, Callable, Any, Dict, Union
@@ -25,7 +25,7 @@ class OutboundClients:
         self,
         on_message_received: Optional[Callable[[Any, Union[str, bytes]], Any]] = None,
     ) -> None:
-        config = read_config_file("./basic_bot.yml")
+        config = read_config_file(c.BB_CONFIG_FILE)
         self.outbound_clients = config.get("outbound_clients", [])
         self.connections: Dict[str, WebSocketClientProtocol] = {}
         self.on_message_received = on_message_received
