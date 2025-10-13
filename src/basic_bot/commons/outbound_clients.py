@@ -29,6 +29,7 @@ class OutboundClients:
         self.outbound_clients = config.get("outbound_clients", [])
         self.connections: Dict[str, WebSocketClientProtocol] = {}
         self.on_message_received = on_message_received
+        self.is_stopping = False
 
     async def connect_all(self) -> None:
         """
@@ -50,6 +51,15 @@ class OutboundClients:
 
             asyncio.create_task(self._connect_and_listen(name, uri, identity, token))
 
+    def stop(self) -> None:
+        """
+        Stops all outbound client connections.
+        """
+        self.is_stopping = True
+        for name, websocket in self.connections.items():
+            asyncio.create_task(websocket.close())
+        self.connections.clear()
+
     async def _connect_and_listen(
         self, name: str, uri: str, identity: str, token: Optional[str]
     ) -> None:
@@ -62,7 +72,7 @@ class OutboundClients:
             identity (str): The identity string to send upon connection.
             token (Optional[str]): An optional shared secret token for authentication.
         """
-        while True:
+        while not self.is_stopping:
             try:
                 log.info(f"Connecting to outbound client {name} at {uri}")
                 async with websockets.client.connect(uri) as websocket:  # type: ignore
