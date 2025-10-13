@@ -2,6 +2,7 @@
 logs/
 pids/
 recorded_video/
+tokens/
 
 node_modules/
 package-lock.json

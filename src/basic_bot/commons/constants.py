@@ -38,6 +38,12 @@ Set this to True to write all `log.debug` to the log file.  Note that `log.debug
 are also written to the log file when BB_ENV is "development" or "test".
 """
 
+BB_CONFIG_FILE = env.env_string("BB_CONFIG_FILE", "./basic_bot.yml")
+"""
+Path to the basic_bot configuration file. This can be overridden to use
+a different configuration file for testing or alternative deployments.
+"""
+
 
 BB_HUB_HOST = env.env_string("BB_HUB_HOST", "127.0.0.1")
 """
