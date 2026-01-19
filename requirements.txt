@@ -23,6 +23,6 @@ websocket-client
 aiohttp
 aiohttp_cors
 Pillow
-# aiortc
+aiortc==1.13.0
 av
 
