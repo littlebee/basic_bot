@@ -21,8 +21,8 @@ numpy
 websockets==10.4
 websocket-client
 aiohttp
-Pillow
-aiortc
 aiohttp_cors
+Pillow
+# aiortc
 # av
 
