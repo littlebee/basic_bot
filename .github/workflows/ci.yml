@@ -27,10 +27,11 @@ jobs:
 
       - name: Install dependencies
         run: |
+          # needed for vision service record video tests
+          sudo add-apt-repository ppa:ubuntuhandbook1/ffmpeg7 -y
           sudo apt update
 
-          # needed for vision service record video tests
-          sudo apt install --fix-missing -y ffmpeg libx264-dev
+          sudo apt install -y ffmpeg libx264-dev
           ffmpeg -version
 
           sudo apt install -y python3-pip
