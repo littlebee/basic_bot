@@ -10,8 +10,8 @@ description = "A simpler alternative to ROS"
 readme = "README.md"
 dependencies = [
     # WebRTC dependencies
-    "aiortc>=1.6.0",
-    "aiohttp>=3.8.0",
+    "aiortc",
+    "aiohttp",
     "aiohttp_cors",
     "build",
     "cachetools",
