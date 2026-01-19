@@ -29,6 +29,10 @@ jobs:
         run: |
           sudo apt update
 
+          #  needed for vision service record video tests
+          sudo apt install --fix-missing -y ffmpeg libx264-dev
+
+
           sudo apt install -y python3-pip
           pip install --upgrade pip
           pip --version
@@ -43,9 +47,6 @@ jobs:
           npm --version
           echo 'Install deps npm path:'
           which npm
-
-          # needed for vision service record video tests
-          sudo apt install --fix-missing -y ffmpeg libx264-dev
 
         # this also runs build.sh which in turn runs mypy
       - name: Run build and install
