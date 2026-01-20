@@ -14,25 +14,20 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: [3.9]
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
-          # needed for vision service record video tests
-          sudo add-apt-repository ppa:ubuntuhandbook1/ffmpeg7 -y
           sudo apt update
-
-          sudo apt install -y ffmpeg libx264-dev
-          ffmpeg -version
 
           sudo apt install -y python3-pip
           pip install --upgrade pip
@@ -48,6 +43,9 @@ jobs:
           npm --version
           echo 'Install deps npm path:'
           which npm
+
+          # needed for vision service record video tests
+          sudo apt install --fix-missing -y ffmpeg libx264-dev
 
         # this also runs build.sh which in turn runs mypy
       - name: Run build and install
