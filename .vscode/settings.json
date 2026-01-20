@@ -1,10 +1,13 @@
 {
     "cSpell.words": [
+        "aiohttp",
+        "aiortc",
         "cachetools",
         "daphbot",
         "fourcc",
         "gethostname",
         "inlinehilite",
+        "jsonschema",
         "killall",
         "linenums",
         "Matlike",
@@ -12,6 +15,7 @@
         "pids",
         "pygments",
         "pymdownx",
+        "pyyaml",
         "setuptools",
         "superfences"
     ]
