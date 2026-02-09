@@ -326,8 +326,9 @@ def main() -> None:
     app.router.add_get("/record_video", record_video)
     app.router.add_get("/recorded_video", recorded_video)
     app.router.add_get("/recorded_video/{filename}", get_recorded_video_file)
-    # this is for handling WebRTC video handshake
+    # these are for handling WebRTC video handshake
     app.router.add_post("/offer", webrtc_peers.respond_to_offer)
+    app.router.add_post("/ice_candidate", webrtc_peers.respond_to_ice_candidate)
     # this is for MJPEG video streaming
     app.router.add_get("/video_feed", video_feed)
 

@@ -11,12 +11,14 @@
         "killall",
         "linenums",
         "Matlike",
+        "MJPEG",
         "Picamera",
         "pids",
         "pygments",
         "pymdownx",
         "pyyaml",
         "setuptools",
-        "superfences"
+        "superfences",
+        "webrtc"
     ]
 }
