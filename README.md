@@ -15,7 +15,7 @@ A Python centric, basic robotics platform providing
 ## Status
 *** This is still a work in progress ***
 
-Latest update:  We have WebRTC video! 🚀🎉.  Check out the [lazy blog](https://github.com/littlebee/basic_bot/blob/main/Blog.md) for more details and older updates.
+Latest update:  We have WebRTC video! 🚀🎉.  Check out the [lazy blog](https://github.com/littlebee/basic_bot/blob/main/BLOG.md) for more details and older updates.
 
 
 ## Getting Started
