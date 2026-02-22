@@ -19,9 +19,6 @@ types-PyYAML
 types-requests
 
 # Runtime dependencies needed for mypy type checking
-aiohttp
-aiohttp_cors
-av
 numpy
 Pillow
 websocket-client
