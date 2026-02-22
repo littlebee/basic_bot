@@ -21,7 +21,7 @@ types-requests
 # Runtime dependencies needed for mypy type checking
 aiohttp
 aiohttp_cors
-aiortc>=1.11.0
+aiortc==1.11.0
 av
 numpy
 Pillow
