@@ -230,7 +230,11 @@ class WebrtcPeers:
         try:
             await pc.addIceCandidate(self.create_RTCIceCandidate(candidate))
             log.debug(f"Added ICE candidate for client_id={client_id}")
-            return web.Response(status=200, text="ICE candidate added")
+            return web.Response(
+                status=200,
+                content_type="application/json",
+                text=json.dumps({"text": "ICE candidate added"}),
+            )
         except Exception as e:
             log.error(f"Error adding ICE candidate for client_id={client_id}: {e}")
             return web.Response(status=500, text="Failed to add ICE candidate")

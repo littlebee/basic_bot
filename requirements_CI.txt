@@ -1,6 +1,4 @@
 -r requirements_base.txt
-aiortc>=1.11.0
+aiortc==1.10.1
 aiohttp
 aiohttp_cors
-av
-

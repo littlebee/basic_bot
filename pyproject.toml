@@ -12,8 +12,7 @@ dependencies = [
     # WebRTC dependencies
     "aiohttp",
     "aiohttp_cors",
-    # 1.11.0 currently fails to build on CI
-    "aiortc==1.10.1",
+    "aiortc",
     "build",
     "cachetools",
     "flask-cors",

@@ -33,7 +33,7 @@ jobs:
           pip install --upgrade pip
           pip --version
           pip install build setuptools wheel
-          pip install -r requirements.txt
+          pip install -r requirements_CI.txt
           chmod +x ./*.sh
 
           # needed for bb_create e2e test
