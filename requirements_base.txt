@@ -1,0 +1,29 @@
+# these are build dependencies for basic_bot itself
+
+build
+cachetools
+flake8
+mkdocs
+mkdocs-material
+mypy
+opencv-stubs
+pydoc-markdown
+pytest
+setuptools>=57.0
+
+# types
+types-Flask-Cors
+types-jsonschema
+types-psutil
+types-PyYAML
+types-requests
+
+# Runtime dependencies needed for mypy type checking
+aiohttp
+aiohttp_cors
+av
+numpy
+Pillow
+websocket-client
+websockets==10.4
+
