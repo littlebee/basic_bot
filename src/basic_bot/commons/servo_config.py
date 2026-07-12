@@ -59,6 +59,8 @@ class ServoOptions(TypedDict):
     max_angle: NotRequired[int]
     min_pulse: NotRequired[int]
     max_pulse: NotRequired[int]
+    step_delay: NotRequired[float]
+    step_degrees: NotRequired[float]
 
 
 @dataclass
@@ -68,3 +70,5 @@ class ServoOptionsDefaults:
     max_angle: int = 180
     min_pulse: int = 500
     max_pulse: int = 2500
+    step_delay: float = 0.0001
+    step_degrees: float = 1.0

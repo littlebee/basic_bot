@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 """
 
-   Simple http server for serving the react web app from build dir
+Simple http server for serving the react web app from its build dir.
+
+See also,
+
+[BB_WEB_PUBLIC constant](https://littlebee.github.io/basic_bot/Api%20Docs/commons/constants/#bb_web_public)
+for default and control of the directory that is served by this web server.
+
+[BB_WEB_PORT constant](https://littlebee.github.io/basic_bot/Api%20Docs/commons/constants/#bb_web_port)
+for default and control of the port that this web server listens on.
 
 """
 
@@ -32,7 +40,7 @@ log.info(f"serving from dir_path: {dir_path}")
 
 @app.route("/stats")
 def send_stats() -> Response:
-    (cpu_temp, *rest) = [
+    cpu_temp, *rest = [
         int(i) / 1000
         for i in os.popen("cat /sys/devices/virtual/thermal/thermal_zone*/temp")
         .read()
@@ -82,7 +90,7 @@ class webapp:
         pass
 
     def thread(self) -> None:
-        app.run(host="0.0.0.0", port=80, threaded=True)
+        app.run(host="0.0.0.0", port=c.BB_WEB_PORT, threaded=True)
 
     def start_thread(self) -> None:
         thread = threading.Thread(target=self.thread)
@@ -93,7 +101,7 @@ class webapp:
 
 def start_app() -> None:
     logger = logging.getLogger(__name__)
-    logger.info(f"webapp started. serving {dir_path}")
+    logger.info(f"webapp started. serving {dir_path} on port {c.BB_WEB_PORT}")
 
     flask_app = webapp()
     flask_app.start_thread()

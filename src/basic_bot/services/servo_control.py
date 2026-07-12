@@ -15,6 +15,8 @@
         max_angle: 180
         min_pulse: 500
         max_pulse: 2500
+        step_delay: 0.0001
+        step_degrees: 1.0
     ```
 
     If you update the `servo_config.yml` file, you will need to restart the service.
@@ -29,6 +31,8 @@
        be constrained.
     - `min_pulse` and `max_pulse` are the minimum and maximum pulse widths in microseconds
        that the servo will accept as specified by the manufacturer.
+    - `step_delay` is the delay in seconds between motor movement steps.
+    - `step_degrees` is the degrees moved per motor movement step.
 
     The service listens for messages on the central_hub key: "servo_angles". The
     message `data` should be a dictionary with keys that are the servo `names`
@@ -65,7 +69,9 @@
                     "min_angle": 0,
                     "max_angle": 180,
                     "min_pulse": 500,
-                    "max_pulse": 2500
+                    "max_pulse": 2500,
+                    "step_delay": 0.0001,
+                    "step_degrees": 1.0
                 }
             ]
         }
@@ -118,6 +124,8 @@ async def send_servo_config(websocket: WebSocketClientProtocol) -> None:
             "max_angle": servo.max_angle,
             "min_pulse": servo.min_pulse,
             "max_pulse": servo.max_pulse,
+            "step_delay": servo.step_delay,
+            "step_degrees": servo.step_degrees,
         }
         for servo in servos_by_name.values()
     ]
