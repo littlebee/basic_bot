@@ -155,18 +155,20 @@ async def _record_webrtc_async(output_file: str, duration: float) -> None:
             log.debug(f"{track.kind} track ended")
 
     try:
-        # Add transceivers for receiving video and audio
+        log.debug("Creating transceivers for video and audio")
         pc.addTransceiver("video", direction="recvonly")
         pc.addTransceiver("audio", direction="recvonly")
 
-        # Create offer
+        log.debug("Creating offer and setting local description")
         offer = await pc.createOffer()
         await pc.setLocalDescription(offer)
 
+        log.debug("Waiting for ICE gathering to complete")
         # Wait for ICE gathering to complete
         while pc.iceGatheringState != "complete":
             await asyncio.sleep(0.1)
 
+        log.debug("ICE gathering complete, sending offer to WebRTC endpoint")
         # Send offer to server
         async with aiohttp.ClientSession() as session:
             offer_data = {
@@ -175,15 +177,17 @@ async def _record_webrtc_async(output_file: str, duration: float) -> None:
             }
 
             headers = {"Content-Type": "application/json"}
+            log.debug(f"Sending offer data: {offer_data} to {webrtc_endpoint}")
             async with session.post(
                 webrtc_endpoint, json=offer_data, headers=headers
             ) as response:
+                log.debug("Answer received from WebRTC endpoint")
                 if response.status != 200:
                     raise RuntimeError(
                         f"Failed to send offer to WebRTC endpoint: {response.status}"
                     )
-
                 answer_data = await response.json()
+                log.debug(f"Answer data: {answer_data}")
 
                 # Set remote description
                 answer = RTCSessionDescription(

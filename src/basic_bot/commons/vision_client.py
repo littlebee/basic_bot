@@ -21,6 +21,19 @@ def send_record_video_request(duration: float) -> requests.Response:
     return response
 
 
+def send_record_video_async(duration: float):
+    """
+    Send a request to the vision service to start recording video asynchronously.
+    """
+    if c.BB_LOG_ALL_MESSAGES:
+        log.info(f"Sending record video request for {duration} seconds")
+    requests.get(
+        f"{c.BB_VISION_URI}/record_video",
+        params={"duration": duration},
+        timeout=0.001,
+    )
+
+
 def fetch_recorded_videos() -> requests.Response:
     """
     Send a request to the vision service to retrieve a list of recorded videos.

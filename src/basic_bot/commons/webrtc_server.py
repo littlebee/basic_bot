@@ -94,6 +94,9 @@ class WebrtcPeers:
                     stderr=subprocess.DEVNULL,
                     bufsize=0,  # Unbuffered stdout
                 )
+                log.debug(
+                    "arecord process started for audio capture. Initializing microphone."
+                )
                 self.microphone = MediaPlayer(
                     self.arecord_process.stdout,
                     format="s16le",
@@ -115,7 +118,7 @@ class WebrtcPeers:
                     # Linux with PulseAudio
                     self.microphone = MediaPlayer("default", format="pulse")
 
-            # Initialize audio relay for sharing between multiple peers
+            log.debug("Initializing MediaRelay for audio streaming")
             self.audio_relay = MediaRelay()
             log.info("Audio streaming initialized successfully")
             return (
@@ -199,10 +202,11 @@ class WebrtcPeers:
         # handle offer
         await pc.setRemoteDescription(offer)
 
-        # send answer
+        log.debug("Creating answer and setting local description")
         answer = await pc.createAnswer()
         await pc.setLocalDescription(answer)
 
+        log.debug(f"Sending answer to {request.remote} with client_id={client_id}")
         return web.Response(
             content_type="application/json",
             text=json.dumps(
