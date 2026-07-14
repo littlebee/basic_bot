@@ -261,3 +261,20 @@ BB_WEB_PUBLIC = env.env_string("BB_WEB_PUBLIC", "./webapp/dist")
 The path to the directory containing the web application's static files.
 The web server will serve files from this directory.
 """
+
+BB_WEB_PORT = env.env_int("BB_WEB_PORT", 5080)
+"""
+The port that the web server listens on for incoming HTTP requests. This is the
+port to use when serving the web application to users.  Some Linux distributions
+require root privileges to bind to ports below 1024.
+
+To bind to port 80 while running as a non-root user, you can use a reverse proxy
+or port forwarding. From bash, you can use the following command to forward port 80.
+
+```bash
+sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5080
+# also redirect for localhost access
+iptables -t nat -I OUTPUT -p tcp -d 127.0.0.1 --dport 80 -j REDIRECT --to-ports 5080
+```
+
+"""

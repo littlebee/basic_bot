@@ -39,6 +39,18 @@ servo_config_file_schema = {
                     # The maximum pulse width in microseconds that the servo will accept
                     # as specified by the manufacturer.
                     "max_pulse": {"type": "integer"},
+                    #
+                    # Delay between servo movement steps in seconds.
+                    "step_delay": {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                    },
+                    #
+                    # Number of degrees to move per servo step.
+                    "step_degrees": {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                    },
                 },
             },
         },

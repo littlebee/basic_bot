@@ -99,6 +99,7 @@ will replace that top level key with the data received.
 
 
 """
+
 import json
 import asyncio
 import websockets
@@ -110,7 +111,6 @@ from websockets.server import WebSocketServerProtocol
 from basic_bot.commons import constants, log
 from basic_bot.commons.hub_state import HubState
 from basic_bot.commons.outbound_clients import OutboundClients
-
 
 log.info("Initializing hub state")
 hub_state = HubState(
@@ -263,15 +263,29 @@ async def unregister(websocket: WebSocketServerProtocol) -> None:
     )
     try:
         connected_sockets.remove(websocket)
-        star_subscribers.remove(websocket)
+    except KeyError:
+        pass
 
+    try:
+        star_subscribers.remove(websocket)
+    except KeyError:
+        pass
+
+    try:
         for key in subscribers:
-            subscribers[key].remove(websocket)
+            try:
+                subscribers[key].remove(websocket)
+            except KeyError:
+                pass
         subsystem_name = identities.pop(websocket, None)
+        log.info(f"{subsystem_name}: subscribers after unregister: {subscribers}")
         if subsystem_name:
             await update_online_status(subsystem_name, 0)
-    except:
-        pass
+    except Exception as e:
+        error_string = traceback.format_exc()
+        log.error(
+            f"error removing websocket from subscribers: {e}; error message: {error_string}"
+        )
 
 
 async def handle_state_request(

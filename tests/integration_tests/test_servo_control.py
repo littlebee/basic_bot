@@ -1,4 +1,5 @@
 import time
+from typing import Any
 
 import basic_bot.test_helpers.central_hub as hub
 import basic_bot.test_helpers.start_stop as sst
@@ -7,16 +8,38 @@ from basic_bot.commons.servo_config import read_servo_config, ServoOptionsDefaul
 
 # See also the servo_config.yml file in the root project directory.
 
+
+def value_or_default(servo: dict[str, Any], key: str, default: Any) -> Any:
+    value = servo.get(key)
+    return default if value is None else value
+
+
 EXPECTED_SERVO_CONFIG = {
     "servos": [
         {
             "name": servo["name"],
             "channel": servo["channel"],
-            "motor_range": servo.get("motor_range") or ServoOptionsDefaults.motor_range,
-            "min_angle": servo.get("min_angle") or ServoOptionsDefaults.min_angle,
-            "max_angle": servo.get("max_angle") or ServoOptionsDefaults.max_angle,
-            "min_pulse": servo.get("min_pulse") or ServoOptionsDefaults.min_pulse,
-            "max_pulse": servo.get("max_pulse") or ServoOptionsDefaults.max_pulse,
+            "motor_range": value_or_default(
+                servo, "motor_range", ServoOptionsDefaults.motor_range
+            ),
+            "min_angle": value_or_default(
+                servo, "min_angle", ServoOptionsDefaults.min_angle
+            ),
+            "max_angle": value_or_default(
+                servo, "max_angle", ServoOptionsDefaults.max_angle
+            ),
+            "min_pulse": value_or_default(
+                servo, "min_pulse", ServoOptionsDefaults.min_pulse
+            ),
+            "max_pulse": value_or_default(
+                servo, "max_pulse", ServoOptionsDefaults.max_pulse
+            ),
+            "step_delay": value_or_default(
+                servo, "step_delay", ServoOptionsDefaults.step_delay
+            ),
+            "step_degrees": value_or_default(
+                servo, "step_degrees", ServoOptionsDefaults.step_degrees
+            ),
         }
         for servo in read_servo_config()["servos"]
     ]

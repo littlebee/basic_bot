@@ -40,11 +40,6 @@ else:
 # env var to turn on console debug output
 DEBUG_MOTORS = env.env_bool("DEBUG_MOTORS", False)
 
-# how many deg to turn per step (abs)
-STEP_DEGREES = 1
-# how long to wait between steps (default; use step_delay setter to change at run time)
-DEFAULT_STEP_DELAY = 0.0001
-
 # the precision of the servo motors in degrees
 SERVO_PRECISION = 0.5
 
@@ -82,24 +77,50 @@ class Servo:
         self.pause_event = threading.Event()
         self.stopped_event = threading.Event()
         self.force_stop = False
-        self._step_delay = DEFAULT_STEP_DELAY
 
         self.name: str = servo_options["name"]
         self.channel: int = servo_options["channel"]
+        motor_range = servo_options.get("motor_range")
         self.motor_range: int = (
-            servo_options.get("motor_range") or ServoOptionsDefaults.motor_range
+            ServoOptionsDefaults.motor_range
+            if motor_range is None
+            else motor_range
         )
+        min_pulse = servo_options.get("min_pulse")
         self.min_pulse: int = (
-            servo_options.get("min_pulse") or ServoOptionsDefaults.min_pulse
+            ServoOptionsDefaults.min_pulse
+            if min_pulse is None
+            else min_pulse
         )
+        max_pulse = servo_options.get("max_pulse")
         self.max_pulse: int = (
-            servo_options.get("max_pulse") or ServoOptionsDefaults.max_pulse
+            ServoOptionsDefaults.max_pulse
+            if max_pulse is None
+            else max_pulse
         )
+        min_angle = servo_options.get("min_angle")
         self.min_angle: int = (
-            servo_options.get("min_angle") or ServoOptionsDefaults.min_angle
+            ServoOptionsDefaults.min_angle
+            if min_angle is None
+            else min_angle
         )
+        max_angle = servo_options.get("max_angle")
         self.max_angle: int = (
-            servo_options.get("max_angle") or ServoOptionsDefaults.max_angle
+            ServoOptionsDefaults.max_angle
+            if max_angle is None
+            else max_angle
+        )
+        step_delay = servo_options.get("step_delay")
+        self._step_delay: float = (
+            ServoOptionsDefaults.step_delay
+            if step_delay is None
+            else step_delay
+        )
+        step_degrees = servo_options.get("step_degrees")
+        self.step_degrees: float = (
+            ServoOptionsDefaults.step_degrees
+            if step_degrees is None
+            else step_degrees
         )
         self.mid_angle: float = (
             float(self.min_angle) + float(self.max_angle - self.min_angle) / 2
@@ -237,7 +258,7 @@ class Servo:
                 # and then stop the movement loop
                 return False
 
-            new_angle = self.current_angle + (STEP_DEGREES * direction)
+            new_angle = self.current_angle + (self.step_degrees * direction)
 
             self.servo.fraction = new_angle / self.motor_range
             time.sleep(self._step_delay)
@@ -251,7 +272,7 @@ class Servo:
 
     def _step_would_overshoot_dest(self, direction: int) -> bool:
         current_angle = self.current_angle
-        new_angle = current_angle + STEP_DEGREES * direction
+        new_angle = current_angle + self.step_degrees * direction
         return (direction == -1 and new_angle < self.destination_angle) or (
             direction == 1 and new_angle > self.destination_angle
         )
@@ -278,6 +299,8 @@ if __name__ == "__main__":
             "max_angle": ServoOptionsDefaults.max_angle,
             "min_pulse": ServoOptionsDefaults.min_pulse,
             "max_pulse": ServoOptionsDefaults.max_pulse,
+            "step_delay": ServoOptionsDefaults.step_delay,
+            "step_degrees": ServoOptionsDefaults.step_degrees,
         }
     )
 

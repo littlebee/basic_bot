@@ -11,7 +11,6 @@ from websockets.client import WebSocketClientProtocol
 from basic_bot.commons import constants as c, messages, log
 from basic_bot.commons.hub_state import HubState
 
-
 # TODO: This class should maybe be a singleton.
 should_exit = False
 
@@ -133,6 +132,8 @@ class HubStateMonitor:
 
             if should_exit:
                 return
+
+        log.info("hub_state_monitor websocket closed by central_hub")
 
     async def monitor_state(self) -> None:
         while not should_exit:
